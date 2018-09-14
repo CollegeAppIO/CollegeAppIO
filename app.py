@@ -19,14 +19,13 @@ def initDB():
 	print ("Connected!")
 	return conn, cursor
 
-
-
 @app.route("/")
 def hello():
     return jsonify("Hello World and DB!!")
 	
 @app.route("/dbinfo")
 def dbinfo():
+    conn, cur = initDB()
     info = "Con: " + str (conn) + "Curr: " + str(cur)
     return jsonify(info)
 
