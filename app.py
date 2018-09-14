@@ -20,6 +20,7 @@ def initDB():
 	return conn, cursor
 
 
+conn, cur = initDB()
 
 @app.route("/")
 def hello():
