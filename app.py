@@ -19,6 +19,9 @@ def initDB():
 	print ("Connected!")
 	return conn, cursor
 
+
+conn, cur = initDB()
+
 @app.route("/")
 def hello():
     return jsonify("Hello World and DB!!")
