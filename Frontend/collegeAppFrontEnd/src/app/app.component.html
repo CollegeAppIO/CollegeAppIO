@@ -19,6 +19,8 @@
   <span>Employee data: {{employee | json}}</span>
 </div> -->
 
+<script type="text/javascript" src="node_modules/auth0-js/build/auth0.js"></script>
+
 <div class="jumbotron jumbotron-fluid" style="background-color: #0080ff; max-height: 200px;">
   <div class="container" style="text-align: center">
     <h1 class="display-4">CollegeApp.IO</h1>
@@ -38,5 +40,56 @@
   <br>
 
   <button type="button" class="btn btn-primary btn-lg btn-block">Login</button>
-  <button type="button" class="btn btn-secondary btn-lg btn-block">Register</button>
+  <button (click)="open(content)" type="button" class="btn btn-secondary btn-lg btn-block">Register</button>
 </form>
+
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Register Account</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+
+        <label for="dateOfBirth">Date of birth</label>
+        <div class="input-group">
+          <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+          </div>
+        </div>
+        <br>
+
+        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" style="align: center">
+          <label ngbButtonLabel class="btn-primary">
+            <input ngbButton type="radio" [value]="1"> Student
+          </label>
+          <label ngbButtonLabel class="btn-primary">
+            <input ngbButton type="radio" value="middle"> Adminstrator
+          </label>
+       </div>
+
+
+
+
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+  </div>
+</ng-template>
