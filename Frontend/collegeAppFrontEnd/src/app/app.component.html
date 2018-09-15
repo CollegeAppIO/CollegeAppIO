@@ -19,25 +19,24 @@
   <span>Employee data: {{employee | json}}</span>
 </div> -->
 
-<div class="row">
-  <div class="col">
-    <div ngbDropdown class="d-inline-block">
-      <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Toggle dropdown</button>
-      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-        <button class="dropdown-item">Action - 1</button>
-        <button class="dropdown-item">Another Action</button>
-        <button class="dropdown-item">Something else is here</button>
-      </div>
-    </div>
-  </div>
-<div class="col text-right">
-    <div ngbDropdown placement="top-right" class="d-inline-block">
-      <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Toggle dropup</button>
-      <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
-        <button class="dropdown-item">Action - 1</button>
-        <button class="dropdown-item">Another Action</button>
-        <button class="dropdown-item">Something else is here</button>
-      </div>
-    </div>
+<div class="jumbotron jumbotron-fluid" style="background-color: #0080ff; max-height: 200px;">
+  <div class="container" style="text-align: center">
+    <h1 class="display-4">CollegeApp.IO</h1>
+    <p class="lead">Changing the College Application Game</p>
   </div>
 </div>
+<br>
+<form style="width: 50%; max-width: 500px;margin: auto; ">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+  </div>
+  <br>
+
+  <button type="button" class="btn btn-primary btn-lg btn-block">Login</button>
+  <button type="button" class="btn btn-secondary btn-lg btn-block">Register</button>
+</form>
