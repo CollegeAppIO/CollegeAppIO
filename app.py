@@ -28,6 +28,7 @@ def hello():
 	
 @app.route("/dbinfo")
 def dbinfo():
+    conn, cur = initDB()
     info = "Con: " + str (conn) + "Curr: " + str(cur)
     return jsonify(info)
 
