@@ -1,0 +1,37 @@
+
+<div class="container" >
+  <div class="row" *ngIf="userObj === undefined">
+   <div class="col-md-12" style="width: 50%; max-width: 500px;margin: auto; ">
+      <div id="login-section">
+        <div class="jumbotron jumbotron-fluid" style="background-color: #0080ff; max-height: 100px;padding-top: 15px;margin-top: 100px;" id="headerTitle">
+          <div class="container" style="text-align: center">
+            <h1 class="display-4">CollegeApp.IO</h1>
+          </div>
+        </div>
+
+         <div class="form-group">
+           <label for="exampleInputEmail1">Email address</label>
+           <input class="form-control" type="text"  [(ngModel)]="useremail"  id="useremail" name="useremail" placeholder="Email"/>
+           <br/>
+           <label for="exampleInputPassword1">Password</label>
+           <input class="form-control" type="password"  [(ngModel)]="password"  id="password" name="password" placeholder="Password"/>
+           <br/>
+       </div>
+     </div>
+     <button type="button" class="btn btn-primary btn-lg btn-block" (click)="onSignIn()" id="quickstart-sign-in" name="signin">Sign In</button>
+     <br>
+     <button class="btn btn-secondary btn-lg btn-block" (click)="onSignUp()" id="quickstart-sign-up" name="signup">Sign Up</button>
+   </div>
+ </div>
+
+
+
+ <div *ngIf="authServ.user | async as user">
+   <h3>Hello {{user?.displayName || 'User'}}</h3>
+   <br>
+   <!-- <img [src]="user.photoURL" class="display-img"/> -->
+   <hr>
+   <!-- <app-gallery #gallery></app-gallery> -->
+ </div>
+ <!-- <app-notification (delEvent)="gallery.deleteItem()"></app-notification> -->
+</div>
