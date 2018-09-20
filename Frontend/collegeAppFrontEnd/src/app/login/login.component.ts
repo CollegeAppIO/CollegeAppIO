@@ -26,11 +26,14 @@ export class LoginComponent implements OnInit {
 
   modalReference: any;
 
+  modalStatus: boolean;
+
   constructor(public authServ: AuthService, private noteSvc: NotificationServicesService,private modalService: NgbModal, private router: Router, private httpClient: HttpClient) {
   }
 
   open(content) {
     this.modalReference = this.modalService.open(content);
+    this.modalStatus = true;
     // this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
     //   // this.closeResult = `Closed with: ${result}`;
     // }, (reason) => {
@@ -39,11 +42,13 @@ export class LoginComponent implements OnInit {
   }
 
   uploadToUserTable(uid:string,status:boolean) {
-    var temp = 'https://college-app-io.herokuapp.com/students/'+uid+'/'+status;
-    this.httpClient.get(temp).subscribe(data => {
-      console.log(data);
+
+        var temp = 'https://college-app-io.herokuapp.com/students/'+uid+'/'+status;
+        this.httpClient.get(temp).subscribe(data => {
+        console.log(data);
     })
     console.log('sent to the db');
+
   }
 
   // uploadToUserTable1(uid:string,status:boolean) {
@@ -117,13 +122,7 @@ export class LoginComponent implements OnInit {
       // this.router.navigateByUrl('/home');
     }
 
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log('sign up '+user.uid);
-        this.uploadToUserTable(user.uid,this.status);
-      }
-    });
-    firebase.auth().signOut();
+    //firebase.auth().signOut();
   }
 
   onSignIn() {
@@ -178,15 +177,15 @@ export class LoginComponent implements OnInit {
     }
     $('#quickstart-sign-in').removeAttr('disabled');
     $('#quickstart-sign-up').removeAttr('disabled');
-    this.router.navigateByUrl('/home');
 
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log('sign in '+user.uid);
-        console.log('sign in '+user.email);
-        this.uploadToUserTable(user.uid,this.status);
-      }
-    });
+
+    // firebase.auth().onAuthStateChanged((user) => {
+    //   if (user) {
+    //     console.log('sign in '+user.uid);
+    //     console.log('sign in '+user.email);
+    //     this.uploadToUserTable(user.uid,this.status);
+    //   }
+    // });
     // document.getElementById('quickstart-sign-in').disabled = true;
   }
 
@@ -197,6 +196,7 @@ export class LoginComponent implements OnInit {
 
   authChanged() {
     firebase.auth().onAuthStateChanged((user) => {
+
         // [START_EXCLUDE silent]
       $('#quickstart-sign-in').removeAttr('disabled');
      // document.getElementById('quickstart-verify-email').disabled = true;
@@ -211,31 +211,39 @@ export class LoginComponent implements OnInit {
         const uid = user.uid;
         const providerData = user.providerData;
 
-        console.log(email);
-        console.log(uid);
-        console.log(this.status);
+         console.log(email);
+        // console.log(uid);
+        // console.log(this.status);
 
-        this.modalReference.close();
+        if(this.modalStatus){
+          this.modalReference.close();
+          //this.router.navigateByUrl('/home');
+          this.uploadToUserTable(user.uid,this.status);
+          this.modalStatus = false;
+        }
         this.router.navigateByUrl('/home');
 
-        // [START_EXCLUDE]
-        document.getElementById('quickstart-sign-in').textContent = 'Sign out';
-        $('#quickstart-sign-in').removeClass('btn-primary');
-        $('#quickstart-sign-in').addClass('btn-danger');
-        document.getElementById('login-section').hidden = true;
 
-        if (!emailVerified) {
-          $('#quickstart-sign-in').removeAttr('disabled');
-        }
+
+        // [START_EXCLUDE]
+        //document.getElementById('quickstart-sign-in').textContent = 'Sign out';
+        //$('#quickstart-sign-in').removeClass('btn-primary');
+        //$('#quickstart-sign-in').addClass('btn-danger');
+        //document.getElementById('login-section').hidden = true;
+
+        // if (!emailVerified) {
+        //   $('#quickstart-sign-in').removeAttr('disabled');
+        // }
         // [END_EXCLUDE]
       } else {
+          console.log('user signed out');
         // User is signed out.
         // [START_EXCLUDE]
         // document.getElementById('quickstart-sign-in').textContent = 'Sign in';
         // [END_EXCLUDE]
       }
       // [START_EXCLUDE silent]
-      $('#quickstart-sign-in').removeAttr('disabled');
+      //$('#quickstart-sign-in').removeAttr('disabled');
       // [END_EXCLUDE]
     });
   }

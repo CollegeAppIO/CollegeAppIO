@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth.service';
+import * as firebase from 'firebase/app';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
@@ -7,9 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePageComponent implements OnInit {
 
-  constructor() { }
+  constructor(public authServ: AuthService,private router: Router) { }
 
   ngOnInit() {
+  }
+
+  onSignOut(){
+      console.log('signed out');
+      firebase.auth().signOut();
+      this.router.navigateByUrl('/');
+
   }
 
 }
