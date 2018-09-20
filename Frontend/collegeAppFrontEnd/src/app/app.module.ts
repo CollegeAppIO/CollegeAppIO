@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './auth.service';
 import { HomePageComponent } from './home-page/home-page.component';
+import { AppRoutingModule } from './app-routing/app-routing.module';
 
 
 
@@ -36,7 +37,8 @@ import { HomePageComponent } from './home-page/home-page.component';
     AngularFireStorageModule,
     // To initialize AngularFire
     AngularFireModule.initializeApp(environment.firebase),
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    AppRoutingModule
   ],
   providers: [
     AuthService,

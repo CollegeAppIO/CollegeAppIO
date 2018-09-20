@@ -1,4 +1,4 @@
-
+<base href="/">
 <div class="container" >
   <div class="row" *ngIf="userObj === undefined">
    <div class="col-md-12" style="width: 50%; max-width: 500px;margin: auto; ">
@@ -41,8 +41,6 @@
          <br/>
          <label for="exampleInputPassword1">Password</label>
          <input class="form-control" type="password"  [(ngModel)]="password"  id="password1" name="password" placeholder="Password"/>
-         <!-- <input class="form-control" type="password"  [(ngModel)]="status"  id="status" name="status" placeholder="Password"/> -->
-
          <br>
          <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" style="align: center" [(ngModel)]="status">
            <label ngbButtonLabel class="btn-primary">
@@ -63,12 +61,12 @@
 
 
 
- <div *ngIf="authServ.user | async as user">
+ <!-- <div *ngIf="authServ.user | async as user">
    <h3>Hello {{user?.displayName || 'User'}}</h3>
-   <br>
+   <br> -->
    <!-- <img [src]="user.photoURL" class="display-img"/> -->
-   <hr>
+   <!-- <hr> -->
    <!-- <app-gallery #gallery></app-gallery> -->
- </div>
+ <!-- </div> -->
  <!-- <app-notification (delEvent)="gallery.deleteItem()"></app-notification> -->
-</div>
+<!-- </div> -->

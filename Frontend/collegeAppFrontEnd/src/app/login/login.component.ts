@@ -6,7 +6,7 @@ import * as $ from 'jquery';
 import { NotificationServicesService } from '../notification-services.service';
 
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
-
+import {Router} from '@angular/router'
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
 
   modalReference: any;
 
-  constructor(public authServ: AuthService, private noteSvc: NotificationServicesService,private modalService: NgbModal) {
+  constructor(public authServ: AuthService, private noteSvc: NotificationServicesService,private modalService: NgbModal, private router: Router) {
   }
 
   open(content) {
@@ -97,7 +97,8 @@ export class LoginComponent implements OnInit {
       });
       console.log('hello')
       // $('#modal-basic-title').modal("hide")
-      this.modalReference.close();
+      // this.modalReference.close();
+      // this.router.navigateByUrl('/home');
     }
 
   }
@@ -154,7 +155,7 @@ export class LoginComponent implements OnInit {
     }
     $('#quickstart-sign-in').removeAttr('disabled');
     $('#quickstart-sign-up').removeAttr('disabled');
-
+    this.router.navigateByUrl('/home');
 
     // document.getElementById('quickstart-sign-in').disabled = true;
   }
@@ -184,6 +185,9 @@ export class LoginComponent implements OnInit {
         console.log(uid);
         console.log(this.status);
 
+        this.modalReference.close();
+        this.router.navigateByUrl('/home');
+
         // [START_EXCLUDE]
         document.getElementById('quickstart-sign-in').textContent = 'Sign out';
         $('#quickstart-sign-in').removeClass('btn-primary');
@@ -197,7 +201,7 @@ export class LoginComponent implements OnInit {
       } else {
         // User is signed out.
         // [START_EXCLUDE]
-        document.getElementById('quickstart-sign-in').textContent = 'Sign in';
+        // document.getElementById('quickstart-sign-in').textContent = 'Sign in';
         // [END_EXCLUDE]
       }
       // [START_EXCLUDE silent]
