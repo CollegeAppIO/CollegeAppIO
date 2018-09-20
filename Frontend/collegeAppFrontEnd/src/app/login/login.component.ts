@@ -7,6 +7,8 @@ import { NotificationServicesService } from '../notification-services.service';
 
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router'
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -24,7 +26,7 @@ export class LoginComponent implements OnInit {
 
   modalReference: any;
 
-  constructor(public authServ: AuthService, private noteSvc: NotificationServicesService,private modalService: NgbModal, private router: Router) {
+  constructor(public authServ: AuthService, private noteSvc: NotificationServicesService,private modalService: NgbModal, private router: Router, private httpClient: HttpClient) {
   }
 
   open(content) {
@@ -36,7 +38,20 @@ export class LoginComponent implements OnInit {
     // });
   }
 
+  uploadToUserTable(uid:string,status:boolean) {
+    var temp = 'https://college-app-io.herokuapp.com/students/'+uid+'/'+status;
+    this.httpClient.get(temp).subscribe(data => {
+      console.log(data);
+    })
+    console.log('sent to the db');
+  }
 
+  // uploadToUserTable1(uid:string,status:boolean) {
+  //   var temp = 'https://college-app-io.herokuapp.com/students/'+'harshatesting'+'/'+'1';
+  //   this.httpClient.get(temp).subscribe(data => {
+  //     console.log(data);
+  //   })
+  // }
 
   ngOnInit() {
     this.authChanged();
@@ -53,6 +68,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSignUp() {
+    firebase.auth().signOut();
     if (this.useremail === undefined || this.password === undefined) {
         this.noteSvc.setNotification(
           'Missing Information',
@@ -101,6 +117,13 @@ export class LoginComponent implements OnInit {
       // this.router.navigateByUrl('/home');
     }
 
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('sign up '+user.uid);
+        this.uploadToUserTable(user.uid,this.status);
+      }
+    });
+    firebase.auth().signOut();
   }
 
   onSignIn() {
@@ -157,6 +180,13 @@ export class LoginComponent implements OnInit {
     $('#quickstart-sign-up').removeAttr('disabled');
     this.router.navigateByUrl('/home');
 
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('sign in '+user.uid);
+        console.log('sign in '+user.email);
+        this.uploadToUserTable(user.uid,this.status);
+      }
+    });
     // document.getElementById('quickstart-sign-in').disabled = true;
   }
 

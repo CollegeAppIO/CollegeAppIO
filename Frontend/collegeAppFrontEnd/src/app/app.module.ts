@@ -17,6 +17,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthService } from './auth.service';
 import { HomePageComponent } from './home-page/home-page.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
+import { HttpClientModule } from "@angular/common/http";
 
 
 
@@ -26,7 +27,8 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
     NotificationComponent,
     GalleryComponent,
     LoginComponent,
-    HomePageComponent
+    HomePageComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -38,7 +40,8 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
     // To initialize AngularFire
     AngularFireModule.initializeApp(environment.firebase),
     NgbModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
   providers: [
     AuthService,
