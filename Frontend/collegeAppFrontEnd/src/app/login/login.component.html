@@ -20,7 +20,6 @@
      </div>
      <button type="button" class="btn btn-primary btn-lg btn-block" (click)="onSignIn()" id="quickstart-sign-in" name="signin">Sign In</button>
      <br>
-     <!-- <button class="btn btn-secondary btn-lg btn-block" (click)="onSignUp()" id="quickstart-sign-up" name="signup">Sign Up</button> -->
      <br>
      <button class="btn btn-secondary btn-lg btn-block" (click)="open(content)">Register</button>
    </div>
@@ -54,19 +53,6 @@
      </form>
    </div>
    <div class="modal-footer">
-     <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button> -->
      <button class="btn btn-secondary btn-lg btn-block" (click)="onSignUp()" id="quickstart-sign-up" name="signup">Submit</button>
    </div>
  </ng-template>
-
-
-
- <!-- <div *ngIf="authServ.user | async as user">
-   <h3>Hello {{user?.displayName || 'User'}}</h3>
-   <br> -->
-   <!-- <img [src]="user.photoURL" class="display-img"/> -->
-   <!-- <hr> -->
-   <!-- <app-gallery #gallery></app-gallery> -->
- <!-- </div> -->
- <!-- <app-notification (delEvent)="gallery.deleteItem()"></app-notification> -->
-<!-- </div> -->

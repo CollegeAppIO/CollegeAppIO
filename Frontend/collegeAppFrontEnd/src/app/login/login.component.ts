@@ -34,15 +34,9 @@ export class LoginComponent implements OnInit {
   open(content) {
     this.modalReference = this.modalService.open(content);
     this.modalStatus = true;
-    // this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-    //   // this.closeResult = `Closed with: ${result}`;
-    // }, (reason) => {
-    //   // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    // });
   }
 
   uploadToUserTable(uid:string,status:boolean) {
-
         var temp = 'https://college-app-io.herokuapp.com/students/'+uid+'/'+status;
         this.httpClient.get(temp).subscribe(data => {
         console.log(data);
@@ -50,13 +44,6 @@ export class LoginComponent implements OnInit {
     console.log('sent to the db');
 
   }
-
-  // uploadToUserTable1(uid:string,status:boolean) {
-  //   var temp = 'https://college-app-io.herokuapp.com/students/'+'harshatesting'+'/'+'1';
-  //   this.httpClient.get(temp).subscribe(data => {
-  //     console.log(data);
-  //   })
-  // }
 
   ngOnInit() {
     this.authChanged();
@@ -117,11 +104,7 @@ export class LoginComponent implements OnInit {
         console.log(error);
       });
       console.log('hello')
-      // $('#modal-basic-title').modal("hide")
-      // this.modalReference.close();
-      // this.router.navigateByUrl('/home');
     }
-
     //firebase.auth().signOut();
   }
 
@@ -129,11 +112,6 @@ export class LoginComponent implements OnInit {
     if (firebase.auth().currentUser) {
       // [START signout]
         firebase.auth().signOut();
-
-        $('#quickstart-sign-in').removeClass('btn-danger');
-        $('#quickstart-sign-in').addClass('btn-primary');
-
-
         document.getElementById('login-section').hidden = false;
       // [END signout]
     } else {
@@ -175,18 +153,6 @@ export class LoginComponent implements OnInit {
       });
       // [END authwithemail]
     }
-    $('#quickstart-sign-in').removeAttr('disabled');
-    $('#quickstart-sign-up').removeAttr('disabled');
-
-
-    // firebase.auth().onAuthStateChanged((user) => {
-    //   if (user) {
-    //     console.log('sign in '+user.uid);
-    //     console.log('sign in '+user.email);
-    //     this.uploadToUserTable(user.uid,this.status);
-    //   }
-    // });
-    // document.getElementById('quickstart-sign-in').disabled = true;
   }
 
   onGHubLogin() {
@@ -222,29 +188,11 @@ export class LoginComponent implements OnInit {
           this.modalStatus = false;
         }
         this.router.navigateByUrl('/home');
-
-
-
-        // [START_EXCLUDE]
-        //document.getElementById('quickstart-sign-in').textContent = 'Sign out';
-        //$('#quickstart-sign-in').removeClass('btn-primary');
-        //$('#quickstart-sign-in').addClass('btn-danger');
-        //document.getElementById('login-section').hidden = true;
-
-        // if (!emailVerified) {
-        //   $('#quickstart-sign-in').removeAttr('disabled');
-        // }
-        // [END_EXCLUDE]
       } else {
           console.log('user signed out');
         // User is signed out.
-        // [START_EXCLUDE]
-        // document.getElementById('quickstart-sign-in').textContent = 'Sign in';
-        // [END_EXCLUDE]
       }
-      // [START_EXCLUDE silent]
-      //$('#quickstart-sign-in').removeAttr('disabled');
-      // [END_EXCLUDE]
+
     });
   }
 
