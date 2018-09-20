@@ -3,7 +3,7 @@
   <div class="row" *ngIf="userObj === undefined">
    <div class="col-md-12" style="width: 50%; max-width: 500px;margin: auto; ">
       <div id="login-section">
-        <div class="jumbotron jumbotron-fluid" style="background-color: #0080ff; max-height: 100px;padding-top: 15px;margin-top: 100px;" id="headerTitle">
+        <div class="jumbotron jumbotron-fluid" style="background-color: #0080ff; max-height: 100px;padding-top: 15px;margin-top: 10px;" id="headerTitle">
           <div class="container" style="text-align: center">
             <h1 class="display-4">CollegeApp.IO</h1>
           </div>
@@ -20,9 +20,46 @@
      </div>
      <button type="button" class="btn btn-primary btn-lg btn-block" (click)="onSignIn()" id="quickstart-sign-in" name="signin">Sign In</button>
      <br>
-     <button class="btn btn-secondary btn-lg btn-block" (click)="onSignUp()" id="quickstart-sign-up" name="signup">Sign Up</button>
+     <!-- <button class="btn btn-secondary btn-lg btn-block" (click)="onSignUp()" id="quickstart-sign-up" name="signup">Sign Up</button> -->
+     <br>
+     <button class="btn btn-secondary btn-lg btn-block" (click)="open(content)">Register</button>
    </div>
  </div>
+
+ <ng-template #content let-modal >
+   <div class="modal-header">
+     <h4 class="modal-title" id="modal-basic-title">Register Account</h4>
+     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+       <span aria-hidden="true">&times;</span>
+     </button>
+   </div>
+   <div class="modal-body">
+     <form>
+       <div class="form-group">
+
+         <input class="form-control" type="text"  [(ngModel)]="useremail"  id="useremail1" name="useremail" placeholder="Email"/>
+         <br/>
+         <label for="exampleInputPassword1">Password</label>
+         <input class="form-control" type="password"  [(ngModel)]="password"  id="password1" name="password" placeholder="Password"/>
+         <!-- <input class="form-control" type="password"  [(ngModel)]="status"  id="status" name="status" placeholder="Password"/> -->
+
+         <br>
+         <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" style="align: center" [(ngModel)]="status">
+           <label ngbButtonLabel class="btn-primary">
+             <input ngbButton type="radio" [value]="1"> Student
+           </label>
+           <label ngbButtonLabel class="btn-primary">
+             <input ngbButton type="radio" [value]="0"> Adminstrator
+           </label>
+        </div>
+       </div>
+     </form>
+   </div>
+   <div class="modal-footer">
+     <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button> -->
+     <button class="btn btn-secondary btn-lg btn-block" (click)="onSignUp()" id="quickstart-sign-up" name="signup">Submit</button>
+   </div>
+ </ng-template>
 
 
 

@@ -5,6 +5,8 @@ import * as firebase from 'firebase/app';
 import * as $ from 'jquery';
 import { NotificationServicesService } from '../notification-services.service';
 
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,9 +20,23 @@ export class LoginComponent implements OnInit {
 
   useremail: string;
   password: string;
+  status: boolean;
 
-  constructor(public authServ: AuthService, private noteSvc: NotificationServicesService) {
+  modalReference: any;
+
+  constructor(public authServ: AuthService, private noteSvc: NotificationServicesService,private modalService: NgbModal) {
   }
+
+  open(content) {
+    this.modalReference = this.modalService.open(content);
+    // this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    //   // this.closeResult = `Closed with: ${result}`;
+    // }, (reason) => {
+    //   // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    // });
+  }
+
+
 
   ngOnInit() {
     this.authChanged();
@@ -37,7 +53,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSignUp() {
-
     if (this.useremail === undefined || this.password === undefined) {
         this.noteSvc.setNotification(
           'Missing Information',
@@ -80,7 +95,11 @@ export class LoginComponent implements OnInit {
         }
         console.log(error);
       });
+      console.log('hello')
+      // $('#modal-basic-title').modal("hide")
+      this.modalReference.close();
     }
+
   }
 
   onSignIn() {
@@ -146,7 +165,6 @@ export class LoginComponent implements OnInit {
   }
 
   authChanged() {
-
     firebase.auth().onAuthStateChanged((user) => {
         // [START_EXCLUDE silent]
       $('#quickstart-sign-in').removeAttr('disabled');
@@ -161,6 +179,11 @@ export class LoginComponent implements OnInit {
         const isAnonymous = user.isAnonymous;
         const uid = user.uid;
         const providerData = user.providerData;
+
+        console.log(email);
+        console.log(uid);
+        console.log(this.status);
+
         // [START_EXCLUDE]
         document.getElementById('quickstart-sign-in').textContent = 'Sign out';
         $('#quickstart-sign-in').removeClass('btn-primary');
