@@ -13,11 +13,11 @@ CORS(app)
   
 def initDB():
 	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
-	print ("Connecting to database\n ->%s" % (conn_string))
+	#print ("Connecting to database\n ->%s" % (conn_string))
 	conn = psycopg2.connect(conn_string)
-	cursor = conn.cursor()
+	curr = conn.cursor()
 	print ("Connected!")
-	return conn, cursor
+	return conn, curr
 
 
 conn, cur = initDB()
@@ -46,6 +46,26 @@ class Employees_Name(Resource):
 api.add_resource(Employees, '/employees') # Route_1
 api.add_resource(Employees_Name, '/employees/<employee_id>') # Route_3
 
+# @app.route("/uid")
+# def uid():
+#     conn, curr = initDB()
+#     str = "INSERT INTO STUDENT (studentid) VALUES"
+
+class Students(Resource):
+    def get (self, id, adbool):
+        print('id, adbool: ' + id + " " + adbool)
+        conn, curr = initDB()
+        bools = int(adbool)
+        if bools == 0:
+            query = "INSERT INTO students (studentid) VALUES (%s)"
+        else:
+            query = "INSERT INTO admin (admin_id) VALUES (%s)"
+        curr.execute(query, (id, ))
+        conn.commit()
+        curr.close()
+        return jsonify("OKKK")
+
+api.add_resource(Students, '/students/<id>/<adbool>')
 
 if __name__ == '__main__':
     conn, cur = initDB()
