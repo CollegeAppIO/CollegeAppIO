@@ -1,0 +1,33 @@
+
+#preview{
+  width: 320px;
+  height: 260px;
+  padding:10px;
+  background-origin: content-box;
+  cursor: pointer
+}
+
+.new-img-div{
+  width: 50%;
+  margin: 0 auto;
+}
+
+#imageFile
+{
+  visibility: hidden;
+  margin-left: 10px;
+}
+
+.rem-icon{
+  margin: 10px;
+  color: #ff4444;
+  cursor: pointer;
+}
+
+
+progress {
+  width: 100%;
+}
+progress::-webkit-progress-value {
+  transition: width 0.1s ease;
+}
