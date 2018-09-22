@@ -22,4 +22,9 @@ export class HomePageComponent implements OnInit {
 
   }
 
+  toApplication(){
+    console.log('to home page');
+    this.router.navigateByUrl('/application');
+  }
+
 }
