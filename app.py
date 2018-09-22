@@ -78,8 +78,8 @@ def addUser():
 		result = []
 		for row in curs:
 			obj = {
-				'collegeName' : row,
-        		'image_link' : row,
+				'collegeName' : row[0],
+        		'image_link' : row[1],
 			}
 			result.append(obj)
 		response = jsonify(result)
