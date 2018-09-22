@@ -18,6 +18,7 @@ import { AuthService } from './auth.service';
 import { HomePageComponent } from './home-page/home-page.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { HttpClientModule } from "@angular/common/http";
+import { ApplicationPageComponent } from './application-page/application-page.component';
 
 
 
@@ -28,6 +29,7 @@ import { HttpClientModule } from "@angular/common/http";
     GalleryComponent,
     LoginComponent,
     HomePageComponent,
+    ApplicationPageComponent,
 
   ],
   imports: [
