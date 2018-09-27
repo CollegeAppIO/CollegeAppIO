@@ -2,3 +2,45 @@
   application-page works!
 </p>
 <button (click)="toHome()">Home</button>
+
+<div class=box>
+<mat-horizontal-stepper [linear]=isLinear class=stepper>
+    <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Personal Information</ng-template>
+      <mat-form-field class=firstNameField>
+          <input id="firstname"  name="firstname" matInput placeholder="First Name" formControlName="firstName" required>
+    </mat-form-field>
+    <mat-form-field class="lastNameField">
+        <input id="lastname"  name="lastname" matInput placeholder="Last Name" formControlName="lastName" required>
+  </mat-form-field>
+  <ul class=address>
+    Address
+    <br>
+    <mat-form-field class="addline1">
+      <input id="addline1"  name="addline1" matInput placeholder="Address Line 1" formControlName="address1" required>
+    </mat-form-field>
+    <mat-form-field class="addline2">
+      <input id="addline2"  name="addline2" matInput placeholder="Address Line 2" >
+    </mat-form-field>
+    <mat-form-field class="state">
+      <mat-select placeholder="State" formControlName="state" required>
+    <mat-option *ngFor="let state of states" [value]="state.value" >
+      {{state.value}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+  <br>
+    <mat-form-field class="city">
+      <input id="city"  name="city" matInput placeholder="City" formControlName="city" required>
+    </mat-form-field>
+    <mat-form-field class="zip">
+      <input id="zip"  name="zip" matInput placeholder="Zip Code" formControlName="zip" required>
+    </mat-form-field>
+  </ul>
+   </form>
+    </mat-step>
+  <mat-step label="Academic Information"></mat-step>
+  <mat-step label="Essay"></mat-step>
+</mat-horizontal-stepper>
+</div>

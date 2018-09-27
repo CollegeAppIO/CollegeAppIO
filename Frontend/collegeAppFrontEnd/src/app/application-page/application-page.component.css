@@ -1,0 +1,35 @@
+
+.firstNameField{
+  /* margin-left: 30%; */
+}
+.lastNameField{
+  padding-left: 100px;
+}
+.address{
+  padding-left: 0px;
+  /* margin-bottom: 100px;
+  /* background-color: blue;
+  border: black; */
+
+}
+.addline1{
+  width: 500px;
+}
+.addline2{
+  padding-left: 100px;
+  width: 500px;
+}
+.state{
+  padding-left: 100px;
+}
+.city{
+  /* padding-left: 1px; */
+}
+.zip{
+  padding-left: 100px;
+}
+/* .box{
+  width: 50%;
+  margin-left: 25%;
+
+} */

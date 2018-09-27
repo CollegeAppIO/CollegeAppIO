@@ -19,9 +19,9 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { HttpClientModule } from "@angular/common/http";
 import { ApplicationPageComponent } from './application-page/application-page.component';
-
-
-
+import { MatStepperModule, MatButtonModule, MatFormFieldModule,MatInputModule,MatSelectModule} from '@angular/material'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +44,15 @@ import { ApplicationPageComponent } from './application-page/application-page.co
     NgbModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    MatStepperModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    BrowserAnimationsModule,
+    FormsModule,
+
+
   ],
   providers: [
     AuthService,
