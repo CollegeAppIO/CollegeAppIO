@@ -1,22 +1,39 @@
-<p>
-  application-page works!
-</p>
+<h1 class=applicationTitle>
+  Application
+</h1>
 <button (click)="toHome()">Home</button>
-
 <div class=box>
 <mat-horizontal-stepper [linear]=isLinear class=stepper>
     <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Personal Information</ng-template>
+      <h6>Name</h6>
       <mat-form-field class=firstNameField>
           <input id="firstname"  name="firstname" matInput placeholder="First Name" formControlName="firstName" required>
     </mat-form-field>
     <mat-form-field class="lastNameField">
         <input id="lastname"  name="lastname" matInput placeholder="Last Name" formControlName="lastName" required>
   </mat-form-field>
+  <h6>Date Of Birth</h6>
+  <mat-form-field class="month">
+    <mat-select placeholder="Month" formControlName="month" required>
+  <mat-option *ngFor="let month of months" [value]="month.value" >
+    {{month.value}}
+  </mat-option>
+</mat-select>
+</mat-form-field>
+<mat-form-field class="date">
+  <mat-select placeholder="Date" formControlName="date" required>
+<mat-option *ngFor="let date of dates" [value]="date.value" >
+  {{date.value}}
+</mat-option>
+</mat-select>
+</mat-form-field>
+<mat-form-field class="year">
+    <input id="year"  name="year" matInput placeholder="Year" formControlName="year" required minlength="4">
+</mat-form-field>
   <ul class=address>
-    Address
-    <br>
+    <h6>Address</h6>
     <mat-form-field class="addline1">
       <input id="addline1"  name="addline1" matInput placeholder="Address Line 1" formControlName="address1" required>
     </mat-form-field>

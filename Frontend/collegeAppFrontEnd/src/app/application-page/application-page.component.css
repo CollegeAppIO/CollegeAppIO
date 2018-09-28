@@ -1,8 +1,19 @@
-
+.applicationTitle{
+  
+}
 .firstNameField{
   /* margin-left: 30%; */
 }
 .lastNameField{
+  padding-left: 100px;
+}
+.month{
+  padding-left: 0px;
+}
+.date{
+  padding-left: 100px;
+}
+.year{
   padding-left: 100px;
 }
 .address{
