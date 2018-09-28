@@ -22,6 +22,11 @@ import { ApplicationPageComponent } from './application-page/application-page.co
 import { MatStepperModule, MatButtonModule, MatFormFieldModule,MatInputModule,MatSelectModule} from '@angular/material'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +35,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
     LoginComponent,
     HomePageComponent,
     ApplicationPageComponent,
+    NavBarComponent,
 
   ],
   imports: [
