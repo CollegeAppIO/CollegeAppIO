@@ -20,6 +20,7 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 import { HttpClientModule } from "@angular/common/http";
 import { ApplicationPageComponent } from './application-page/application-page.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { CollegeSpecificPageComponent } from './college-specific-page/college-specific-page.component';
 
 
 
@@ -32,6 +33,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
     HomePageComponent,
     ApplicationPageComponent,
     NavBarComponent,
+    CollegeSpecificPageComponent,
 
   ],
   imports: [

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
 import { HomePageComponent } from '../home-page/home-page.component';
 import { ApplicationPageComponent } from '../application-page/application-page.component';
+import { CollegeSpecificPageComponent } from '../college-specific-page/college-specific-page.component';
 
 // @NgModule({
 //   imports: [
@@ -24,6 +25,10 @@ const routes: Routes = [
         {
             path: 'application',
             component: ApplicationPageComponent,
+        },
+        {
+            path: 'CollegePage',
+            component: CollegeSpecificPageComponent,
         },
 
     ];
