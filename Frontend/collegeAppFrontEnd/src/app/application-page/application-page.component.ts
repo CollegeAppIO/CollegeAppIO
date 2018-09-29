@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import { AuthService } from '../auth.service';
 import {FormBuilder, FormGroup,FormsModule, Validators,ReactiveFormsModule} from '@angular/forms';
-
+import {Student} from '../../data/Student'
+import {HttpClient,HttpHeaders} from '@angular/common/http'
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-application-page',
@@ -117,17 +120,42 @@ dates = [
   {value: '28'},
   {value: '29'},
   {value: '30'},
-  {value: '31'},  
+  {value: '31'},
+]
+genders = [
+  {value: 'Male'},
+  {value: 'Female'},
 ]
 
+uid = '';
+firstNameStr='';
+lastNameStr='';
+genderStr = '';
+bdayMonthStr = '';
+bdayDayStr = '';
+bdayYearStr = '';
+bdayStr = '';
+streetStr='';
+stateStr='';
+cityStr='';
+countryStr='';
+zipcodeStr='';
+phoneStr='';
 
 
-  constructor(public authServ: AuthService,private router: Router, private _formBuilder: FormBuilder) { }
+student: Student;
+
+constructor(public authServ: AuthService,private router: Router,private _formBuilder: FormBuilder,public http: HttpClient,public fireAuth: AngularFireAuth) {
+  //this.student = new Student(this.uid);
+
+}
+
 
   ngOnInit() {
     this.firstFormGroup = this._formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
+      gender: ['', Validators.required],
       month: ['', Validators.required],
       date : ['', Validators.required],
       year: ['', Validators.required, Validators.minLength(4)],
@@ -135,13 +163,97 @@ dates = [
       city: ['',Validators.required],
       state: ['',Validators.required],
       zip: ['',Validators.required],
+      phone:['',Validators.required, Validators.minLength(10)],
     });
+    //console.log('hi');
+    this.fireAuth.authState.subscribe(user => {
+        if(user) {
+          this.uid = user.uid
+          //console.log(this.uid);
+        }
+
+
+      })
+      console.log('hi');
+
+    //this.http.get()
 
   }
+
+
 
   toHome(){
     console.log('back home');
     this.router.navigateByUrl('/home');
+  }
+  onFirstNameType(value:string){
+    this.firstNameStr = value;
+    console.log(this.firstNameStr);
+  }
+  onLastNameType(value:string){
+    this.lastNameStr = value;
+    console.log(this.lastNameStr);
+  }
+  onGenderSelect(value:string){
+    this.genderStr = value;
+    console.log(this.genderStr);
+  }
+  onMonthSelect(value:string){
+    this.bdayMonthStr = value;
+    console.log(this.bdayMonthStr);
+
+  }
+  onDaySelect(value:string){
+    this.bdayDayStr = value;
+    console.log(this.bdayDayStr);
+  }
+  onYearType(value:string){
+    this.bdayYearStr = value;
+  }
+  onStreetType(value:string){
+    this.streetStr = value;
+  }
+  onStateSelect(value:string){
+    this.stateStr = value;
+    console.log(this.bdayDayStr);
+  }
+  onCityType(value:string){
+    this.cityStr = value;
+  }
+  onZipcodeType(value:string){
+    this.zipcodeStr = value;
+  }
+  onPhoneType(value:string){
+    this.phoneStr = value;
+  }
+
+  onSave(){
+    this.bdayStr = this.bdayMonthStr + ' ' + this.bdayDayStr + ' ' + this.bdayYearStr;
+    console.log(this.bdayStr);
+    console.log(this.uid);
+
+
+    this.http.post('', {
+      studentid: this.uid,
+      fname: this.firstNameStr,
+      lname: this.lastNameStr,
+      sex: this.genderStr,
+      bday: this.bdayStr,
+      street: this.streetStr,
+      city: this.cityStr,
+      country: this.countryStr,
+      zipcode: this.zipcodeStr,
+      phone: this.phoneStr,
+
+    })
+      .subscribe(
+        res => {
+          console.log(res);
+        },
+        err => {
+          console.log("Error occured");
+        }
+      );
   }
 
 }

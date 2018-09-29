@@ -1,59 +1,64 @@
 <app-nav-bar></app-nav-bar>
-<p>
-  application-page works!
-</p>
 <button (click)="toHome()">Home</button>
 <div class=box>
 <mat-horizontal-stepper [linear]=isLinear class=stepper>
     <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Personal Information</ng-template>
-      <h6>Name</h6>
+      <h6>Name<span style="padding-left:517px;">Gender</span></h6>
       <mat-form-field class=firstNameField>
-          <input id="firstname"  name="firstname" matInput placeholder="First Name" formControlName="firstName" required>
+          <input #firstName (keyup)="onFirstNameType(firstName.value)"id="firstname"  name="firstname" matInput placeholder="First Name" formControlName="firstName" required>
     </mat-form-field>
     <mat-form-field class="lastNameField">
-        <input id="lastname"  name="lastname" matInput placeholder="Last Name" formControlName="lastName" required>
+        <input #lastName (keyup)="onLastNameType(lastName.value)"id="lastname"  name="lastname" matInput placeholder="Last Name" formControlName="lastName" required>
   </mat-form-field>
+  <mat-form-field class="gender">
+    <mat-select  placeholder="Gender" formControlName="gender" required>
+  <mat-option #genderInput (click)="onGenderSelect(genderInput.value)"*ngFor="let gender of genders" [value]="gender.value" >
+    {{gender.value}}
+  </mat-option>
+</mat-select>
+</mat-form-field>
   <h6>Date Of Birth</h6>
   <mat-form-field class="month">
     <mat-select placeholder="Month" formControlName="month" required>
-  <mat-option *ngFor="let month of months" [value]="month.value" >
+  <mat-option #monthInput (click)="onMonthSelect(monthInput.value)" *ngFor="let month of months" [value]="month.value" >
     {{month.value}}
   </mat-option>
 </mat-select>
 </mat-form-field>
 <mat-form-field class="date">
   <mat-select placeholder="Date" formControlName="date" required>
-<mat-option *ngFor="let date of dates" [value]="date.value" >
+<mat-option #dayInput (click)="onDaySelect(dayInput.value)"*ngFor="let date of dates" [value]="date.value" >
   {{date.value}}
 </mat-option>
 </mat-select>
 </mat-form-field>
 <mat-form-field class="year">
-    <input id="year"  name="year" matInput placeholder="Year" formControlName="year" required minlength="4">
+    <input #yearInput (keyup)="onYearType(yearInput.value)"id="year"  name="year" matInput placeholder="Year" formControlName="year" required minlength="4">
 </mat-form-field>
   <ul class=address>
     <h6>Address</h6>
     <mat-form-field class="addline1">
-      <input id="addline1"  name="addline1" matInput placeholder="Address Line 1" formControlName="address1" required>
-    </mat-form-field>
-    <mat-form-field class="addline2">
-      <input id="addline2"  name="addline2" matInput placeholder="Address Line 2" >
+      <input #addline1 (keyup)="onStreetType(addline1.value)"id="addline1"  name="addline1" matInput placeholder="Address Line 1" formControlName="address1" required>
     </mat-form-field>
     <mat-form-field class="state">
       <mat-select placeholder="State" formControlName="state" required>
-    <mat-option *ngFor="let state of states" [value]="state.value" >
+    <mat-option #stateInput (click)="onStateSelect(stateInput.value)" *ngFor="let state of states" [value]="state.value" >
       {{state.value}}
     </mat-option>
   </mat-select>
 </mat-form-field>
   <br>
     <mat-form-field class="city">
-      <input id="city"  name="city" matInput placeholder="City" formControlName="city" required>
+      <input #cityInput (keyup)="onCityType(cityInput.value)" id="city"  name="city" matInput placeholder="City" formControlName="city" required>
     </mat-form-field>
     <mat-form-field class="zip">
-      <input id="zip"  name="zip" matInput placeholder="Zip Code" formControlName="zip" required>
+      <input #zipInput (keyup)="onZipcodeType(zipInput.value)"id="zip"  name="zip" matInput placeholder="Zip Code" formControlName="zip" required>
+    </mat-form-field>
+    <h6>Phone</h6>
+    <mat-form-field class="phone">
+      <input #phoneInput (keyup)="onPhoneType(zipInput.value)"id="phone"  name="phone" matInput placeholder="Phone #" formControlName="phone" required minlength="10" >
     </mat-form-field>
   </ul>
    </form>
@@ -62,3 +67,4 @@
   <mat-step label="Essay"></mat-step>
 </mat-horizontal-stepper>
 </div>
+<button (click)="onSave()">Save</button>
