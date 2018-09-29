@@ -70,13 +70,11 @@ api.add_resource(Students, '/students/<id>/<adbool>')
 @app.route("/getCollegeInfo", methods = ['GET'])
 def getCollegesInfo():
 	con = None
-	print "Here"
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
-		print(collegeName)
 		collegeN = (collegeName, )
 		curs.execute("SELECT information FROM COLLEGES WHERE collegename = %s", collegeN)
 		result = []
@@ -113,6 +111,68 @@ def getCollege():
 	finally:
 		if con:
 			con.close()
+
+def insertIntoDB(tablename, keyval, conn, cursor):
+    # print "Keyval is", keyval
+    columns = ','.join (k for k in keyval)
+    # print "columns: ", type(columns)
+    placeholder = ','.join( "%s" for k in keyval)
+    # print "placeholder: ", type(placeholder)
+
+    query = "INSERT INTO " + tablename + " (" + columns + ") VALUES (" + placeholder + ")"
+    print (query)
+
+    valTuple = ()
+    for (k,v) in keyval.items():
+        valTuple = valTuple + (v, )
+    # print (str(valTuple))
+    # print type(valTuple)
+    # print (str(query))
+    cursor.execute(query, valTuple)
+
+
+def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
+    #print "Keyval is", keyval
+
+    for (k,v) in keyval.items():
+        query = "UPDATE " + tablename + " SET " + k + " = %s WHERE %s = studentid"
+        valTuple = ()
+        valTuple = (v, ) + (target_keyval, )
+        query = str(query)
+        # print (query)
+        # print (str(valTuple))
+        cursor.execute(query, valTuple)
+
+
+
+
+
+import json, ast
+@app.route("/putStudents", methods = ['POST'])
+def putStudents():
+
+    conn, cur = initDB()
+
+    # convert json request into ascii utf-8
+    text = ast.literal_eval(json.dumps(request.get_json()))
+
+    student_id = text["studentid"]
+
+    # insertIntoDB('students', text, conn, cur)
+    # query = "UPDATE students SET fname = %s, lname = %s  WHERE %s = studentid"
+    # cur.execute(query, (fname, lname, student_id,))
+
+    UpdateIntoDB('students', text, student_id, conn, cur)
+
+    conn.commit()
+    cur.close()
+    response = jsonify("HI")
+    response.status_code = 200
+    return response
+
+
+
+
 
 if __name__ == '__main__':
     conn, cur = initDB()
