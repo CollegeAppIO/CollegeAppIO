@@ -18,7 +18,7 @@ api = Api(app)
 #    "MAIL_USE_SSL": True,
 #    "MAIL_USERNAME": os.environ['collegeappio2@gmail.com'],
 #    "MAIL_PASSWORD": os.environ['C0llegeApp']
-}
+#}
 
 app.config.update(mail_settings)
 mail = Mail(app)
@@ -90,7 +90,7 @@ def getCollegesInfo():
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
-		curs.execute("SELECT information FROM COLLEGES WHERE collegename = %s", collegeN)
+		curs.execute("SELECT information, tuition_in, tuition_out, school_locat, a_calender, FROM COLLEGES WHERE collegename = %s", collegeN)
 		result = []
 		for row in curs:
 			obj = {
