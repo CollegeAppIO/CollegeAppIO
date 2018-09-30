@@ -20,8 +20,8 @@ api = Api(app)
 #    "MAIL_PASSWORD": os.environ['C0llegeApp']
 #}
 
-app.config.update(mail_settings)
-mail = Mail(app)
+# app.config.update(mail_settings)
+# mail = Mail(app)
 
 CORS(app)
 
@@ -90,11 +90,12 @@ def getCollegesInfo():
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
-		curs.execute("SELECT information, tuition_in, tuition_out, school_locat, a_calender, FROM COLLEGES WHERE collegename = %s", collegeN)
+		curs.execute("SELECT information, tuition_in, tuition_out, school_locat, a_calender, num_students, num_ugrads, num_postgrads FROM COLLEGES WHERE collegename = %s", collegeN)
 		result = []
 		for row in curs:
 			obj = {
-				'information' : row,
+				'information' : row[0],
+
 			}
 			result.append(obj)
 		response = jsonify(result)
