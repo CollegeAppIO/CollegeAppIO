@@ -5,19 +5,19 @@ from json import dumps
 from flask_jsonpify import jsonify
 import psycopg2
 import jinja2
-from flask_mail import Mail, Message
+#from flask_mail import Mail, Message
 import os
 
 app = Flask(__name__)
 api = Api(app)
 
-mail_settings = {
-    "MAIL_SERVER": 'smtp.gmail.com',
-    "MAIL_PORT": 465,
-    "MAIL_USE_TLS": False,
-    "MAIL_USE_SSL": True,
-    "MAIL_USERNAME": os.environ['collegeappio2@gmail.com'],
-    "MAIL_PASSWORD": os.environ['C0llegeApp']
+#mail_settings = {
+#    "MAIL_SERVER": 'smtp.gmail.com',
+#    "MAIL_PORT": 465,
+#    "MAIL_USE_TLS": False,
+#    "MAIL_USE_SSL": True,
+#    "MAIL_USERNAME": os.environ['collegeappio2@gmail.com'],
+#    "MAIL_PASSWORD": os.environ['C0llegeApp']
 }
 
 app.config.update(mail_settings)
@@ -155,14 +155,14 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
         # print (str(valTuple))
         cursor.execute(query, valTuple)
 
-@app.route("/sendEmail", methods = ['GET'])
-def sendEmail():
-	with app.app_context():
-		msg = Message(subject="Hello",
-		sender=app.config.get("MAIL_USERNAME"),
-		recipients=["vishaal.bommena@gmail.com"], # replace with your email for testing
-		body="This is a test email I sent with Gmail and Python!")
-	mail.send(msg)
+# @app.route("/sendEmail", methods = ['GET'])
+# def sendEmail():
+# 	with app.app_context():
+# 		msg = Message(subject="Hello",
+# 		sender=app.config.get("MAIL_USERNAME"),
+# 		recipients=["vishaal.bommena@gmail.com"], # replace with your email for testing
+# 		body="This is a test email I sent with Gmail and Python!")
+# 	mail.send(msg)
 
 import json, ast
 @app.route("/putStudents", methods = ['POST'])
