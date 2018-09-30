@@ -19,7 +19,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { HttpClientModule } from "@angular/common/http";
 import { ApplicationPageComponent } from './application-page/application-page.component';
-import { MatStepperModule, MatButtonModule, MatFormFieldModule,MatInputModule,MatSelectModule} from '@angular/material'
+import { MatStepperModule, MatButtonModule, MatFormFieldModule,MatInputModule,MatSelectModule,MatIconModule,MatSliderModule} from '@angular/material'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
@@ -54,6 +54,8 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
     MatButtonModule,
     MatInputModule,
     MatSelectModule,
+    MatIconModule,
+    MatSliderModule,
     BrowserAnimationsModule,
     FormsModule,
 

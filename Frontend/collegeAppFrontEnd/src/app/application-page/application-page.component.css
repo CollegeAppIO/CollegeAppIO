@@ -1,11 +1,26 @@
 .applicationTitle{
 
 }
+.box{
+  margin-left: 70px;
+  margin-right: 40px;
+  height: 100%;
+}
+#bdayDay{
+  padding-left: 100px;
+}
+.contents{
+  margin-left: 150px;
+  /* margin-right: 0px; */
+}
+.dropdown-item{
+  overflow: visible;
+}
 .firstNameField{
   /* margin-left: 30%; */
 }
 .lastNameField{
-  padding-left: 100px;
+  margin-left: 100px;
 }
 .gender{
   padding-left: 100px;
@@ -17,6 +32,12 @@
   padding-left: 100px;
 }
 .year{
+  padding-left: 100px;
+}
+.religion{
+  padding-left: 100px;
+}
+.nationality{
   padding-left: 100px;
 }
 .address{
@@ -34,13 +55,32 @@
   width: 500px;
 }
 .state{
-  padding-left: 100px;
+  padding-left: 60px;
 }
 .city{
   /* padding-left: 1px; */
 }
 .zip{
   padding-left: 100px;
+}
+.country{
+  padding-left: 100px;
+}
+.gpa{
+  padding-left: 100px;
+}
+.sat{
+  padding-left: 100px;
+}
+.act{
+  padding-left: 100px;
+}
+.languages{
+  padding-left: 100px;
+  width:75%;
+}
+.sliderValue{
+  padding-left: 400px;
 }
 /* .box{
   width: 50%;

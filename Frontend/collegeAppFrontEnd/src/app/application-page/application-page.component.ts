@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import { AuthService } from '../auth.service';
 import {FormBuilder, FormGroup,FormsModule, Validators,ReactiveFormsModule} from '@angular/forms';
-import {Student} from '../../data/Student'
 import {HttpClient,HttpHeaders} from '@angular/common/http'
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-application-page',
@@ -13,8 +14,9 @@ import * as firebase from 'firebase/app';
   styleUrls: ['./application-page.component.css']
 })
 export class ApplicationPageComponent implements OnInit {
-  isLinear = true;
+  isLinear = false;
   firstFormGroup: FormGroup;
+  academicInfoFormGroup: FormGroup;
   states = [
     {value: 'Alabama'},
     {value: 'Alaska'},
@@ -127,25 +129,49 @@ genders = [
   {value: 'Female'},
 ]
 
+races = [
+  {value: 'Asian'},
+  {value: 'African American'},
+  {value: 'Other'},
+]
+
+religions = [
+  {value: 'Hindu'},
+  {value: 'Christianity'},
+  {value: 'Other'},
+]
+
+nationalities = [
+  {value: 'United States'},
+  {value: 'Indian'},
+  {value: 'Other'},
+]
+
 uid = '';
 firstNameStr='';
 lastNameStr='';
-genderStr = '';
+handleStr = '';
+genderStr = 'Select Gender';
 bdayMonthStr = '';
 bdayDayStr = '';
 bdayYearStr = '';
 bdayStr = '';
+raceStr = '';
+religionStr = '';
+nationalityStr = '';
 streetStr='';
 stateStr='';
 cityStr='';
 countryStr='';
 zipcodeStr='';
 phoneStr='';
-
-
-student: Student;
-
-constructor(public authServ: AuthService,private router: Router,private _formBuilder: FormBuilder,public http: HttpClient,public fireAuth: AngularFireAuth) {
+highschoolStr='';
+gpaStr='';
+satStr='';
+actStr='';
+numLanguages = 2;
+numAPs = 2;
+constructor(public authServ: AuthService,private router: Router,private _formBuilder: FormBuilder,public http: HttpClient) {
   //this.student = new Student(this.uid);
 
 }
@@ -155,18 +181,28 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
     this.firstFormGroup = this._formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
+      handle: ['',Validators.required],
       gender: ['', Validators.required],
       month: ['', Validators.required],
       date : ['', Validators.required],
       year: ['', Validators.required, Validators.minLength(4)],
+      race: ['', Validators.required],
+      religion: ['',Validators.required],
+      nationality: ['',Validators.required],
       address1: ['',Validators.required],
       city: ['',Validators.required],
       state: ['',Validators.required],
       zip: ['',Validators.required],
+      country: ['',Validators.required],
       phone:['',Validators.required, Validators.minLength(10)],
+
     });
+    this.academicInfoFormGroup = this._formBuilder.group({
+      highschool: ['',Validators.required],
+      gpa: ['',Validators.required],
+    })
     //console.log('hi');
-    this.fireAuth.authState.subscribe(user => {
+    this.authServ.fireAuth.authState.subscribe(user => {
         if(user) {
           this.uid = user.uid
           //console.log(this.uid);
@@ -174,7 +210,7 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
 
 
       })
-      console.log('hi');
+      //console.log('hi');
 
     //this.http.get()
 
@@ -194,6 +230,9 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
     this.lastNameStr = value;
     console.log(this.lastNameStr);
   }
+  onHandleType(value:string){
+    this.handleStr = value;
+  }
   onGenderSelect(value:string){
     this.genderStr = value;
     console.log(this.genderStr);
@@ -210,12 +249,25 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
   onYearType(value:string){
     this.bdayYearStr = value;
   }
+  onRaceSelect(value:string){
+    this.raceStr = value;
+  }
+  onReligionSelect(value:string){
+    this.religionStr = value;
+  }
+  onNationalitySelect(value: string){
+    this.nationalityStr = value;
+    console.log(this.nationalityStr);
+  }
   onStreetType(value:string){
     this.streetStr = value;
   }
   onStateSelect(value:string){
     this.stateStr = value;
     console.log(this.bdayDayStr);
+  }
+  onCountryType(value:string){
+    this.countryStr = value;
   }
   onCityType(value:string){
     this.cityStr = value;
@@ -226,14 +278,45 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
   onPhoneType(value:string){
     this.phoneStr = value;
   }
+  onHighSchoolType(value: string){
+    this.highschoolStr = value;
+  }
+  onGPAType(value:string){
+    this.gpaStr = value;
+    console.log(this.gpaStr);
+  }
+  onSATType(value:string){
+    this.satStr = value;
+    //console.log(this.gpaStr);
+  }
+  onACTType(value:string){
+    this.actStr = value;
+    //console.log(this.gpaStr);
+  }
+  onNumLanguagesSlider(value:number){
+    this.numLanguages = value;
+    console.log(this.numLanguages);
+  }
+  onNumAPsSlider(value:number){
+    this.numAPs = value;
+
+  }
 
   onSave(){
     this.bdayStr = this.bdayMonthStr + ' ' + this.bdayDayStr + ' ' + this.bdayYearStr;
-    console.log(this.bdayStr);
-    console.log(this.uid);
+    //console.log(this.bdayStr);
+    //console.log(this.uid);
+    console.log(this.firstNameStr);
+    console.log(this.lastNameStr);
+    console.log(this.genderStr);
+    var gpaNum = parseFloat(this.gpaStr);
+    var satNum = parseInt(this.satStr);
+    var actNum = parseInt(this.actStr);
+    // console.log(gpaNum);
+    // console.log(this.numLanguages);
 
 
-    this.http.post('', {
+    this.http.post('https://college-app-io.herokuapp.com/putStudents', {
       studentid: this.uid,
       fname: this.firstNameStr,
       lname: this.lastNameStr,
@@ -244,6 +327,15 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
       country: this.countryStr,
       zipcode: this.zipcodeStr,
       phone: this.phoneStr,
+      religion: this.religionStr,
+      race: this.raceStr,
+      nationality: this.nationalityStr,
+      state: this.stateStr,
+      nickname: this.handleStr,
+      highschool: this.highschoolStr,
+      gpa: gpaNum,
+      sat: satNum,
+      act: actNum
 
     })
       .subscribe(

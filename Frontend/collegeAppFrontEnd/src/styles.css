@@ -16,5 +16,11 @@
 
 .mat-step-header .mat-step-icon {
   background-color: blue;
-  
+
+}
+.mat-accent .mat-slider-thumb{
+  background-color: blue;
+}
+.mat-accent .mat-slider-track-fill{
+  background-color:  blue;
 }

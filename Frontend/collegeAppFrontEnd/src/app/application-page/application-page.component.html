@@ -1,23 +1,68 @@
 <app-nav-bar></app-nav-bar>
+* Required
+<br>
 <button (click)="toHome()">Home</button>
-<div class=box>
+
 <mat-horizontal-stepper [linear]=isLinear class=stepper>
-    <mat-step [stepControl]="firstFormGroup">
-    <form [formGroup]="firstFormGroup">
-      <ng-template matStepLabel>Personal Information</ng-template>
-      <h6>Name<span style="padding-left:517px;">Gender</span></h6>
-      <mat-form-field class=firstNameField>
-          <input #firstName (keyup)="onFirstNameType(firstName.value)"id="firstname"  name="firstname" matInput placeholder="First Name" formControlName="firstName" required>
-    </mat-form-field>
-    <mat-form-field class="lastNameField">
-        <input #lastName (keyup)="onLastNameType(lastName.value)"id="lastname"  name="lastname" matInput placeholder="Last Name" formControlName="lastName" required>
-  </mat-form-field>
-  <mat-form-field class="gender">
-    <mat-select  placeholder="Gender" formControlName="gender" required>
+    <mat-step label="Personal Information">
+    <form >
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>First Name</label>
+            <input type="text" class="form-control" #firstName (keyup)="onFirstNameType(firstName.value)"id="firstname" name="firstname" placeholder="First Name" required>
+      </div>
+        <div class="form-group col-md-6">
+          <label>Last Name</label>
+            <input class="form-control" type="text" #lastName (keyup)="onLastNameType(lastName.value)"id="lastname"   name="lastname"  placeholder="Last Name"  required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label>Handle</label>
+          <input type="text" class="form-control" #handle (keyup)="onHandleType(firstName.value)"id="handle" name="handle" placeholder="Handle" required>
+    </div>
+    </div>
+
+    <div class="form-row">
+    <div class="form-control col-md-3">
+      <label for="gender">Gender</label>
+      <select [(ngModel)]="genderStr" name="gender"id="gender" class="form-control">
+        <option  *ngFor="let gender of genders">{{gender.value}}</option>
+      </select>
+    </div>
+    </div>
+
+      <div class="form-row">
+        <label>Birthday</label>
+      </div>
+      <div class="form-row">
+      <div class="form-control col-md-3">
+        <label>Month</label>
+        <select [(ngModel)]="bdayMonthStr" name="bdayMonth" class="form-control">
+          <option *ngFor="let month of months">{{month.value}}</option>
+        </select>
+      </div>
+      <div name="bdayDay" class="form-control col-md-3">
+        <label>Day</label>
+        <select [(ngModel)]="bdayDayStr" name="bdayDay" class="form-control">
+          <option *ngFor="let day of dates">{{day.value}}</option>
+        </select>
+      </div>
+    </div>
+
+    </form>
+  </mat-step>
+
+  <!-- <mat-form-field class="gender"> -->
+    <!-- <mat-select  placeholder="Gender" formControlName="gender" required>
   <mat-option #genderInput (click)="onGenderSelect(genderInput.value)"*ngFor="let gender of genders" [value]="gender.value" >
     {{gender.value}}
   </mat-option>
-</mat-select>
+</mat-select> -->
+<!-- </mat-form-field> -->
+  <!-- <h6>Handle</h6>
+  <mat-form-field class="handle">
+      <input #handleInput (keyup)="onHandleType(handleInput.value)"id="handle"  name="handle" matInput placeholder="Handle" formControlName="handle" required>
 </mat-form-field>
   <h6>Date Of Birth</h6>
   <mat-form-field class="month">
@@ -37,6 +82,28 @@
 <mat-form-field class="year">
     <input #yearInput (keyup)="onYearType(yearInput.value)"id="year"  name="year" matInput placeholder="Year" formControlName="year" required minlength="4">
 </mat-form-field>
+  <h6>Race<span style="padding-left:200px;">Religion<span style="padding-left:260px;">Nationality</span></span></h6>
+  <mat-form-field class="race">
+    <mat-select placeholder="Race" formControlName="race" required>
+  <mat-option #raceInput (click)="onRaceSelect(raceInput.value)"*ngFor="let race of races" [value]="race.value" >
+    {{race.value}}
+  </mat-option>
+  </mat-select>
+  </mat-form-field>
+  <mat-form-field class="religion">
+    <mat-select placeholder="Religion" formControlName="religion" required>
+  <mat-option #religionInput (click)="onReligionSelect(religionInput.value)"*ngFor="let religion of religions" [value]="religion.value" >
+    {{religion.value}}
+  </mat-option>
+  </mat-select>
+  </mat-form-field>
+  <mat-form-field class="nationality">
+    <mat-select placeholder="Nationality" formControlName="nationality" required>
+  <mat-option #nationalityInput (click)="onNationalitySelect(nationalityInput.value)"*ngFor="let nationality of nationalities" [value]="nationality.value" >
+    {{nationality.value}}
+  </mat-option>
+  </mat-select>
+  </mat-form-field>
   <ul class=address>
     <h6>Address</h6>
     <mat-form-field class="addline1">
@@ -56,15 +123,48 @@
     <mat-form-field class="zip">
       <input #zipInput (keyup)="onZipcodeType(zipInput.value)"id="zip"  name="zip" matInput placeholder="Zip Code" formControlName="zip" required>
     </mat-form-field>
+    <mat-form-field class="country">
+      <input #countryInput (keyup)="onZipcodeType(countryInput.value)"id="zip"  name="zip" matInput placeholder="Country" formControlName="country" required>
+    </mat-form-field>
     <h6>Phone</h6>
     <mat-form-field class="phone">
       <input #phoneInput (keyup)="onPhoneType(zipInput.value)"id="phone"  name="phone" matInput placeholder="Phone #" formControlName="phone" required minlength="10" >
     </mat-form-field>
   </ul>
+  </div>
    </form>
     </mat-step>
-  <mat-step label="Academic Information"></mat-step>
-  <mat-step label="Essay"></mat-step>
-</mat-horizontal-stepper>
+  <mat-step label="Academic Information" [stepControl]="academicInfoFormGroup">
+    <ng-template matStepperIcon="done">
+      <mat-icon>done_all</mat-icon>
+    </ng-template>
+    <form [formGroup]="academicInfoFormGroup">
+    <div class=contents>
+      <h6>High School<span style="padding-left:190px;">Academic Info</span></h6>
+    <mat-form-field class=highschoolField>
+        <input #highSchool (keyup)="onHighSchoolType(highSchool.value)"id="highschool"  name="highschool" matInput placeholder="High School" formControlName="highschool" required>
+  </mat-form-field>
+  <mat-form-field class=gpa>
+      <input #gpaInput (keyup)="onGPAType(gpaInput.value)"id="gpa"  name="gpa" matInput placeholder="GPA" formControlName="gpa" required>
+</mat-form-field>
+<mat-form-field class=sat>
+    <input #satInput (keyup)="onSATType(satInput.value)"id="sat"  name="sat" matInput placeholder="SAT" >
+</mat-form-field>
+<mat-form-field class=act>
+    <input #actInput (keyup)="onACTType(gpaInput.value)"id="act"  name="act" matInput placeholder="ACT">
+</mat-form-field>
+<h6>Number of Languages Taken</h6>
+<span class="text-small">0</span><mat-slider  #numLanguagesInput (click)="onNumLanguagesSlider(numLanguagesInput.value)" class=languages min="0" max="5" step="1" value="3"></mat-slider><span class="text-small">5</span>
+<br>
+<p class=sliderValue>Languages Taken: {{numLanguagesInput.value}}<p>
+  <h6>Number of APs Taken</h6>
+  <span class="text-small">0</span><mat-slider  #numAPsInput (click)="onNumSlider(numAPsInput.value)" class=languages min="0" max="5" step="1" value="3"></mat-slider><span class="text-small">5</span>
+  <br>
+  <p class=sliderValue>APs Taken: {{numAPsInput.value}}<p>
 </div>
+</form>
+  </mat-step>
+  <mat-step label="Essay"></mat-step> -->
+</mat-horizontal-stepper>
+
 <button (click)="onSave()">Save</button>
