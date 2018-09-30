@@ -100,6 +100,7 @@ def getCollegesInfo():
 	finally:
 		if con:
 			con.close()
+
 @app.route("/postResponse", methods = ['POST'])
 def postResponse():
 	con = None
@@ -107,13 +108,23 @@ def postResponse():
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		con = psycopg2.connect(conn_string)
 		print ("Connecting to database\n ->%s" % (conn_string))
-		studentid = request.headers.get('studentid')
-		collegeName = request.headers.get('collegeName')
-		q1 = request.headers.get('q1')
-		q2 = request.headers.get('q2')
-		q3 = request.headers.get('q3')
-		appliedStatus = request.headers.get('appliedStatus')
-		major = request.headers.get('major')
+		text = ast.literal_eval(json.dumps(request.get_json()))
+		print "text", text
+		studentid = text['studentid']
+		collegeName = text['collegeName']
+		q1 = ""
+		if 'q1' in text:
+			q1 = text['q1']
+		q2 = ""
+		if 'q2' in text:
+			q2 = text['q2']
+		q3 = ""
+		if 'q3' in text:
+			q3 = text['q3']
+		appliedStatus = text['appliedStatus']
+		major = ""
+		if 'major' in text:
+			major = text['major']
 		curs = con.cursor()
 		curs2 = con.cursor()
 		collegeN = (collegeName, )
@@ -153,10 +164,11 @@ def checkUser(studentid, collegeid):
 			'applicationid' : rows
 		}
 		results.append(objs)
-	print "second: ", results
 	con.commit()
 	curs1.close()
 	return results
+
+
 
 @app.route("/getColleges", methods = ['GET'])
 def getCollege():
