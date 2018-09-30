@@ -6,7 +6,9 @@ from flask_jsonpify import jsonify
 import psycopg2
 import jinja2
 import json, ast
-
+import sendgrid
+import os
+from sendgrid.helpers.mail import *
 
 app = Flask(__name__)
 api = Api(app)
@@ -167,16 +169,21 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
         # print (str(valTuple))
         cursor.execute(query, valTuple)
 
-# @app.route("/sendEmail", methods = ['GET'])
-# def sendEmail():
-# 	with app.app_context():
-# 		msg = Message(subject="Hello",
-# 		sender=app.config.get("MAIL_USERNAME"),
-# 		recipients=["vishaal.bommena@gmail.com"], # replace with your email for testing
-# 		body="This is a test email I sent with Gmail and Python!")
-# 	mail.send(msg)
 
-import json, ast
+@app.route("/sendEmail/<email_id>", methods = ['GET'])
+def sendEmail(email_id):
+    sg = sendgrid.SendGridAPIClient(apikey='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')
+    from_email = Email("collegeappio2@gmail.com")
+    subject = "Hello World from the SendGrid Python Library!"
+    to_email = Email(str(email_id))
+    content = Content("text/plain", "Hello, Email!")
+    mail = Mail(from_email, subject, to_email, content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print response.status_code 
+    print response.body
+    print response.headers
+    return jsonify("Sent")
+
 
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
