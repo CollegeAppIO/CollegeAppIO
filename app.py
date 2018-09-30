@@ -11,23 +11,11 @@ import json, ast
 app = Flask(__name__)
 api = Api(app)
 
-#mail_settings = {
-#    "MAIL_SERVER": 'smtp.gmail.com',
-#    "MAIL_PORT": 465,
-#    "MAIL_USE_TLS": False,
-#    "MAIL_USE_SSL": True,
-#    "MAIL_USERNAME": os.environ['collegeappio2@gmail.com'],
-#    "MAIL_PASSWORD": os.environ['C0llegeApp']
-#}
-
-# app.config.update(mail_settings)
-# mail = Mail(app)
 
 CORS(app)
 
 def initDB():
 	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
-	#print ("Connecting to database\n ->%s" % (conn_string))
 	conn = psycopg2.connect(conn_string)
 	curr = conn.cursor()
 	print ("Connected!")
@@ -59,11 +47,6 @@ class Employees_Name(Resource):
 
 api.add_resource(Employees, '/employees') # Route_1
 api.add_resource(Employees_Name, '/employees/<employee_id>') # Route_3
-
-# @app.route("/uid")
-# def uid():
-#     conn, curr = initDB()
-#     str = "INSERT INTO STUDENT (studentid) VALUES"
 
 class Students(Resource):
     def get (self, id, adbool):
@@ -117,7 +100,38 @@ def getCollegesInfo():
 	finally:
 		if con:
 			con.close()
-
+@app.route("/postResponse", methods = ['POST'])
+def postResponse():
+	con = None
+	try:
+		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+		con = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		studentid = request.headers.get('studentid')
+		collegeName = request.headers.get('collegeName')
+		q1 = request.headers.get('q1')
+		q2 = request.headers.get('q2')
+		q3 = request.headers.get('q3')
+		appliedStatus = request.headers.get('appliedStatus')
+		major = request.headers.get('major')
+		curs = con.cursor()
+		print "collegeName: ", collegeName
+		collegeN = (collegeName, )
+		curs.execute("SELECT collegeid FROM COLLEGES WHERE collegename = %s", collegeN)
+		result = []
+		for row in curs:
+			obj = {
+				'collegeid' : row
+			}
+		result.append(obj)
+		query = "INSERT INTO current_application (studentid, collegeid, q1, q2, q3, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+		curs.execute(query, (studentid, result[0]['collegeid'], q1, q2, q3, appliedStatus, major, ))
+		con.commit()
+		curs.close()
+		return jsonify("200")
+	finally:
+		if con:
+			con.close()
 @app.route("/getColleges", methods = ['GET'])
 def getCollege():
 	con = None
@@ -143,11 +157,8 @@ def getCollege():
 			con.close()
 
 def insertIntoDB(tablename, keyval, conn, cursor):
-    # print "Keyval is", keyval
     columns = ','.join (k for k in keyval)
-    # print "columns: ", type(columns)
     placeholder = ','.join( "%s" for k in keyval)
-    # print "placeholder: ", type(placeholder)
     query = "INSERT INTO " + tablename + " (" + columns + ") VALUES (" + placeholder + ")"
     print (query)
     valTuple = ()
@@ -157,36 +168,20 @@ def insertIntoDB(tablename, keyval, conn, cursor):
 
 
 def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
-    #print "Keyval is", keyval
     for (k,v) in keyval.items():
         query = "UPDATE " + tablename + " SET " + k + " = %s WHERE %s = studentid"
         valTuple = ()
         valTuple = (v, ) + (target_keyval, )
         query = str(query)
-        # print (query)
-        # print (str(valTuple))
         cursor.execute(query, valTuple)
-
-# @app.route("/sendEmail", methods = ['GET'])
-# def sendEmail():
-# 	with app.app_context():
-# 		msg = Message(subject="Hello",
-# 		sender=app.config.get("MAIL_USERNAME"),
-# 		recipients=["vishaal.bommena@gmail.com"], # replace with your email for testing
-# 		body="This is a test email I sent with Gmail and Python!")
-# 	mail.send(msg)
 
 import json, ast
 
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
     conn, cur = initDB()
-    # convert json request into ascii utf-8
     text = ast.literal_eval(json.dumps(request.get_json()))
     student_id = text["studentid"]
-    # insertIntoDB('students', text, conn, cur)
-    # query = "UPDATE students SET fname = %s, lname = %s  WHERE %s = studentid"
-    # cur.execute(query, (fname, lname, student_id,))
     UpdateIntoDB('students', text, student_id, conn, cur)
     conn.commit()
     cur.close()
@@ -209,9 +204,6 @@ def getStudents(uid):
                 temp[i] : row[i],
             }
             keyval.update(obj)
-
-    #print "Keyval: ", keyval
-
     response = jsonify(keyval)
     print "response: ", response
     response.status_code = 200
