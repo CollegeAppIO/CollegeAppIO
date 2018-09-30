@@ -6,7 +6,7 @@ from flask_jsonpify import jsonify
 import psycopg2
 import jinja2
 #from flask_mail import Mail, Message
-import os
+#import os
 
 app = Flask(__name__)
 api = Api(app)
@@ -90,12 +90,23 @@ def getCollegesInfo():
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
-		curs.execute("SELECT information, tuition_in, tuition_out, school_locat, a_calender, num_students, num_ugrads, num_postgrads FROM COLLEGES WHERE collegename = %s", collegeN)
+		curs.execute("SELECT information, tuition_in, tuition_out, school_locat, a_calender, num_students, num_ugrads, num_postgrads, found_year, telephone, deadlines, stud_fac, 4_yr_grad FROM COLLEGES WHERE collegename = %s", collegeN)
 		result = []
 		for row in curs:
 			obj = {
 				'information' : row[0],
-
+				'tuition_in' : row[1],
+				'tuition_out' : row[2],
+				'school_locat' : row[3],
+				'a_calender' : row[4],
+				'num_students' : row[5],
+				'num_ugrads' : row[6],
+				'num_postgrads' : row[7],
+				'found_year' : row[8],
+				'telephone' : row[9],
+				'deadlines' : row[10],
+				'stud-fac' : row[11],
+				'4-yr-grad' : row[12]
 			}
 			result.append(obj)
 		response = jsonify(result)
