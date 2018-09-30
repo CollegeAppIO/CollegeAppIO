@@ -6,8 +6,6 @@ from flask_jsonpify import jsonify
 import psycopg2
 import jinja2
 import json, ast
-import sendgrid
-import os
 from sendgrid.helpers.mail import *
 
 app = Flask(__name__)
