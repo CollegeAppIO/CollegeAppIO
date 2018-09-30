@@ -70,14 +70,13 @@ class Students(Resource):
 api.add_resource(Students, '/students/<id>/<adbool>')
 
 @app.route("/getCollegeInfo", methods = ['GET'])
-def getCollegesInfo(collegeName):
+def getCollegesInfo():
 	con = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
 		curs = conn.cursor()
-		print(collegeName)
-		collegeName = request.args.get('collegeName')
+		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
 		curs.execute("SELECT information FROM COLLEGES WHERE collegename = %s", collegeN)
 		result = []
@@ -124,19 +123,19 @@ def insertIntoDB(tablename, keyval, conn, cursor):
 
     query = "INSERT INTO " + tablename + " (" + columns + ") VALUES (" + placeholder + ")"
     print (query)
-   
+
     valTuple = ()
     for (k,v) in keyval.items():
         valTuple = valTuple + (v, )
-    # print (str(valTuple))  
-    # print type(valTuple)  
+    # print (str(valTuple))
+    # print type(valTuple)
     # print (str(query))
     cursor.execute(query, valTuple)
 
 
 def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
     #print "Keyval is", keyval
-    
+
     for (k,v) in keyval.items():
         query = "UPDATE " + tablename + " SET " + k + " = %s WHERE %s = studentid"
         valTuple = ()
@@ -144,7 +143,7 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
         query = str(query)
         # print (query)
         # print (str(valTuple))
-        cursor.execute(query, valTuple)   
+        cursor.execute(query, valTuple)
 
 
 @app.route("/putStudents", methods = ['POST'])
@@ -160,7 +159,7 @@ def putStudents():
     # insertIntoDB('students', text, conn, cur)
     # query = "UPDATE students SET fname = %s, lname = %s  WHERE %s = studentid"
     # cur.execute(query, (fname, lname, student_id,))
-    
+
     UpdateIntoDB('students', text, student_id, conn, cur)
 
     conn.commit()
@@ -193,8 +192,6 @@ def getStudents(uid):
     cur.close()
     return response
 
-    
-   
 
 if __name__ == '__main__':
     conn, cur = initDB()
