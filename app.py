@@ -6,8 +6,6 @@ from flask_jsonpify import jsonify
 import psycopg2
 import jinja2
 import json, ast
-import sendgrid
-import os
 from sendgrid.helpers.mail import *
 
 app = Flask(__name__)
@@ -177,7 +175,7 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
         query = str(query)
         cursor.execute(query, valTuple)
 
-
+import sendgrid
 @app.route("/sendEmail/<email_id>", methods = ['GET'])
 def sendEmail(email_id):
     sg = sendgrid.SendGridAPIClient(apikey='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')
