@@ -5,6 +5,8 @@ from json import dumps
 from flask_jsonpify import jsonify
 import psycopg2
 import jinja2
+import json, ast
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -144,10 +146,6 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
         cursor.execute(query, valTuple)
 
 
-
-
-
-import json, ast
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
 
@@ -171,7 +169,28 @@ def putStudents():
     return response
 
 
+@app.route("/getStudents/<uid>", methods = ['GET'])
+def getStudents(uid):
+    conn, cur = initDB()
+    cur.execute("SELECT * FROM students WHERE studentid = %s", (uid, ))
+    colnames = [desc[0] for desc in cur.description]
+    
+    keyval = {}
+    for row in cur:
+        temp = ast.literal_eval(json.dumps(colnames))
+        for i in range (0, len(temp)):       
+            obj = {
+                temp[i] : row[i],
+            }
+            keyval.update(obj)
 
+    #print "Keyval: ", keyval
+
+    response = jsonify(keyval)
+    print "response: ", response
+    response.status_code = 200
+    cur.close()
+    return response
 
 
 if __name__ == '__main__':
