@@ -167,7 +167,6 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
         # print (str(valTuple))
         cursor.execute(query, valTuple)
 
-<<<<<<< HEAD
 # @app.route("/sendEmail", methods = ['GET'])
 # def sendEmail():
 # 	with app.app_context():
@@ -178,9 +177,7 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
 # 	mail.send(msg)
 
 import json, ast
-=======
 
->>>>>>> 9b7c1e5c1401b8d5cc6d7277e972025a667ea097
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
     conn, cur = initDB()
