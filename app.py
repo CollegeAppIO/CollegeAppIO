@@ -5,9 +5,23 @@ from json import dumps
 from flask_jsonpify import jsonify
 import psycopg2
 import jinja2
+from flask_mail import Mail, Message
+import os
 
 app = Flask(__name__)
 api = Api(app)
+
+mail_settings = {
+    "MAIL_SERVER": 'smtp.gmail.com',
+    "MAIL_PORT": 465,
+    "MAIL_USE_TLS": False,
+    "MAIL_USE_SSL": True,
+    "MAIL_USERNAME": os.environ['collegeappio2@gmail.com'],
+    "MAIL_PASSWORD": os.environ['C0llegeApp']
+}
+
+app.config.update(mail_settings)
+mail = Mail(app)
 
 CORS(app)
 
@@ -80,11 +94,13 @@ def getCollegesInfo():
 		result = []
 		for row in curs:
 			obj = {
-				'information' : row[0],
+				'information' : row,
 			}
 			result.append(obj)
 		response = jsonify(result)
 		response.status_code = 200
+		conn.commit()
+		curs.close()
 		return response
 	finally:
 		if con:
@@ -107,6 +123,8 @@ def getCollege():
 			result.append(obj)
 		response = jsonify(result)
 		response.status_code = 200
+		conn.commit()
+		curs.close()
 		return response
 	finally:
 		if con:
@@ -118,22 +136,16 @@ def insertIntoDB(tablename, keyval, conn, cursor):
     # print "columns: ", type(columns)
     placeholder = ','.join( "%s" for k in keyval)
     # print "placeholder: ", type(placeholder)
-
     query = "INSERT INTO " + tablename + " (" + columns + ") VALUES (" + placeholder + ")"
     print (query)
-
     valTuple = ()
     for (k,v) in keyval.items():
         valTuple = valTuple + (v, )
-    # print (str(valTuple))
-    # print type(valTuple)
-    # print (str(query))
     cursor.execute(query, valTuple)
 
 
 def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
     #print "Keyval is", keyval
-
     for (k,v) in keyval.items():
         query = "UPDATE " + tablename + " SET " + k + " = %s WHERE %s = studentid"
         valTuple = ()
@@ -143,36 +155,31 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
         # print (str(valTuple))
         cursor.execute(query, valTuple)
 
-
-
-
+@app.route("/sendEmail", methods = ['GET'])
+def sendEmail():
+	with app.app_context():
+		msg = Message(subject="Hello",
+		sender=app.config.get("MAIL_USERNAME"),
+		recipients=["vishaal.bommena@gmail.com"], # replace with your email for testing
+		body="This is a test email I sent with Gmail and Python!")
+	mail.send(msg)
 
 import json, ast
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
-
     conn, cur = initDB()
-
     # convert json request into ascii utf-8
     text = ast.literal_eval(json.dumps(request.get_json()))
-
     student_id = text["studentid"]
-
     # insertIntoDB('students', text, conn, cur)
     # query = "UPDATE students SET fname = %s, lname = %s  WHERE %s = studentid"
     # cur.execute(query, (fname, lname, student_id,))
-
     UpdateIntoDB('students', text, student_id, conn, cur)
-
     conn.commit()
     cur.close()
     response = jsonify("HI")
     response.status_code = 200
     return response
-
-
-
-
 
 if __name__ == '__main__':
     conn, cur = initDB()
