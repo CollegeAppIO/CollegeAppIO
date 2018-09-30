@@ -115,7 +115,7 @@ def postResponse():
 		appliedStatus = request.headers.get('appliedStatus')
 		major = request.headers.get('major')
 		curs = con.cursor()
-		print "collegeName: ", collegeName
+		curs2 = con.cursor()
 		collegeN = (collegeName, )
 		curs.execute("SELECT collegeid FROM COLLEGES WHERE collegename = %s", collegeN)
 		result = []
@@ -124,14 +124,40 @@ def postResponse():
 				'collegeid' : row
 			}
 		result.append(obj)
-		query = "INSERT INTO current_application (studentid, collegeid, q1, q2, q3, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-		curs.execute(query, (studentid, result[0]['collegeid'], q1, q2, q3, appliedStatus, major, ))
+		collegeid = result[0]['collegeid']
+		results = checkUser(studentid, collegeid)
+		print results
+		if (len(results) == 0):
+			query = "INSERT INTO current_application (studentid, collegeid, q1, q2, q3, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+			curs2.execute(query, (studentid, result[0]['collegeid'], q1, q2, q3, appliedStatus, major, ))
+		else:
+			query = "UPDATE current_application SET (q1, q2, q3, appliedStatus, major) = (%s, %s, %s, %s, %s) WHERE studentid = %s AND collegeid = %s"
+			curs2.execute(query, (q1, q2, q3, appliedStatus, major, studentid, collegeid, ))
 		con.commit()
 		curs.close()
+		curs2.close()
 		return jsonify("200")
 	finally:
 		if con:
 			con.close()
+
+def checkUser(studentid, collegeid):
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	con = psycopg2.connect(conn_string)
+	print ("Connecting to database\n ->%s" % (conn_string))
+	curs1 = con.cursor()
+	curs1.execute("SELECT applicationid FROM current_application WHERE collegeid = %s AND studentid = %s", (collegeid, studentid, ))
+	results = []
+	for rows in curs1:
+		objs = {
+			'applicationid' : rows
+		}
+		results.append(objs)
+	print "second: ", results
+	con.commit()
+	curs1.close()
+	return results
+
 @app.route("/getColleges", methods = ['GET'])
 def getCollege():
 	con = None
