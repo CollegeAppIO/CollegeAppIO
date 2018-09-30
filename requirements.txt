@@ -24,3 +24,4 @@ six==1.11.0
 subprocess32==3.5.2
 virtualenv==16.0.0
 Werkzeug==0.14.1
+Flask-Mail
