@@ -90,7 +90,7 @@ def getCollegesInfo():
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
-		curs.execute("SELECT information, tuition_in, tuition_out, school_locat, a_calender, num_students, num_ugrads, num_postgrads, found_year, telephone, deadlines, stud_fac, 4_yr_grad FROM COLLEGES WHERE collegename = %s", collegeN)
+		curs.execute("SELECT information, tuition_in, tuition_out, school_locat, a_calender, num_students, num_ugrads, num_postgrads, found_year, telephone, deadlines, stud_fac, yr_grad FROM COLLEGES WHERE collegename = %s", collegeN)
 		result = []
 		for row in curs:
 			obj = {
@@ -105,8 +105,8 @@ def getCollegesInfo():
 				'found_year' : row[8],
 				'telephone' : row[9],
 				'deadlines' : row[10],
-				'stud-fac' : row[11],
-				'4-yr-grad' : row[12]
+				'stud_fac' : row[11],
+				'yr_grad' : row[12]
 			}
 			result.append(obj)
 		response = jsonify(result)
