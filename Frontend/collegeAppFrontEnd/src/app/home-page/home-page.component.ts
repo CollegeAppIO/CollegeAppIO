@@ -3,6 +3,7 @@ import { AuthService } from '../auth.service';
 import * as firebase from 'firebase/app';
 import {Router} from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { DataService } from "../data.service";
 
 @Component({
   selector: 'app-home-page',
@@ -11,12 +12,14 @@ import { HttpClient } from '@angular/common/http';
 })
 export class HomePageComponent implements OnInit {
   collegeList: JSON;
-
-  constructor(public authServ: AuthService,private router: Router,private httpClient: HttpClient) { }
+  message:string;
+  constructor(public authServ: AuthService,private router: Router,private httpClient: HttpClient,private data: DataService) { }
 
 
 
   ngOnInit() {
+    this.data.currentMessage.subscribe(message => this.message = message)
+
     var temp = 'https://college-app-io.herokuapp.com/getColleges';
     this.httpClient.get(temp).subscribe(data => {
           this.collegeList = data as JSON;
@@ -31,6 +34,12 @@ export class HomePageComponent implements OnInit {
 
   }
 
+  openCollege(name: string){
+    console.log(name);
+    this.newMessage(name);
+    this.router.navigate(['/CollegePage'],{ queryParams: { collegeName: name } });
+  }
+
   toApplication(){
     console.log('to home page');
     this.router.navigateByUrl('/application');
@@ -43,6 +52,10 @@ export class HomePageComponent implements OnInit {
     })
     console.log('sent to the db');
 
+  }
+
+  newMessage(collegeName:string) {
+    this.data.changeMessage(collegeName);
   }
 
 }

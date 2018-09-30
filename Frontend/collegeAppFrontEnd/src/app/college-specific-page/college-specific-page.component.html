@@ -1,4 +1,48 @@
 <app-nav-bar></app-nav-bar>
-<p>
-  college-specific-page works!
-</p>
+
+<br>
+<div style="text-align: center">
+  <h1>{{message}}</h1>
+</div>
+
+<br>
+<div style="width: 50%; padding-left: 30px;">
+<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+  <ngb-panel title="Background Information">
+    <ng-template ngbPanelContent>
+      {{collegeList?.information}}
+    </ng-template>
+  </ngb-panel>
+  <ngb-panel title="Academic Information">
+    <ng-template ngbPanelContent>
+      <label>Deadline: {{collegeList?.deadlines}}</label>
+      <br>
+      <label>Undergraduate Students: {{collegeList?.num_ugrads}}</label>
+      <br>
+      <label>Graduate Students: {{collegeList?.num_postgrads}}</label>
+      <br>
+      <label>Total Enrollment: {{collegeList?.num_students}}</label>
+      <br>
+      <label>Four Year Graduation Rate: {{collegeList?.yr_grad}}%</label>
+      <br>
+      <label>Academic Calander Type: {{collegeList?.a_calender}}</label>
+    </ng-template>
+  </ngb-panel>
+  <ngb-panel title="General Information">
+    <ng-template ngbPanelContent>
+      <label>Year Founded: {{collegeList?.found_year}}</label>
+      <br>
+      <label>Location: {{collegeList?.school_locat}}</label>
+      <br>
+      <label>Student Facaulty Ratio: {{collegeList?.stud_fac}}</label>
+      <br>
+      <label>Telephone: {{collegeList?.telephone}}</label>
+      <br>
+      <label>In-state tuition and fees: {{collegeList?.tuition_in}}</label>
+      <br>
+      <label>Out-of-state tuition and fees: {{collegeList?.tuition_out}}</label>
+      <br>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>
+</div>

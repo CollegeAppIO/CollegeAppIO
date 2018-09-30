@@ -33,7 +33,7 @@
 <div class="container">
     <div *ngFor="let hero of collegeList;let i = index">
         <ul>
-            <li>
+            <li (click)="openCollege(hero.collegeName)">
                 <img src={{hero.image_link}} style="width:240px;height:240px;">
                 <p><b>{{hero.collegeName}}</b></p>
                 <!-- <h3>{{hero.collegeName}}</h3> -->
