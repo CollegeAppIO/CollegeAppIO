@@ -15,6 +15,7 @@ import { AuthService } from '../auth.service';
 export class CollegeSpecificPageComponent implements OnInit {
   collegeList: JSON;
   collegeQuestions: JSON;
+  // userData: JSON;
 
 
   collegeName: string;
@@ -30,6 +31,12 @@ export class CollegeSpecificPageComponent implements OnInit {
   constructor(private httpClient: HttpClient, private route: ActivatedRoute, private data: DataService, private modalService: NgbModal,public authServ: AuthService) { }
 
   ngOnInit() {
+    this.authServ.fireAuth.authState.subscribe(user => {
+        if(user) {
+          this.uid = user.uid          //console.log(this.uid);
+        }
+    })
+
     this.data.currentMessage.subscribe(message => this.message = message);
 
     var temp = 'https://college-app-io.herokuapp.com/getCollegeInfo';
@@ -44,12 +51,17 @@ export class CollegeSpecificPageComponent implements OnInit {
           // console.log(this.collegeQuestions);
     })
 
-    this.authServ.fireAuth.authState.subscribe(user => {
-        if(user) {
-          this.uid = user.uid
-          //console.log(this.uid);
-        }
-      })
+    var temp = 'http://college-app-io.herokuapp.com/getStudentResponse';
+    this.httpClient.get(temp,{headers: {'collegeName': this.message, 'studentid':'KwuKquxLICYtVN4brqM6Wo8SdZs2'}}).subscribe(data => {
+          // this.userData = data[0] as JSON;
+          this.q1 = data[0].q1;
+          this.q2 = data[0].q2;
+          this.q3 = data[0].q3;
+          this.major = data[0].major;
+          console.log(this.userData);
+    })
+
+
   }
 
   open(content) {
