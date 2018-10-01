@@ -75,90 +75,6 @@ class Students(Resource):
 
 api.add_resource(Students, '/students/<id>/<adbool>')
 
-@app.route("/getQuestions", methods = ['GET'])
-def getQuestions():
-	con = None
-	try:
-		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
-		print ("Connecting to database\n ->%s" % (conn_string))
-		curs = conn.cursor()
-		collegeName = request.headers.get('collegeName')
-		collegeN = (collegeName, )
-		curs.execute("SELECT q1, q2, q3 FROM colleges WHERE collegeName = %s", collegeN)
-		result = []
-		for row in curs:
-			obj = {
-				'q1' : row[0],
-				'q2' : row[1],
-				'q3' : row[2]
-			}
-			result.append(obj)
-		response = jsonify(result)
-		response.status_code = 200
-		conn.commit()
-		curs.close()
-		return response
-	finally:
-		if con:
-			con.close()
-
-@app.route("/getStudentResponse", methods = ['GET'])
-def getStudentResponse():
-	con = None
-	try:
-		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
-		print ("Connecting to database\n ->%s" % (conn_string))
-		curs = conn.cursor()
-		curs1 = conn.cursor()
-		curs2 = conn.cursor()
-		studentid = request.headers.get('studentid')
-		collegeName = request.headers.get('collegeName')
-		print "collegeName: ", collegeName
-		collegeN = (collegeName, )
-		curs1.execute("SELECT collegeid FROM colleges WHERE collegeName = %s", collegeN)
-		result = []
-		for row in curs1:
-			obj = {
-				'collegeid' : row[0]
-			}
-			result.append(obj)
-		collegeid = result[0]['collegeid']
-		collegeN = (collegeid, studentid, )
-		print "collegeN: ", collegeN
-		curs.execute("SELECT appliedStatus FROM current_application WHERE collegeid = %s and studentid = %s", collegeN)
-		result = []
-		for row in curs:
-			obj = {
-				'appliedStatus' : row[0],
-			}
-			result.append(obj)
-		appliedStatus = 2
-		if (len(result) > 0):
-			appliedStatus = result[0]['appliedStatus']
-		print "appliedStatus: ", appliedStatus
-		response = jsonify("Student Not Found")
-		if (int(appliedStatus) == 0 and int(appliedStatus) != 2):
-			curs2.execute("SELECT q1, q2, q3, major FROM current_application WHERE collegeid = %s and studentid = %s", collegeN)
-			result = []
-			for row in curs2:
-				obj = {
-					'q1' : row[0],
-					'q2' : row[1],
-					'q3' : row[2],
-					'major' : row[3]
-				}
-				result.append(obj)
-			response = jsonify(result)
-		response.status_code = 200
-		conn.commit()
-		curs.close()
-		curs1.close()
-		curs2.close()
-		return response
-	finally:
-		if con:
-			con.close()
-
 @app.route("/getCollegeInfo", methods = ['GET'])
 def getCollegesInfo():
 	con = None
@@ -195,7 +111,6 @@ def getCollegesInfo():
 	finally:
 		if con:
 			con.close()
-
 @app.route("/postResponse", methods = ['POST'])
 def postResponse():
 	con = None
@@ -203,25 +118,15 @@ def postResponse():
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		con = psycopg2.connect(conn_string)
 		print ("Connecting to database\n ->%s" % (conn_string))
-		text = ast.literal_eval(json.dumps(request.get_json()))
-		print "text", text
-		studentid = text['studentid']
-		collegeName = text['collegeName']
-		q1 = ""
-		if 'q1' in text:
-			q1 = text['q1']
-		q2 = ""
-		if 'q2' in text:
-			q2 = text['q2']
-		q3 = ""
-		if 'q3' in text:
-			q3 = text['q3']
-		appliedStatus = text['appliedStatus']
-		major = ""
-		if 'major' in text:
-			major = text['major']
+		studentid = request.headers.get('studentid')
+		collegeName = request.headers.get('collegeName')
+		q1 = request.headers.get('q1')
+		q2 = request.headers.get('q2')
+		q3 = request.headers.get('q3')
+		appliedStatus = request.headers.get('appliedStatus')
+		major = request.headers.get('major')
 		curs = con.cursor()
-		curs2 = con.cursor()
+		print "collegeName: ", collegeName
 		collegeN = (collegeName, )
 		curs.execute("SELECT collegeid FROM COLLEGES WHERE collegename = %s", collegeN)
 		result = []
@@ -230,41 +135,14 @@ def postResponse():
 				'collegeid' : row
 			}
 		result.append(obj)
-		collegeid = result[0]['collegeid']
-		results = checkUser(studentid, collegeid)
-		print results
-		if (len(results) == 0):
-			query = "INSERT INTO current_application (studentid, collegeid, q1, q2, q3, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-			curs2.execute(query, (studentid, result[0]['collegeid'], q1, q2, q3, appliedStatus, major, ))
-		else:
-			query = "UPDATE current_application SET (q1, q2, q3, appliedStatus, major) = (%s, %s, %s, %s, %s) WHERE studentid = %s AND collegeid = %s"
-			curs2.execute(query, (q1, q2, q3, appliedStatus, major, studentid, collegeid, ))
+		query = "INSERT INTO current_application (studentid, collegeid, q1, q2, q3, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+		curs.execute(query, (studentid, result[0]['collegeid'], q1, q2, q3, appliedStatus, major, ))
 		con.commit()
 		curs.close()
-		curs2.close()
 		return jsonify("200")
 	finally:
 		if con:
 			con.close()
-
-def checkUser(studentid, collegeid):
-	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
-	con = psycopg2.connect(conn_string)
-	print ("Connecting to database\n ->%s" % (conn_string))
-	curs1 = con.cursor()
-	curs1.execute("SELECT applicationid FROM current_application WHERE collegeid = %s AND studentid = %s", (collegeid, studentid, ))
-	results = []
-	for rows in curs1:
-		objs = {
-			'applicationid' : rows
-		}
-		results.append(objs)
-	con.commit()
-	curs1.close()
-	return results
-
-
-
 @app.route("/getColleges", methods = ['GET'])
 def getCollege():
 	con = None
@@ -333,7 +211,7 @@ def sendEmail(email_id):
 	response = mail.send(msg)
 	print "REsponse is:", response
 	return jsonify("Sent")
-
+		
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
 	conn, cur = initDB()
