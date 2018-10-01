@@ -15,6 +15,7 @@ import { NotificationServicesService } from './notification-services.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './auth.service';
+import { DataService } from './data.service';
 import { HomePageComponent } from './home-page/home-page.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { HttpClientModule } from "@angular/common/http";
@@ -51,6 +52,7 @@ import { CollegeSpecificPageComponent } from './college-specific-page/college-sp
   ],
   providers: [
     AuthService,
+    DataService,
     NotificationServicesService
   ],
   bootstrap: [AppComponent]
