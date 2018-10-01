@@ -64,6 +64,33 @@ class Students(Resource):
 
 api.add_resource(Students, '/students/<id>/<adbool>')
 
+@app.route("/getQuestions", methods = ['GET'])
+def getQuestions():
+	con = None
+	try:
+		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		curs.execute("SELECT q1, q2, q3 FROM colleges WHERE collegeName = %s", collegeN)
+		result = []
+		for row in curs:
+			obj = {
+				'q1' : row[0],
+				'q2' : row[1],
+				'q3' : row[2]
+			}
+			result.append(obj)
+		response = jsonify(result)
+		response.status_code = 200
+		conn.commit()
+		curs.close()
+		return response
+	finally:
+		if con:
+			con.close()
+
 @app.route("/getCollegeInfo", methods = ['GET'])
 def getCollegesInfo():
 	con = None
