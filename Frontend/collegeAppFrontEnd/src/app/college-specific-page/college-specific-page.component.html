@@ -1,4 +1,104 @@
 <app-nav-bar></app-nav-bar>
-<p>
-  college-specific-page works!
-</p>
+
+<br>
+<div style="text-align: center">
+  <h1>{{message}}</h1>
+</div>
+
+<br>
+<div style="width: 30%; padding-left: 30px;">
+<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+  <ngb-panel title="Background Information">
+    <ng-template ngbPanelContent>
+      {{collegeList?.information}}
+    </ng-template>
+  </ngb-panel>
+  <ngb-panel title="Academic Information">
+    <ng-template ngbPanelContent>
+      <label>Deadline: {{collegeList?.deadlines}}</label>
+      <br>
+      <label>Undergraduate Students: {{collegeList?.num_ugrads}}</label>
+      <br>
+      <label>Graduate Students: {{collegeList?.num_postgrads}}</label>
+      <br>
+      <label>Total Enrollment: {{collegeList?.num_students}}</label>
+      <br>
+      <label>Four Year Graduation Rate: {{collegeList?.yr_grad}}%</label>
+      <br>
+      <label>Academic Calander Type: {{collegeList?.a_calender}}</label>
+    </ng-template>
+  </ngb-panel>
+  <ngb-panel title="General Information">
+    <ng-template ngbPanelContent>
+      <label>Year Founded: {{collegeList?.found_year}}</label>
+      <br>
+      <label>Location: {{collegeList?.school_locat}}</label>
+      <br>
+      <label>Student Facaulty Ratio: {{collegeList?.stud_fac}}</label>
+      <br>
+      <label>Telephone: {{collegeList?.telephone}}</label>
+      <br>
+      <label>In-state tuition and fees: {{collegeList?.tuition_in}}</label>
+      <br>
+      <label>Out-of-state tuition and fees: {{collegeList?.tuition_out}}</label>
+      <br>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>
+</div>
+<br>
+
+<div style="text-align:center;">
+<button class="btn btn-lg btn-primary" (click)="open(content)">Apply to College</button>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Apply Page</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <div class="form-group">
+        <label>Major</label>
+        <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]='major'>
+          <option>Computer Science</option>
+          <option>Biology</option>
+          <option>Math</option>
+          <option>Engineering</option>
+          <option>Spanish</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">{{collegeQuestions?.q1}}</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]='q1'></textarea>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">{{collegeQuestions?.q2}}</label>
+        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" [(ngModel)]='q2'></textarea>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">{{collegeQuestions?.q3}}</label>
+        <textarea class="form-control" id="exampleFormControlTextarea3" rows="3" [(ngModel)]='q3' name="something"></textarea>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="saveAppl()">Save</button>
+    <button class="btn btn-primary" (click)="confirm(contenttemp)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #contenttemp let-modal >
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Comfirm Submisssion</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <button class="btn btn-primary" id="cancel" name="Cancel" (click)="cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="submitAppl()" style="float: right;">Submit</button>
+  </div>
+
+</ng-template>
