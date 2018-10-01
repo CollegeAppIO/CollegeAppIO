@@ -102,6 +102,7 @@ def getQuestions():
 		if con:
 			con.close()
 
+@app.route("/getStudentResponse", methods = ['GET'])
 def getStudentResponse():
 	con = None
 	try:
