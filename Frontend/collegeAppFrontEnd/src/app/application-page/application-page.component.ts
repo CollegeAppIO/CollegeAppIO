@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ViewChild,Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import { AuthService } from '../auth.service';
 import {FormBuilder, FormGroup,FormsModule, Validators,ReactiveFormsModule} from '@angular/forms';
@@ -14,7 +14,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./application-page.component.css']
 })
 export class ApplicationPageComponent implements OnInit {
-  isLinear = false;
+  isLinear = true;
   firstFormGroup: FormGroup;
   academicInfoFormGroup: FormGroup;
   states = [
@@ -75,6 +75,42 @@ export class ApplicationPageComponent implements OnInit {
     {value: 'U.S. Virgin Islands'},
     {value: 'Northern Mariana Islands'},
   ]
+  countries = [
+    'Afghanistan',
+    'Albania',
+    'Algeria',
+    'Andorra',
+    'Angola',
+    'Antigua and Barbuda',
+    'Argentina',
+    'Armenia',
+    'Australia',
+    'Austria',
+    'Azerbaijan',
+    'The Bahamas',
+    'Bahrain',
+    'Bangladesh',
+    'Barbados',
+    'Belarus',
+    'Belgium',
+    'Belize',
+    'Benin',
+    'Bhutan',
+    'Bolivia',
+    'Bosnia and Herzegovina',
+    'Botswana',
+    'Brazil',
+    'Brunei',
+    'Bulgaria',
+    'Burkina Faso',
+    'Burundi',
+    'Cabo Verde',
+    'Cambodia',
+    'Cameroon',
+    'Canada',
+    'United States'
+
+  ]
 
 months = [
   {value: 'January'},
@@ -125,8 +161,7 @@ dates = [
   {value: '31'},
 ]
 genders = [
-  {value: 'Male'},
-  {value: 'Female'},
+  'Male','Female'
 ]
 
 races = [
@@ -147,11 +182,18 @@ nationalities = [
   {value: 'Other'},
 ]
 
+years = [
+  {value: '1990'},
+]
+yesNo = [
+  'Yes',
+  'No'
+]
 uid = '';
 firstNameStr='';
 lastNameStr='';
 handleStr = '';
-genderStr = 'Select Gender';
+genderStr = '';
 bdayMonthStr = '';
 bdayDayStr = '';
 bdayYearStr = '';
@@ -165,12 +207,21 @@ cityStr='';
 countryStr='';
 zipcodeStr='';
 phoneStr='';
-highschoolStr='';
+highschoolStr = '';
 gpaStr='';
 satStr='';
 actStr='';
 numLanguages = 2;
 numAPs = 2;
+athleteStr='';
+speechStr = '';
+artsStr='';
+techStr='';
+musicStr='';
+mathStr='';
+studentGovStr='';
+volunteerHoursStr='';
+@ViewChild('slider')slider;
 constructor(public authServ: AuthService,private router: Router,private _formBuilder: FormBuilder,public http: HttpClient) {
   //this.student = new Student(this.uid);
 
@@ -204,12 +255,79 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
     //console.log('hi');
     this.authServ.fireAuth.authState.subscribe(user => {
         if(user) {
+
           this.uid = user.uid
+          var url = 'https://college-app-io.herokuapp.com/getStudents/' + this.uid;
+          console.log(url);
+          this.http.get(url).subscribe(data =>{
+            this.firstNameStr = data['fname'];
+            this.lastNameStr = data['lname'];
+            this.genderStr = data['sex'];
+            this.bdayStr = data['bday'];
+            this.streetStr = data['street'];
+            this.cityStr = data['city'];
+            this.stateStr = data['state'];
+            this.countryStr = data['country'];
+            this.zipcodeStr = data['zipcode'];
+            this.phoneStr = data['phone'];
+            this.religionStr = data['religion'];
+            this.raceStr = data['race'];
+            this.nationalityStr = data['nationality'];
+            this.handleStr = data['nickname'];
+            this.highschoolStr = data['highschool'];
+            this.numAPs = data['num_ap'];
+            this.numLanguages = data['numlang'];
+            this.volunteerHoursStr = data['volunteer_hours'];
+            this.gpaStr = data['gpa'];
+            this.satStr = data['sat'];
+            this.actStr = data['act'];
+            if(data['athletics'] == 1){
+              this.athleteStr = 'Yes';
+            }else{
+              this.athleteStr = 'No';
+            }
+            if(data['speech'] == 1){
+              this.speechStr = 'Yes';
+            }else{
+              this.speechStr = 'No';
+            }
+            if(data['arts'] == 1){
+              this.artsStr = 'Yes';
+            }else{
+              this.artsStr = 'No';
+            }
+            if(data['tech'] == 1){
+              this.techStr = 'Yes';
+            }else{
+              this.techStr = 'No';
+            }
+            if(data['music'] == 1){
+              this.musicStr = 'Yes';
+            }else{
+              this.musicStr = 'No';
+            }
+            if(data['math'] == 1){
+              this.mathStr = 'Yes';
+            }else{
+              this.mathStr = 'No';
+            }
+            if(data['student_gov'] == 1){
+              this.studentGovStr = 'Yes';
+            }else{
+              this.studentGovStr = 'No';
+            }
+
+            //this.speechStr = data['speech'];
+            //console.log(data['numlang']);
+          })
           //console.log(this.uid);
         }
 
 
       })
+
+
+
       //console.log('hi');
 
     //this.http.get()
@@ -218,102 +336,81 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
 
 
 
-  toHome(){
-    console.log('back home');
-    this.router.navigateByUrl('/home');
-  }
-  onFirstNameType(value:string){
-    this.firstNameStr = value;
-    console.log(this.firstNameStr);
-  }
-  onLastNameType(value:string){
-    this.lastNameStr = value;
-    console.log(this.lastNameStr);
-  }
-  onHandleType(value:string){
-    this.handleStr = value;
-  }
-  onGenderSelect(value:string){
-    this.genderStr = value;
-    console.log(this.genderStr);
-  }
-  onMonthSelect(value:string){
-    this.bdayMonthStr = value;
-    console.log(this.bdayMonthStr);
+  // toHome(){
+  //   console.log('back home');
+  //   this.router.navigateByUrl('/home');
+  // }
+  // onFirstNameType(value:string){
+  //   this.firstNameStr = value;
+  //   console.log(this.firstNameStr);
+  // }
 
-  }
-  onDaySelect(value:string){
-    this.bdayDayStr = value;
-    console.log(this.bdayDayStr);
-  }
-  onYearType(value:string){
-    this.bdayYearStr = value;
-  }
-  onRaceSelect(value:string){
-    this.raceStr = value;
-  }
-  onReligionSelect(value:string){
-    this.religionStr = value;
-  }
-  onNationalitySelect(value: string){
-    this.nationalityStr = value;
+  postToDataBase(){
+    this.firstFormGroup.get('firstName').setValue(this.firstNameStr);
+    console.log(this.uid);
+    console.log(this.firstNameStr);
+    console.log(this.lastNameStr);
+    console.log(this.handleStr);
+    console.log(this.genderStr);
+    console.log(this.bdayStr);
+    console.log(this.raceStr);
     console.log(this.nationalityStr);
-  }
-  onStreetType(value:string){
-    this.streetStr = value;
-  }
-  onStateSelect(value:string){
-    this.stateStr = value;
-    console.log(this.bdayDayStr);
-  }
-  onCountryType(value:string){
-    this.countryStr = value;
-  }
-  onCityType(value:string){
-    this.cityStr = value;
-  }
-  onZipcodeType(value:string){
-    this.zipcodeStr = value;
-  }
-  onPhoneType(value:string){
-    this.phoneStr = value;
-  }
-  onHighSchoolType(value: string){
-    this.highschoolStr = value;
-  }
-  onGPAType(value:string){
-    this.gpaStr = value;
-    console.log(this.gpaStr);
-  }
-  onSATType(value:string){
-    this.satStr = value;
-    //console.log(this.gpaStr);
-  }
-  onACTType(value:string){
-    this.actStr = value;
-    //console.log(this.gpaStr);
-  }
-  onNumLanguagesSlider(value:number){
-    this.numLanguages = value;
-    console.log(this.numLanguages);
-  }
-  onNumAPsSlider(value:number){
-    this.numAPs = value;
+    console.log(this.religionStr);
+    console.log(this.streetStr);
+    console.log(this.cityStr);
+    console.log(this.stateStr);
+    console.log(this.countryStr);
+    console.log(this.zipcodeStr);
+    console.log(this.phoneStr);
 
-  }
 
-  onSave(){
-    this.bdayStr = this.bdayMonthStr + ' ' + this.bdayDayStr + ' ' + this.bdayYearStr;
-    //console.log(this.bdayStr);
-    //console.log(this.uid);
-    console.log(this.firstNameStr);
-    console.log(this.lastNameStr);
-    console.log(this.genderStr);
+
     var gpaNum = parseFloat(this.gpaStr);
     var satNum = parseInt(this.satStr);
     var actNum = parseInt(this.actStr);
-    // console.log(gpaNum);
-    // console.log(this.numLanguages);
+    var athleteVal = 0;
+    var speechVal = 0;
+    var artsVal = 0;
+    var studentGovVal = 0;
+    var techVal = 0;
+    var musicVal = 0;
+    var mathVal = 0;
+    var volunteerHours = parseInt(this.volunteerHoursStr);
+    if(this.athleteStr == 'Yes'){
+      athleteVal = 1;
+    }else{
+      athleteVal = 0;
+    }
+    if(this.speechStr == 'Yes'){
+      speechVal = 1;
+    }else{
+      speechVal = 0;
+    }
+    if(this.artsStr == 'Yes'){
+      artsVal = 1;
+    }else{
+      artsVal = 0;
+    }
+    if(this.studentGovStr == 'Yes'){
+      studentGovVal = 1;
+    }else{
+      studentGovVal = 0;
+    }
+    if(this.techStr == 'Yes'){
+      techVal = 1;
+    }else{
+      techVal = 0;
+    }
+    if(this.musicStr == 'Yes'){
+      musicVal = 1;
+    }else{
+      musicVal = 0;
+    }
+    if(this.mathStr == 'Yes'){
+      mathVal = 1;
+    }else{
+      mathVal = 0;
+    }
 
 
     this.http.post('https://college-app-io.herokuapp.com/putStudents', {
@@ -324,18 +421,30 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
       bday: this.bdayStr,
       street: this.streetStr,
       city: this.cityStr,
+      state: this.stateStr,
       country: this.countryStr,
       zipcode: this.zipcodeStr,
       phone: this.phoneStr,
       religion: this.religionStr,
       race: this.raceStr,
       nationality: this.nationalityStr,
-      state: this.stateStr,
       nickname: this.handleStr,
+      numlang: this.numLanguages,
       highschool: this.highschoolStr,
+      num_ap: this.numAPs,
       gpa: gpaNum,
       sat: satNum,
-      act: actNum
+      act: actNum,
+      athletics: athleteVal,
+      speech: speechVal,
+      student_gov: studentGovVal,
+      arts: artsVal,
+      tech: techVal,
+      music: musicVal,
+      math:mathVal,
+      volunteer_hours: volunteerHours,
+
+
 
     })
       .subscribe(
@@ -346,6 +455,15 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
           console.log("Error occured");
         }
       );
+  }
+  onSaveContinue(){
+
+    this.postToDataBase();
+    //this.bdayStr = this.bdayMonthStr + ' ' + this.bdayDayStr + ' ' + this.bdayYearStr;
+
+  }
+  onSave(){
+    this.postToDataBase();
   }
 
 }

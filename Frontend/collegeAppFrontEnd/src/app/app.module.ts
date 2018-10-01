@@ -58,6 +58,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
     MatSliderModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
 
 
   ],
