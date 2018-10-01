@@ -75,7 +75,6 @@ class Students(Resource):
 
 api.add_resource(Students, '/students/<id>/<adbool>')
 
-
 @app.route("/postResponse", methods = ['POST'])
 def postResponse():
 	con = None
