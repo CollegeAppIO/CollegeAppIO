@@ -4,6 +4,7 @@ import * as firebase from 'firebase/app';
 import {Router} from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from "../data.service";
+import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-home-page',
@@ -13,7 +14,15 @@ import { DataService } from "../data.service";
 export class HomePageComponent implements OnInit {
   collegeList: JSON;
   message:string;
-  constructor(public authServ: AuthService,private router: Router,private httpClient: HttpClient,private data: DataService) { }
+
+  
+
+
+
+  constructor(public authServ: AuthService,private router: Router,private httpClient: HttpClient,private data: DataService,config: NgbCarouselConfig) {
+      config.showNavigationArrows = false;
+      config.showNavigationIndicators = false;
+  }
 
 
 

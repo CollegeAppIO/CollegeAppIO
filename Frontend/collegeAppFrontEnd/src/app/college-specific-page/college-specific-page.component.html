@@ -6,7 +6,7 @@
 </div>
 
 <br>
-<div style="width: 50%; padding-left: 30px;">
+<div style="width: 30%; padding-left: 30px;">
 <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
   <ngb-panel title="Background Information">
     <ng-template ngbPanelContent>
@@ -46,3 +46,59 @@
   </ngb-panel>
 </ngb-accordion>
 </div>
+<br>
+
+<div style="text-align:center;">
+<button class="btn btn-lg btn-primary" (click)="open(content)">Apply to College</button>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Apply Page</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <div class="form-group">
+        <label>Major</label>
+        <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]='major'>
+          <option>Computer Science</option>
+          <option>Biology</option>
+          <option>Math</option>
+          <option>Engineering</option>
+          <option>Spanish</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">{{collegeQuestions?.q1}}</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]='q1'></textarea>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">{{collegeQuestions?.q2}}</label>
+        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" [(ngModel)]='q2'></textarea>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">{{collegeQuestions?.q3}}</label>
+        <textarea class="form-control" id="exampleFormControlTextarea3" rows="3" [(ngModel)]='q3' name="something"></textarea>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="saveAppl()">Save</button>
+    <button class="btn btn-primary" (click)="confirm(contenttemp)">Submit</button>
+  </div>
+</ng-template>
+
+<ng-template #contenttemp let-modal >
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Comfirm Submisssion</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <button class="btn btn-primary" id="cancel" name="Cancel" (click)="cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="submitAppl()" style="float: right;">Submit</button>
+  </div>
+
+</ng-template>

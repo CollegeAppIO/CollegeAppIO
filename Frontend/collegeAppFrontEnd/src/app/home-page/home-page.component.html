@@ -32,11 +32,35 @@
 
 <div class="container">
     <div *ngFor="let hero of collegeList;let i = index">
-        <ul>
-            <li (click)="openCollege(hero.collegeName)">
-                <img src={{hero.image_link}} style="width:240px;height:240px;">
-                <p><b>{{hero.collegeName}}</b></p>
-                <!-- <h3>{{hero.collegeName}}</h3> -->
+        <ul (click)="openCollege(hero.collegeName)">
+            <li >
+                <!-- <img src={{hero.image_link}} style="width:240px;height:240px;">
+                <p><b>{{hero.collegeName}}</b></p> -->
+
+                <ngb-carousel style="width:240px;height:240px;">
+                  <ng-template ngbSlide>
+                    <img src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
+                    <div class="carousel-caption">
+                      <p>{{hero.collegeName}}</p>
+                    </div>
+                  </ng-template>
+                  <!-- <ng-template ngbSlide>
+                    <img src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
+                    <div class="carousel-caption">
+                      <p>{{hero.collegeName}} 2</p>
+                    </div>
+                  </ng-template>
+                  <ng-template ngbSlide>
+                    <img src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
+                    <div class="carousel-caption">
+                      <p>{{hero.collegeName}} 3</p>
+                    </div>
+                  </ng-template> -->
+
+
+                </ngb-carousel>
+
+
             </li>
         </ul>
     </div>
