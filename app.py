@@ -91,6 +91,63 @@ def getQuestions():
 		if con:
 			con.close()
 
+@app.route("/getStudentResponse", methods = ['GET'])
+def getStudentResponse():
+	con = None
+	try:
+		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		curs1 = conn.cursor()
+		curs2 = conn.cursor()
+		studentid = request.headers.get('studentid')
+		collegeName = request.headers.get('collegeName')
+		print "collegeName: ", collegeName
+		collegeN = (collegeName, )
+		curs1.execute("SELECT collegeid FROM colleges WHERE collegeName = %s", collegeN)
+		result = []
+		for row in curs1:
+			obj = {
+				'collegeid' : row[0]
+			}
+			result.append(obj)
+		collegeid = result[0]['collegeid']
+		collegeN = (collegeid, studentid, )
+		print "collegeN: ", collegeN
+		curs.execute("SELECT appliedStatus FROM current_application WHERE collegeid = %s and studentid = %s", collegeN)
+		result = []
+		for row in curs:
+			obj = {
+				'appliedStatus' : row[0],
+			}
+			result.append(obj)
+		appliedStatus = 2
+		if (len(result) > 0):
+			appliedStatus = result[0]['appliedStatus']
+		print "appliedStatus: ", appliedStatus
+		response = jsonify("Student Not Found")
+		if (int(appliedStatus) == 0 and int(appliedStatus) != 2):
+			curs2.execute("SELECT q1, q2, q3, major FROM current_application WHERE collegeid = %s and studentid = %s", collegeN)
+			result = []
+			for row in curs2:
+				obj = {
+					'q1' : row[0],
+					'q2' : row[1],
+					'q3' : row[2],
+					'major' : row[3]
+				}
+				result.append(obj)
+			response = jsonify(result)
+		response.status_code = 200
+		conn.commit()
+		curs.close()
+		curs1.close()
+		curs2.close()
+		return response
+	finally:
+		if con:
+			con.close()
+
 @app.route("/getCollegeInfo", methods = ['GET'])
 def getCollegesInfo():
 	con = None
