@@ -12,8 +12,10 @@ import { map } from '../../node_modules/rxjs/operators';
 export class AuthService {
   user: Observable<firebase.User>;
   authToken: any;
+  
   constructor(public fireAuth: AngularFireAuth) {
     this.user = fireAuth.authState;
+    console.log(this.user);
   }
 
   canActivate(): Observable<boolean> {
@@ -25,6 +27,7 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
     this.authToken = token;
     this.user = user;
+
   }
 
   loginWithGoogle() {
@@ -95,6 +98,8 @@ export class AuthService {
           uid: user.uid,
           providerData: user.providerData
         };
+        //this.obj = userObj;
+        //console.log("something please");
        return(userObj);
         // ...
       } else {
