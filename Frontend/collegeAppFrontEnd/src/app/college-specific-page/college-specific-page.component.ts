@@ -31,6 +31,7 @@ export class CollegeSpecificPageComponent implements OnInit {
   q3: string;
   major: string;
   uid:string;
+  email:string;
   modalReference: any;
   modalReferenceMainModal: any;
   constructor(private httpClient: HttpClient, private route: ActivatedRoute, private data: DataService, private modalService: NgbModal,public authServ: AuthService) { }
@@ -38,7 +39,8 @@ export class CollegeSpecificPageComponent implements OnInit {
   ngOnInit() {
     this.authServ.fireAuth.authState.subscribe(user => {
         if(user) {
-          this.uid = user.uid          //console.log(this.uid);
+          this.uid = user.uid;
+          this.email = user.email;          //console.log(this.uid);
         }
 
         var temp = 'http://college-app-io.herokuapp.com/getStudentResponse';
@@ -128,6 +130,12 @@ export class CollegeSpecificPageComponent implements OnInit {
         }
       )
       ;
+
+      var temp = 'http://college-app-io.herokuapp.com/sendEmail/'+this.email;
+      this.httpClient.get(temp).subscribe(data => {
+            console.log(data);
+      })
+
       this.isDisabled = true;
       this.modalReference.close();
       this.modalReferenceMainModal.close();
