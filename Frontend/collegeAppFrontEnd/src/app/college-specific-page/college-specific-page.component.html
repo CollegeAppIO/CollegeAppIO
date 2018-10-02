@@ -49,7 +49,7 @@
 <br>
 
 <div style="text-align:center;">
-<button class="btn btn-lg btn-primary" (click)="open(content)">Apply to College</button>
+<button class="btn btn-lg btn-primary" [disabled]="isDisabled" (click)="open(content)">Apply to College</button>
 </div>
 
 <ng-template #content let-modal>
@@ -62,7 +62,7 @@
   <div class="modal-body">
       <div class="form-group">
         <label>Major</label>
-        <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]='major'>
+        <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]='major' [ngClass]="{'green' : toggleq0, 'red': !toggleq0}">
           <option>Computer Science</option>
           <option>Biology</option>
           <option>Math</option>
@@ -72,15 +72,15 @@
       </div>
       <div class="form-group">
         <label for="exampleFormControlTextarea1">{{collegeQuestions?.q1}}</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]='q1'></textarea>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]='q1' [ngClass]="{'green' : toggleq1, 'red': !toggleq1}"></textarea>
       </div>
       <div class="form-group">
         <label for="exampleFormControlTextarea1">{{collegeQuestions?.q2}}</label>
-        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" [(ngModel)]='q2'></textarea>
+        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" [(ngModel)]='q2' [ngClass]="{'green' : toggleq2, 'red': !toggleq2}"></textarea>
       </div>
       <div class="form-group">
         <label for="exampleFormControlTextarea1">{{collegeQuestions?.q3}}</label>
-        <textarea class="form-control" id="exampleFormControlTextarea3" rows="3" [(ngModel)]='q3' name="something"></textarea>
+        <textarea class="form-control" id="exampleFormControlTextarea3" rows="3" [(ngModel)]='q3' name="something" [ngClass]="{'green' : toggleq3, 'red': !toggleq3}"></textarea>
       </div>
   </div>
   <div class="modal-footer">

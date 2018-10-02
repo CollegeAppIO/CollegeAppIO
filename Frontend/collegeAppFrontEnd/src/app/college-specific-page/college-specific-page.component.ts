@@ -17,6 +17,11 @@ export class CollegeSpecificPageComponent implements OnInit {
   collegeQuestions: JSON;
   // userData: JSON;
 
+  isDisabled: boolean = false;
+  toggleq0:boolean = true;
+  toggleq1:boolean = true;
+  toggleq2:boolean = true;
+  toggleq3:boolean = true;
 
   collegeName: string;
   message:string;
@@ -35,6 +40,25 @@ export class CollegeSpecificPageComponent implements OnInit {
         if(user) {
           this.uid = user.uid          //console.log(this.uid);
         }
+
+        var temp = 'http://college-app-io.herokuapp.com/getStudentResponse';
+        this.httpClient.get(temp,{headers: {'collegeName': this.message, 'studentid':this.uid}}).subscribe(data => {
+              // this.userData = data[0] as JSON;
+
+              if(data == 'Student Already Applied'){
+                this.isDisabled = true;
+                console.log("user submitted");
+              }else{
+                this.isDisabled = false;
+              }
+              this.q1 = data[0].q1;
+              this.q2 = data[0].q2;
+              this.q3 = data[0].q3;
+              this.major = data[0].major;
+
+
+        })
+
     })
 
     this.data.currentMessage.subscribe(message => this.message = message);
@@ -51,15 +75,15 @@ export class CollegeSpecificPageComponent implements OnInit {
           // console.log(this.collegeQuestions);
     })
 
-    var temp = 'http://college-app-io.herokuapp.com/getStudentResponse';
-    this.httpClient.get(temp,{headers: {'collegeName': this.message, 'studentid':'KwuKquxLICYtVN4brqM6Wo8SdZs2'}}).subscribe(data => {
-          // this.userData = data[0] as JSON;
-          this.q1 = data[0].q1;
-          this.q2 = data[0].q2;
-          this.q3 = data[0].q3;
-          this.major = data[0].major;
-          console.log(this.userData);
-    })
+    // var temp = 'http://college-app-io.herokuapp.com/getStudentResponse';
+    // this.httpClient.get(temp,{headers: {'collegeName': this.message, 'studentid':this.uid}}).subscribe(data => {
+    //       // this.userData = data[0] as JSON;
+    //       this.q1 = data[0].q1;
+    //       this.q2 = data[0].q2;
+    //       this.q3 = data[0].q3;
+    //       this.major = data[0].major;
+    //       console.log(this.userData);
+    // })
 
 
   }
@@ -104,6 +128,7 @@ export class CollegeSpecificPageComponent implements OnInit {
         }
       )
       ;
+      this.isDisabled = true;
       this.modalReference.close();
       this.modalReferenceMainModal.close();
   }
@@ -137,8 +162,35 @@ export class CollegeSpecificPageComponent implements OnInit {
   }
 
   confirm(contenttemp){
-      console.log("cofirm");
-      this.modalReference = this.modalService.open(contenttemp, { centered: true });
+      console.log(!this.q1 || 0 === this.q1.length);
+      if(!this.major || 0 === this.major.length){
+        console.log("no q1");
+        this.toggleq0 = false;
+      }else{
+        this.toggleq0 = true;
+      }
+      if(!this.q1 || 0 === this.q1.length){
+        console.log("no q1");
+        this.toggleq1 = false;
+      }else{
+        this.toggleq1 = true;
+      }
+      if(!this.q2 || 0 === this.q2.length){
+        console.log("no q1");
+        this.toggleq2 = false;
+      }else{
+        this.toggleq2 = true;
+      }
+      if(!this.q3 || 0 === this.q3.length){
+        console.log("no q1");
+        this.toggleq3 = false;
+      }else{
+        this.toggleq3 = true;
+      }
+      if(this.q1 && this.q2 && this.q3 && this.major){
+        console.log("cofirm");
+        this.modalReference = this.modalService.open(contenttemp, { centered: true });
+      }
   }
 
   cancel(){
