@@ -199,13 +199,14 @@ def getStudentResponse():
 				'appliedStatus' : row[0],
 			}
 			result.append(obj)
+		print result
 		appliedStatus = 2
 		if (len(result) > 0):
-			appliedStatus = result[0]['appliedStatus']
+			appliedStatus = int(result[0]['appliedStatus'])
 		print "appliedStatus: ", appliedStatus
 		if (int(appliedStatus) == 2):
 			response = jsonify("Student Not Found")
-		if (int(appleidStatus) == 1):
+		if (int(appliedStatus) == 1):
 			response = jsonify("Student Already Applied")
 		if (int(appliedStatus) == 0):
 			curs2.execute("SELECT q1, q2, q3, major FROM current_application WHERE collegeid = %s and studentid = %s", collegeN)
