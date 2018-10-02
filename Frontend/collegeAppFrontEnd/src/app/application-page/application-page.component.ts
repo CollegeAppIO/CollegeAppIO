@@ -17,6 +17,7 @@ export class ApplicationPageComponent implements OnInit {
   isLinear = true;
   firstFormGroup: FormGroup;
   academicInfoFormGroup: FormGroup;
+  essayInfoFormGroup: FormGroup;
   states = [
     {value: 'Alabama'},
     {value: 'Alaska'},
@@ -223,6 +224,9 @@ studentGovStr: string;
 volunteerHoursStr: string;
 firstFormBool = true;
 academicFormBool = true;
+essayFormBool = true;
+applicationStatus: string;
+essayStr: string;
 constructor(public authServ: AuthService,private router: Router,private _formBuilder: FormBuilder,public http: HttpClient) {
   //this.student = new Student(this.uid);
 
@@ -246,7 +250,7 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
       country: ['',Validators.required],
       phone:['',Validators.required],
 
-    }Validators.required);
+    }, Validators.required);
     this.academicInfoFormGroup = this._formBuilder.group({
       highschool: ['',Validators.required],
       gpa: ['',Validators.required],
@@ -263,6 +267,9 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
       math:['',Validators.required],
       volunteer:['',Validators.required],
     }, Validators.required);
+    this.essayInfoFormGroup = this._formBuilder.group({
+      essay: ['',Validators.required],
+    },Validators.required);
     //console.log('hi');
     this.authServ.fireAuth.authState.subscribe(user => {
         if(user) {
@@ -282,7 +289,7 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
             this.stateStr = data['state'];
             this.countryStr = data['country'];
             this.zipcodeStr = data['zipcode'];
-            //this.phoneStr = data['phone'];
+            this.phoneStr = data['phone'];
             this.religionStr = data['religion'];
             this.raceStr = data['race'];
             this.nationalityStr = data['nationality'];
@@ -294,6 +301,7 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
             this.gpaStr = data['gpa'];
             this.satStr = data['sat'];
             this.actStr = data['act'];
+            this.essayStr = data['essay'];
             if(data['athletics'] == 1){
               this.athleteStr = 'Yes';
             }else{
@@ -455,6 +463,8 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
       music: this.musicStr,
       math:this.mathStr,
       volunteer_hours: this.volunteerHoursStr,
+      applicationstatus: this.applicationStatus,
+      essay: this.essayStr,
 
     })
       .subscribe(
@@ -473,20 +483,37 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
     }else{
       this.firstFormBool = true;
     }
-    if(this.academicInfoFormGroup.invalid && this.academicInfoFormGroup.touched){
+    if(this.academicInfoFormGroup.invalid){
       this.academicFormBool = false;
       //console.log("something");
     }else{
       this.academicFormBool = true;
     }
+
     this.postToDataBase();
     //this.bdayStr = this.bdayMonthStr + ' ' + this.bdayDayStr + ' ' + this.bdayYearStr;
 
   }
   onSave(){
+
     this.firstFormBool = true;
     this.academicFormBool = true;
     this.postToDataBase();
+  }
+  onSubmit(){
+    if(this.essayInfoFormGroup.get('essay').invalid){
+      this.essayFormBool = false;
+      //console.log("something");
+    }else{
+      this.essayFormBool = true;
+      this.applicationStatus = '1';
+      this.router.navigateByUrl('/home');
+      this.postToDataBase();
+    }
+
+
+
+
   }
 
 }

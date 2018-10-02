@@ -5,10 +5,11 @@
   <p>Please Fill All Fields</p>
 </div> -->
 <mat-horizontal-stepper [linear]="isLinear" class=stepper>
+  <ng-template matStepperIcon="edit">
+    <mat-icon></mat-icon>
+  </ng-template>
     <mat-step [stepControl]="firstFormGroup" label="Personal Information">
-      <ng-template matStepperIcon="done">
-        <mat-icon>done_all</mat-icon>
-      </ng-template>
+
     <form [formGroup]="firstFormGroup" required>
       <div class="box">
       <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; " >
@@ -117,8 +118,8 @@
     <button ngbButtonLabel class="saveBtn" (click)="onSave()">Save</button>
   </mat-step>
   <mat-step  [stepControl]="academicInfoFormGroup" label="Academic Information">
-    <ng-template matStepperIcon="done">
-      <mat-icon>done_all</mat-icon>
+    <ng-template matStepperIcon="edit">
+      <mat-icon>edit</mat-icon>
     </ng-template>
     <form [formGroup]="academicInfoFormGroup" required >
     <div class="box">
@@ -236,22 +237,28 @@
     <button ngbButtonLabel class="saveBtn" (click)="onSave()">Save</button>
   </mat-step>
   <mat-step label="Essay">
-    <ng-template matStepperIcon="done">
-      <mat-icon>done_all</mat-icon>
+    <ng-template matStepperIcon="edit">
+      <mat-icon>edit</mat-icon>
     </ng-template>
-    <form>
+    <form [formGroup]="essayInfoFormGroup" required>
       <div>
       <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
         <div class="form-group">
           <label>Essay</label>
             <br>
-            <textarea class="essay"></textarea>
+
+            <textarea [(ngModel)]="essayStr"formControlName="essay" name="essay" id="essay" class="essay" required></textarea>
           </div>
       </div>
     </div>
   </form>
+  <div *ngIf="essayFormBool == false">
+    <div class="alert alert-danger" role="alert">
+      Please Fill in all the fields
+    </div>
+  </div>
   <button ngbButtonLabel class="prevBtn" matStepperPrevious>Previous</button>
-  <button ngbButtonLabel class="nextBtn" matStepperNext (click)="onSaveContinue()">Save & Continue</button>
+  <button ngbButtonLabel class="nextBtn" matStepperNext (click)="onSubmit()">Submit</button>
   <button ngbButtonLabel class="saveBtn" (click)="onSave()">Save</button>
   </mat-step>
   </mat-horizontal-stepper>

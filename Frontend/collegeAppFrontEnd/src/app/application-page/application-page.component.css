@@ -117,7 +117,9 @@ input.ng-invalid.ng-touched {
 select.ng-invalid.ng-touched {
   border: 1px solid red;
 }
-
+textarea.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
 /* .box{
   width: 50%;
   margin-left: 25%;
