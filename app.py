@@ -332,7 +332,7 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
 def sendEmail(email_id):
 	mail = initEmailService()
 	msg = Message('Hello', sender = 'collegeappio2@gmail.com', recipients = [email_id])
-	msg.body = "Hello Flask message sent from Flask-Mail"
+	msg.body = "Congratulations! You have applied to a college! "
 	response = mail.send(msg)
 	print "REsponse is:", response
 	return jsonify("Sent")
@@ -340,9 +340,6 @@ def sendEmail(email_id):
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
 	conn, cur = initDB()
-
-	print json.dumps(request.get_json())
-
 	text = ast.literal_eval(json.dumps(request.get_json()))
 	student_id = text["studentid"]
 	UpdateIntoDB('students', text, student_id, conn, cur)
@@ -361,15 +358,17 @@ def xstr(s):
 def getStudents(uid):
 	conn, cur = initDB()
 	cur.execute("SELECT * FROM students WHERE studentid = %s", (uid, ))
+
+	# Fetch column names of postgres table
 	colnames = [desc[0] for desc in cur.description]
 
 	keyval = {}
 	for row in cur:
 		temp = ast.literal_eval(json.dumps(colnames))
 		for i in range (0, len(temp)):
-			temp1 = xstr(row[i])
+
 			obj = {
-				temp[i] : temp1,
+				temp[i] : xstr(row[i]),
 			}
 			keyval.update(obj)
 	print jsonify(keyval)
