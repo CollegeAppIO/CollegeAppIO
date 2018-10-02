@@ -189,39 +189,40 @@ yesNo = [
   'Yes',
   'No'
 ]
-uid = '';
-firstNameStr='';
-lastNameStr='';
-handleStr = '';
-genderStr = '';
-bdayMonthStr = '';
-bdayDayStr = '';
-bdayYearStr = '';
-bdayStr = '';
-raceStr = '';
-religionStr = '';
-nationalityStr = '';
-streetStr='';
-stateStr='';
-cityStr='';
-countryStr='';
-zipcodeStr='';
-phoneStr='';
-highschoolStr = '';
-gpaStr='';
-satStr='';
-actStr='';
-numLanguages = 2;
-numAPs = 2;
-athleteStr='';
-speechStr = '';
-artsStr='';
-techStr='';
-musicStr='';
-mathStr='';
-studentGovStr='';
-volunteerHoursStr='';
-@ViewChild('slider')slider;
+uid: string;
+firstNameStr: string;
+lastNameStr: string;
+handleStr: string;
+genderStr: string;
+bdayMonthStr: string;
+bdayDayStr: string;
+bdayYearStr: string;
+bdayStr: string;
+raceStr: string;
+religionStr: string;
+nationalityStr: string;
+streetStr: string;
+stateStr: string;
+cityStr: string;
+countryStr: string;
+zipcodeStr: string;
+phoneStr: string;
+highschoolStr: string;
+gpaStr: string;
+satStr: string;
+actStr: string;
+numLanguages: string;
+numAPs: string;
+athleteStr: string;
+speechStr: string;
+artsStr: string;
+techStr: string;
+musicStr: string;
+mathStr: string;
+studentGovStr: string;
+volunteerHoursStr: string;
+firstFormBool = true;
+academicFormBool = true;
 constructor(public authServ: AuthService,private router: Router,private _formBuilder: FormBuilder,public http: HttpClient) {
   //this.student = new Student(this.uid);
 
@@ -234,24 +235,34 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
       lastName: ['', Validators.required],
       handle: ['',Validators.required],
       gender: ['', Validators.required],
-      month: ['', Validators.required],
-      date : ['', Validators.required],
-      year: ['', Validators.required, Validators.minLength(4)],
+      bday: ['',Validators.required],
       race: ['', Validators.required],
       religion: ['',Validators.required],
       nationality: ['',Validators.required],
-      address1: ['',Validators.required],
+      street: ['',Validators.required],
       city: ['',Validators.required],
       state: ['',Validators.required],
       zip: ['',Validators.required],
       country: ['',Validators.required],
-      phone:['',Validators.required, Validators.minLength(10)],
+      phone:['',Validators.required],
 
-    });
+    }Validators.required);
     this.academicInfoFormGroup = this._formBuilder.group({
       highschool: ['',Validators.required],
       gpa: ['',Validators.required],
-    })
+      sat: ['',Validators.required],
+      act: ['',Validators.required],
+      numLangs:['',Validators.required],
+      numAps: ['',Validators.required],
+      athletes: ['',Validators.required],
+      speechdebate: ['',Validators.required],
+      studentGov: ['',Validators.required],
+      arts: ['',Validators.required],
+      tech: ['',Validators.required],
+      music:['',Validators.required],
+      math:['',Validators.required],
+      volunteer:['',Validators.required],
+    }, Validators.required);
     //console.log('hi');
     this.authServ.fireAuth.authState.subscribe(user => {
         if(user) {
@@ -260,7 +271,9 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
           var url = 'https://college-app-io.herokuapp.com/getStudents/' + this.uid;
           console.log(url);
           this.http.get(url).subscribe(data =>{
+
             this.firstNameStr = data['fname'];
+
             this.lastNameStr = data['lname'];
             this.genderStr = data['sex'];
             this.bdayStr = data['bday'];
@@ -269,7 +282,7 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
             this.stateStr = data['state'];
             this.countryStr = data['country'];
             this.zipcodeStr = data['zipcode'];
-            this.phoneStr = data['phone'];
+            //this.phoneStr = data['phone'];
             this.religionStr = data['religion'];
             this.raceStr = data['race'];
             this.nationalityStr = data['nationality'];
@@ -346,7 +359,6 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
   // }
 
   postToDataBase(){
-    this.firstFormGroup.get('firstName').setValue(this.firstNameStr);
     console.log(this.uid);
     console.log(this.firstNameStr);
     console.log(this.lastNameStr);
@@ -365,9 +377,9 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
 
 
 
-    var gpaNum = parseFloat(this.gpaStr);
-    var satNum = parseInt(this.satStr);
-    var actNum = parseInt(this.actStr);
+    //var gpaNum = parseFloat(this.gpaStr);
+    //var satNum = parseInt(this.satStr);
+    //var actNum = parseInt(this.actStr);
     var athleteVal = 0;
     var speechVal = 0;
     var artsVal = 0;
@@ -432,19 +444,17 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
       numlang: this.numLanguages,
       highschool: this.highschoolStr,
       num_ap: this.numAPs,
-      gpa: gpaNum,
-      sat: satNum,
-      act: actNum,
-      athletics: athleteVal,
-      speech: speechVal,
-      student_gov: studentGovVal,
-      arts: artsVal,
-      tech: techVal,
-      music: musicVal,
-      math:mathVal,
-      volunteer_hours: volunteerHours,
-
-
+      gpa: this.gpaStr,
+      sat: this.satStr,
+      act: this.actStr,
+      athletics: this.athleteStr,
+      speech: this.speechStr,
+      student_gov: this.studentGovStr,
+      arts: this.artsStr,
+      tech: this.techStr,
+      music: this.musicStr,
+      math:this.mathStr,
+      volunteer_hours: this.volunteerHoursStr,
 
     })
       .subscribe(
@@ -457,12 +467,25 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
       );
   }
   onSaveContinue(){
-
+    if(this.firstFormGroup.invalid && this.firstFormGroup.touched){
+      this.firstFormBool = false;
+      //console.log("something");
+    }else{
+      this.firstFormBool = true;
+    }
+    if(this.academicInfoFormGroup.invalid && this.academicInfoFormGroup.touched){
+      this.academicFormBool = false;
+      //console.log("something");
+    }else{
+      this.academicFormBool = true;
+    }
     this.postToDataBase();
     //this.bdayStr = this.bdayMonthStr + ' ' + this.bdayDayStr + ' ' + this.bdayYearStr;
 
   }
   onSave(){
+    this.firstFormBool = true;
+    this.academicFormBool = true;
     this.postToDataBase();
   }
 

@@ -1,37 +1,40 @@
 <app-nav-bar></app-nav-bar>
 <br>
 <button (click)="toHome()">Home</button>
-
-<mat-horizontal-stepper [linear]=isLinear class=stepper>
+<!-- <div *ngIf="firstFormGroup.invalid && firstFormGroup.touched">
+  <p>Please Fill All Fields</p>
+</div> -->
+<mat-horizontal-stepper [linear]="isLinear" class=stepper>
     <mat-step [stepControl]="firstFormGroup" label="Personal Information">
       <ng-template matStepperIcon="done">
         <mat-icon>done_all</mat-icon>
       </ng-template>
-    <form [formGroup]="firstFormGroup">
+    <form [formGroup]="firstFormGroup" required>
       <div class="box">
       <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; " >
         <div class="form-group" >
           <label>First Name</label>
-            <input formControlName="firstName" type="text"  id="firstname" name="firstname" placeholder="First Name" required>
+            <input  formControlName="firstName"  class="form-control"type="text"  id="firstname" name="firstname"
+            [(ngModel)]="firstNameStr" placeholder="First Name" required>
       </div>
       </div>
       <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
         <div class="form-group">
           <label>Last Name</label>
-            <input [(ngModel)]="lastNameStr"class="form-control" type="text" id="lastname"   name="lastname"  placeholder="Last Name"  required>
+            <input formControlName="lastName" [(ngModel)]="lastNameStr"class="form-control" type="text" id="lastname"   name="lastname"  placeholder="Last Name"  required>
       </div>
       </div>
 
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
       <div class="form-group">
         <label>Handle</label>
-          <input [(ngModel)]="handleStr" type="text" class="form-control" id="handle" name="handle" placeholder="Handle" required>
+          <input formControlName="handle" [(ngModel)]="handleStr" type="text" class="form-control" id="handle" name="handle" placeholder="Handle" required>
     </div>
     </div>
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label for="gender">Gender</label>
-      <select [(ngModel)]="genderStr" name="gender"id="gender" class="form-control">
+      <select formControlName="gender" [(ngModel)]="genderStr" name="gender"id="gender" class="form-control">
         <option  *ngFor="let gender of genders">{{gender}}</option>
       </select>
     </div>
@@ -42,13 +45,13 @@
       </div>
       <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
       <div class="form-group">
-        <input [(ngModel)]="bdayStr" name="dob" type="date" class="form-control" id="exampleInputDOB1" placeholder="Date of Birth">
+        <input formControlName="bday" [(ngModel)]="bdayStr" name="dob" type="date" class="form-control" id="exampleInputDOB1" placeholder="Date of Birth">
       </div>
     </div>
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label>Race</label>
-      <select [(ngModel)]="raceStr" name="race"id="race" class="form-control">
+      <select formControlName="race" [(ngModel)]="raceStr" name="race"id="race" class="form-control">
         <option  *ngFor="let race of races">{{race.value}}</option>
       </select>
     </div>
@@ -56,16 +59,15 @@
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label>Nationality</label>
-      <select [(ngModel)]="nationalityStr" name="nationality"id="nationality" class="form-control">
+      <select formControlName="nationality" [(ngModel)]="nationalityStr" name="nationality"id="nationality" class="form-control">
         <option  *ngFor="let nationality of nationalities">{{nationality.value}}</option>
       </select>
     </div>
     </div>
-
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label for="gender">Religion</label>
-      <select [(ngModel)]="religionStr" name="religion"id="religion" class="form-control">
+      <select formControlName="religion" [(ngModel)]="religionStr" name="religion"id="religion" class="form-control">
         <option  *ngFor="let religion of religions">{{religion.value}}</option>
       </select>
     </div>
@@ -77,87 +79,91 @@
     </div>
     <div class="card-body">
         <label>Street Address</label>
-        <input [(ngModel)]="streetStr"type="text" class="form-control" id="street" name="street" placeholder="Address Line 1" required>
+        <input formControlName="street" [(ngModel)]="streetStr"type="text" class="form-control" id="street" name="street" placeholder="Address Line 1" required>
         <br>
         <label>City</label>
-          <input [(ngModel)]="cityStr"type="text" class="form-control" id="city" name="city" placeholder="City" required>
+          <input formControlName="city" [(ngModel)]="cityStr"type="text" class="form-control" id="city" name="city" placeholder="City" required>
         <br>
         <label>State</label>
-        <select [(ngModel)]="stateStr" name="state"id="state" class="form-control">
+        <select formControlName="state" [(ngModel)]="stateStr" name="state"id="state" class="form-control">
           <option  *ngFor="let state of states">{{state.value}}</option>
         </select>
         <br>
         <label>Country</label>
-        <select [(ngModel)]="countryStr" name="country"id="country" class="form-control">
+        <select formControlName="country"[(ngModel)]="countryStr" name="country"id="country" class="form-control">
           <option  *ngFor="let country of countries">{{country}}</option>
         </select>
         <br>
         <label>Zip Code</label>
-        <input [(ngModel)]="zipcodeStr"type="text" class="form-control" id="zip" name="zip" placeholder="Zip Code" required>
+        <input formControlName="zip" [(ngModel)]="zipcodeStr"type="text" class="form-control" id="zip" name="zip" placeholder="Zip Code" required>
     </div>
   </div>
 </div>
 <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
   <div class="form-group">
     <label>Phone</label>
-      <input [(ngModel)]="phoneStr" type="text" class="form-control" id="phone" name="phone" placeholder="##########" required>
+      <input formControlName="phone" [(ngModel)]="phoneStr" type="text" class="form-control" id="phone" name="phone" placeholder="##########" required>
 </div>
 </div>
 
   </div>
     </form>
-
+    <div *ngIf="firstFormBool == false">
+        <div class="alert alert-danger" role="alert">
+          Please Fill in all the fields
+        </div>
+    </div>
     <button ngbButtonLabel class="nextBtn" matStepperNext (click)="onSaveContinue()">Save & Continue</button>
     <button ngbButtonLabel class="saveBtn" (click)="onSave()">Save</button>
   </mat-step>
-  <mat-step label="Academic Information">
+  <mat-step  [stepControl]="academicInfoFormGroup" label="Academic Information">
     <ng-template matStepperIcon="done">
       <mat-icon>done_all</mat-icon>
     </ng-template>
-    <form>
+    <form [formGroup]="academicInfoFormGroup" required >
     <div class="box">
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
       <div class="form-group">
         <label>High School</label>
-          <input [(ngModel)]="highschoolStr"type="text" class="form-control" id="highschool" name="highschool" placeholder="High School" required>
+          <input  formControlName="highschool" [(ngModel)]="highschoolStr"type="text" class="form-control" id="highschool" name="highschool" placeholder="High School" required>
         </div>
     </div>
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
       <div class="form-group">
         <label>GPA</label>
-          <input [(ngModel)]="gpaStr"type="text" class="form-control" id="gpa" name="gpa" placeholder="GPA" required>
+          <input formControlName="gpa" [(ngModel)]="gpaStr"type="text" class="form-control" id="gpa" name="gpa" placeholder="GPA" required>
         </div>
     </div>
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
       <div class="form-group">
         <label>SAT</label>
-          <input [(ngModel)]="satStr"type="text" class="form-control" id="sat" name="sat" placeholder="SAT" required>
+          <input formControlName="sat"[(ngModel)]="satStr"type="text" class="form-control" id="sat" name="sat" placeholder="SAT" required>
         </div>
     </div>
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
       <div class="form-group">
         <label>ACT</label>
-          <input [(ngModel)]="actStr"type="text" class="form-control" id="act" name="act" placeholder="ACT" required>
+          <input  formControlName="act"[(ngModel)]="actStr"type="text" class="form-control" id="act" name="act" placeholder="ACT" required>
         </div>
     </div>
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
       <div class="form-group">
         <label>Number of Languages Taken</label>
-        <mat-slider  [(ngModel)]="numLanguages" name="languages" class=languages min="0" max="5" step="1"></mat-slider>
+        <mat-slider formControlName="numLangs" [(ngModel)]="numLanguages" name="languages" class=languages min="0" max="5" step="1"></mat-slider>
         <p class=sliderValue>Languages Taken: {{numLanguages}}<p>
         </div>
     </div>
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
       <div class="form-group">
         <label>Number of APs Taken</label>
-        <mat-slider [(ngModel)]="numAPs" name="aps" class=languages min="0" max="5" step="1" ></mat-slider>
+        <mat-slider  formControlName="numAps" [(ngModel)]="numAPs" name="aps" class=languages min="0" max="5" step="1" ></mat-slider>
         <p class=sliderValue>APs Taken: {{numAPs}}<p>
         </div>
     </div>
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label>Have you participated in any Athletic Activities</label>
-      <select [(ngModel)]="athleteStr" name="athlete"id="athlete" class="form-control">
+      <select formControlName="athletes" [(ngModel)]="athleteStr" name="athlete"id="athlete" class="form-control">
         <option  *ngFor="let option of yesNo">{{option}}</option>
       </select>
     </div>
@@ -165,7 +171,7 @@
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label>Have you participated in any Speech and Debate Clubs</label>
-      <select [(ngModel)]="speechStr" name="speech"id="speech" class="form-control">
+      <select formControlName="speechdebate" [(ngModel)]="speechStr" name="speech"id="speech" class="form-control">
         <option  *ngFor="let option of yesNo">{{option}}</option>
       </select>
     </div>
@@ -173,7 +179,7 @@
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label>Have you participated in Student Government</label>
-      <select [(ngModel)]="studentGovStr" name="gov"id="gov" class="form-control">
+      <select formControlName="studentGov" [(ngModel)]="studentGovStr" name="gov"id="gov" class="form-control">
         <option  *ngFor="let option of yesNo">{{option}}</option>
       </select>
     </div>
@@ -181,7 +187,7 @@
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label>Have you participated in any Arts clubs</label>
-      <select [(ngModel)]="artsStr" name="arts"id="arts" class="form-control">
+      <select formControlName="arts"[(ngModel)]="artsStr" name="arts"id="arts" class="form-control">
         <option  *ngFor="let option of yesNo">{{option}}</option>
       </select>
     </div>
@@ -189,7 +195,7 @@
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label>Have you participated in any Technology Clubs</label>
-      <select [(ngModel)]="techStr" name="tech"id="tech" class="form-control">
+      <select formControlName="tech"[(ngModel)]="techStr" name="tech"id="tech" class="form-control">
         <option  *ngFor="let option of yesNo">{{option}}</option>
       </select>
     </div>
@@ -197,7 +203,7 @@
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label>Have you participated in any Music clubs</label>
-      <select [(ngModel)]="musicStr" name="music"id="music" class="form-control">
+      <select formControlName="music"[(ngModel)]="musicStr" name="music"id="music" class="form-control">
         <option  *ngFor="let option of yesNo">{{option}}</option>
       </select>
     </div>
@@ -205,7 +211,7 @@
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
     <div class="form-group">
       <label>Have you participated in any Math or Science clubs</label>
-      <select [(ngModel)]="mathStr" name="math"id="math" class="form-control">
+      <select formControlName="math"[(ngModel)]="mathStr" name="math"id="math" class="form-control">
         <option  *ngFor="let option of yesNo">{{option}}</option>
       </select>
     </div>
@@ -213,14 +219,18 @@
     <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
       <div class="form-group">
         <label>Enter Number of Volunteer Hours</label>
-          <input [(ngModel)]="volunteerHoursStr"type="text" class="form-control" id="volunteer" name="volunteer" placeholder="Volunteer Hours" required>
+          <input formControlName="volunteer"[(ngModel)]="volunteerHoursStr"type="text" class="form-control" id="volunteer" name="volunteer" placeholder="Volunteer Hours" required>
         </div>
     </div>
 
     <br>
   </div>
 </form>
-
+  <div *ngIf="academicFormBool == false">
+    <div class="alert alert-danger" role="alert">
+      Please Fill in all the fields
+    </div>
+</div>
     <button ngbButtonLabel class="prevBtn" matStepperPrevious>Previous</button>
     <button ngbButtonLabel class="nextBtn" matStepperNext (click)="onSaveContinue()">Save & Continue</button>
     <button ngbButtonLabel class="saveBtn" (click)="onSave()">Save</button>
