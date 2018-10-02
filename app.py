@@ -65,7 +65,9 @@ class Students(Resource):
         conn, curr = initDB()
         bools = int(adbool)
         if bools == 0:
-            query = "INSERT INTO students (studentid) VALUES (%s)"
+            #query = "INSERT INTO students (studentid) VALUES (%s)"
+			keyval = {'studentid':id, 'fname':'', 'lname':'', 'sex':' ', 'bday': ' ', 'street':' ', }
+			#insertIntoDB('students', keyval, )
         else:
             query = "INSERT INTO admin (admin_id) VALUES (%s)"
         curr.execute(query, (id, ))
@@ -336,6 +338,9 @@ def sendEmail(email_id):
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
 	conn, cur = initDB()
+
+	print json.dumps(request.get_json())
+
 	text = ast.literal_eval(json.dumps(request.get_json()))
 	student_id = text["studentid"]
 	UpdateIntoDB('students', text, student_id, conn, cur)
@@ -348,23 +353,24 @@ def putStudents():
 
 @app.route("/getStudents/<uid>", methods = ['GET'])
 def getStudents(uid):
-    conn, cur = initDB()
-    cur.execute("SELECT * FROM students WHERE studentid = %s", (uid, ))
-    colnames = [desc[0] for desc in cur.description]
+	conn, cur = initDB()
+	cur.execute("SELECT * FROM students WHERE studentid = %s", (uid, ))
+	colnames = [desc[0] for desc in cur.description]
 
-    keyval = {}
-    for row in cur:
-        temp = ast.literal_eval(json.dumps(colnames))
-        for i in range (0, len(temp)):
-            obj = {
-                temp[i] : row[i],
-            }
-            keyval.update(obj)
-    response = jsonify(keyval)
-    print "response: ", response
-    response.status_code = 200
-    cur.close()
-    return response
+	keyval = {}
+	for row in cur:
+		temp = ast.literal_eval(json.dumps(colnames))
+		for i in range (0, len(temp)):
+			obj = {
+				temp[i] : str(row[i]),
+			}
+			keyval.update(obj)
+	print jsonify(keyval)
+	response = jsonify(keyval)
+	print "response: ", response
+	response.status_code = 200
+	cur.close()
+	return response
 
 
 if __name__ == '__main__':
