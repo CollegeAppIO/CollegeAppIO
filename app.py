@@ -337,6 +337,16 @@ def sendEmail(email_id, collegename):
 	print "REsponse is:", response
 	return jsonify("Sent")
 
+@app.route("/sendEmailtoStudent/<email_id>/<fname>", methods = ['GET'])
+def sendEmailtoStudent(email_id, fname):
+	mail = initEmailService()
+	msg = Message('Hello', sender = 'collegeappio2@gmail.com', recipients = [email_id])
+	msg.body = "Congratulations "+ fname + "! You have finished your application! Please go ahead and submit your college applications!"
+	response = mail.send(msg)
+	print "Response is:", response
+	return jsonify("Sent")
+
+
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
 	conn, cur = initDB()
