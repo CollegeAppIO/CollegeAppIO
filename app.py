@@ -328,11 +328,11 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
 #     return jsonify("Sent")
 
 
-@app.route("/sendEmail/<email_id>", methods = ['GET'])
-def sendEmail(email_id):
+@app.route("/sendEmail/<email_id>/<collegename>", methods = ['GET'])
+def sendEmail(email_id, collegename):
 	mail = initEmailService()
 	msg = Message('Hello', sender = 'collegeappio2@gmail.com', recipients = [email_id])
-	msg.body = "Congratulations! You have applied to a college! "
+	msg.body = "Congratulations! You have applied to " + str(collegename) + ""
 	response = mail.send(msg)
 	print "REsponse is:", response
 	return jsonify("Sent")
