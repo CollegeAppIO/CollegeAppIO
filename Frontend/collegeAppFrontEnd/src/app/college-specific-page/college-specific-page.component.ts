@@ -41,6 +41,7 @@ export class CollegeSpecificPageComponent implements OnInit {
         if(user) {
           this.uid = user.uid;
           this.email = user.email;          //console.log(this.uid);
+        
         }
 
         var temp = 'http://college-app-io.herokuapp.com/getStudentResponse';
@@ -131,7 +132,7 @@ export class CollegeSpecificPageComponent implements OnInit {
       )
       ;
 
-      var temp = 'http://college-app-io.herokuapp.com/sendEmail/'+this.email;
+      var temp = 'http://college-app-io.herokuapp.com/sendEmail/'+this.email+'/'+this.message;
       this.httpClient.get(temp).subscribe(data => {
             console.log(data);
       })
