@@ -65,9 +65,7 @@ class Students(Resource):
         conn, curr = initDB()
         bools = int(adbool)
         if bools == 0:
-            #query = "INSERT INTO students (studentid) VALUES (%s)"
-			keyval = {'studentid':id, 'fname':'', 'lname':'', 'sex':' ', 'bday': ' ', 'street':' ', }
-			#insertIntoDB('students', keyval, )
+            query = "INSERT INTO students (studentid) VALUES (%s)"
         else:
             query = "INSERT INTO admin (admin_id) VALUES (%s)"
         curr.execute(query, (id, ))
@@ -354,6 +352,10 @@ def putStudents():
 	response.status_code = 200
 	return response
 
+def xstr(s):
+    if s is None:
+        return ''
+    return str(s)
 
 @app.route("/getStudents/<uid>", methods = ['GET'])
 def getStudents(uid):
@@ -365,8 +367,9 @@ def getStudents(uid):
 	for row in cur:
 		temp = ast.literal_eval(json.dumps(colnames))
 		for i in range (0, len(temp)):
+			temp1 = xstr(row[i])
 			obj = {
-				temp[i] : str(row[i]),
+				temp[i] : temp1,
 			}
 			keyval.update(obj)
 	print jsonify(keyval)
