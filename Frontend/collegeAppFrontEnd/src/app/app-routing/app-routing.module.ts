@@ -4,6 +4,7 @@ import { LoginComponent } from '../login/login.component';
 import { HomePageComponent } from '../home-page/home-page.component';
 import { ApplicationPageComponent } from '../application-page/application-page.component';
 import { CollegeSpecificPageComponent } from '../college-specific-page/college-specific-page.component';
+import {ViewApplicationComponent}  from '../view-application/view-application.component';
 
 // @NgModule({
 //   imports: [
@@ -30,6 +31,10 @@ const routes: Routes = [
             path: 'CollegePage',
             component: CollegeSpecificPageComponent,
         },
+        {
+            path: 'ViewApplication',
+            component: ViewApplicationComponent,
+        }
 
     ];
 

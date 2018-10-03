@@ -25,6 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { CollegeSpecificPageComponent } from './college-specific-page/college-specific-page.component';
+import { ViewApplicationComponent } from './view-application/view-application.component';
 
 
 
@@ -38,6 +39,7 @@ import { CollegeSpecificPageComponent } from './college-specific-page/college-sp
     ApplicationPageComponent,
     NavBarComponent,
     CollegeSpecificPageComponent,
+    ViewApplicationComponent,
 
   ],
   imports: [

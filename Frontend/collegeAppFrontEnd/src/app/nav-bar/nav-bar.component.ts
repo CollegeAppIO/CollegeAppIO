@@ -31,5 +31,8 @@ export class NavBarComponent implements OnInit {
     console.log('go home page');
     this.router.navigateByUrl('/home');
   }
+  toViewApplication(){
+    this.router.navigateByUrl('/ViewApplication');
+  }
 
 }
