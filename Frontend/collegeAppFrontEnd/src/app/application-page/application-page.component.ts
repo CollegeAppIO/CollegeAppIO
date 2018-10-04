@@ -227,6 +227,7 @@ academicFormBool = true;
 essayFormBool = true;
 applicationStatus: string;
 essayStr: string;
+emailStr: string;
 constructor(public authServ: AuthService,private router: Router,private _formBuilder: FormBuilder,public http: HttpClient) {
   //this.student = new Student(this.uid);
 
@@ -274,7 +275,8 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
     this.authServ.fireAuth.authState.subscribe(user => {
         if(user) {
 
-          this.uid = user.uid
+          this.uid = user.uid;
+          this.emailStr = user.email;
           var url = 'https://college-app-io.herokuapp.com/getStudents/' + this.uid;
           console.log(url);
           this.http.get(url).subscribe(data =>{
@@ -507,8 +509,19 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
     }else{
       this.essayFormBool = true;
       this.applicationStatus = '1';
-      this.router.navigateByUrl('/home');
       this.postToDataBase();
+      this.router.navigateByUrl('/home');
+      var url = 'https://college-app-io.herokuapp.com/sendEmailtoStudent/' + this.emailStr + '/' + this.firstNameStr;
+      this.http.get(url,)
+        .subscribe(
+          res => {
+            console.log(res);
+          },
+          err => {
+            console.log("Error occured");
+          }
+        );
+
     }
 
 
