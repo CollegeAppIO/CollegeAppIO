@@ -23,12 +23,12 @@ def initDB():
 
 
 conn, cur = initDB()
-
+import os
 def initEmailService():
 	app.config['MAIL_SERVER']='smtp.gmail.com'
 	app.config['MAIL_PORT'] = 465
-	app.config['MAIL_USERNAME'] = 'collegeappio2@gmail.com'
-	app.config['MAIL_PASSWORD'] = 'C0llegeApp1'
+	app.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME']
+	app.config['MAIL_PASSWORD'] = os.environ['MAIL_PASSWORD'] #C0llegeApp1
 	app.config['MAIL_USE_TLS'] = False
 	app.config['MAIL_USE_SSL'] = True
 	mail = Mail(app)
@@ -331,7 +331,7 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
 @app.route("/sendEmail/<email_id>/<collegename>", methods = ['GET'])
 def sendEmail(email_id, collegename):
 	mail = initEmailService()
-	msg = Message('Hello', sender = 'collegeappio2@gmail.com', recipients = [email_id])
+	msg = Message('Hello', sender = 'collegeappio3@gmail.com', recipients = [email_id])
 	msg.body = "Congratulations! You have applied to " + str(collegename) + ""
 	response = mail.send(msg)
 	print "REsponse is:", response
@@ -340,7 +340,7 @@ def sendEmail(email_id, collegename):
 @app.route("/sendEmailtoStudent/<email_id>/<fname>", methods = ['GET'])
 def sendEmailtoStudent(email_id, fname):
 	mail = initEmailService()
-	msg = Message('Hello', sender = 'collegeappio2@gmail.com', recipients = [email_id])
+	msg = Message('Hello', sender = 'collegeappio3@gmail.com', recipients = [email_id])
 	msg.body = "Congratulations "+ fname + "! You have finished your application! Please go ahead and submit your college applications!"
 	response = mail.send(msg)
 	print "Response is:", response
