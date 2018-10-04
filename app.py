@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_cors import CORS, cross_origin
 from flask_restful import Resource, Api
 from json import dumps
@@ -332,7 +332,8 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
 def sendEmail(email_id, collegename):
 	mail = initEmailService()
 	msg = Message('Hello', sender = 'collegeappio3@gmail.com', recipients = [email_id])
-	msg.body = "Congratulations! You have applied to " + str(collegename) + ""
+	#msg.body = "Congratulations! You have applied to " + str(collegename) + ""
+	msg.html = render_template("email-template-college.html", cname = collegename)
 	response = mail.send(msg)
 	print "REsponse is:", response
 	return jsonify("Sent")
@@ -342,6 +343,7 @@ def sendEmailtoStudent(email_id, fname):
 	mail = initEmailService()
 	msg = Message('Hello', sender = 'collegeappio3@gmail.com', recipients = [email_id])
 	msg.body = "Congratulations "+ fname + "! You have finished your application! Please go ahead and submit your college applications!"
+	#msg.html = render_template("email-template-college.html", cname = collegename)
 	response = mail.send(msg)
 	print "Response is:", response
 	return jsonify("Sent")
