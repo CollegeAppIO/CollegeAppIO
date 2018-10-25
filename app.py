@@ -527,6 +527,20 @@ def getCollegeName():
 	cur.close()
 	return response
 	
+@app.route("/getIDType/<sid>", methods=['GET'])
+def getIDType(sid):
+	conn, cur = initDB()
+	ans = ""
+	cur.execute("SELECT admin_id FROM admin WHERE admin_id = %s", (sid, ))
+	row = cur.fetchone()
+	if row != None:
+		ans = "admin"
+	else :
+		ans = "student"
+	response = jsonify(ans)
+	conn.commit()
+	cur.close()
+	return response	
 
 if __name__ == '__main__':
 	conn, cur = initDB()
