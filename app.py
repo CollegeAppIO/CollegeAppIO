@@ -400,21 +400,22 @@ def UpdateIntoDB(tablename, keyval, target_keyval, conn, cursor):
         query = str(query)
         cursor.execute(query, valTuple)
 
+# using SendGrid's Python Library
+# https://github.com/sendgrid/sendgrid-python
 # import sendgrid
+# import os
+# from sendgrid.helpers.mail import *
 
-# @app.route("/sendEmail/<email_id>", methods = ['GET'])
-# def sendEmail(email_id):
-#     sg = sendgrid.SendGridAPIClient(apikey='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')
-#     from_email = Email("collegeappio2@gmail.com")
-#     subject = "Hello World from the SendGrid Python Library!"
-#     to_email = Email(str(email_id))
-#     content = Content("text/plain", "Hello, Email!")
-#     mail = Mail(from_email, subject, to_email, content)
-#     response = sg.client.mail.send.post(request_body=mail.get())
-#     print response.status_code
-#     print response.body
-#     print response.headers
-#     return jsonify("Sent")
+# sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+# from_email = Email("sanatmouli@gmail.com")
+# to_email = Email("sanatmouli@gmail.com")
+# subject = "Sending with SendGrid is Fun"
+# content = Content("text/plain", "and easy to do anywhere, even with Python")
+# mail = Mail(from_email, subject, to_email, content)
+# response = sg.client.mail.send.post(request_body=mail.get())
+# print(response.status_code)
+# print(response.body)
+# print(response.headers)
 
 
 @app.route("/sendEmail/<email_id>/<collegename>", methods = ['GET'])
@@ -479,7 +480,54 @@ def getStudents(uid):
 	cur.close()
 	return response
 
+def UpdateIntoAdminDB(tablename, keyval, target_keyval, conn, cursor):
+    for (k,v) in keyval.items():
+        query = "UPDATE " + tablename + " SET " + k + " = %s WHERE %s = collegename"
+        valTuple = ()
+        valTuple = (v, ) + (target_keyval, )
+        query = str(query)
+        cursor.execute(query, valTuple)
+
+@app.route("/setCollegeDetails/<collegename>", methods = ['POST'])
+def setCollegeDetails(collegename):
+	conn, cur = initDB()
+	text = ast.literal_eval(json.dumps(request.get_json()))
+	#admin_id = text["collegename"]
+	admin_id = str(collegename)
+	UpdateIntoAdminDB('colleges', text, admin_id, conn, cur)
+	conn.commit()
+	cur.close()
+	response = jsonify("HI")
+	response.status_code = 200
+	return response
+
+@app.route("/setCollegeQuestions/<collegename>", methods = ['POST'])
+def setCollegeQuestions(collegename):
+	conn, cur = initDB()
+	text = ast.literal_eval(json.dumps(request.get_json()))
+	#admin_id = text["collegename"]
+	admin_id = str(collegename)
+	UpdateIntoAdminDB('colleges', text, admin_id, conn, cur)
+	conn.commit()
+	cur.close()
+	response = jsonify("HI")
+	response.status_code = 200
+	return response
+
+@app.route("/getCollegeName", methods = ['GET'])
+def getCollegeName():
+	conn, cur = initDB()
+	cur.execute("SELECT collegeName FROM colleges")
+	result = []
+	for row in cur:
+		result.append(row[0])
+	response = jsonify(result)
+	response.status_code = 200
+	conn.commit()
+	cur.close()
+	return response
+	
 
 if __name__ == '__main__':
-    conn, cur = initDB()
-    app.run(debug=True)
+	conn, cur = initDB()
+	app.run(debug=True)
