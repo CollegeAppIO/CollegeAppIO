@@ -35,18 +35,26 @@
    <div class="modal-body">
      <form>
        <div class="form-group">
-
+        <label>Email</label>
          <input class="form-control" type="text"  [(ngModel)]="useremail"  id="useremail1" name="useremail" placeholder="Email"/>
          <br/>
          <label for="exampleInputPassword1">Password</label>
          <input class="form-control" type="password"  [(ngModel)]="password"  id="password1" name="password" placeholder="Password"/>
          <br>
-         <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" style="align: center" [(ngModel)]="status">
+         <div *ngIf="isAdmin">
+
+           <label for="typeahead-format">College Name</label>
+           <input id="typeahead-format" type="text" class="form-control" [(ngModel)]="collegeName"  id="collegeName" name="collegeName" [ngbTypeahead]="search" [resultFormatter]="formatter" />
+           <!-- <pre>Model: {{ model | json }}</pre> -->
+           <br>
+         </div>
+
+         <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" style="display: flex;justify-content: center;" [(ngModel)]="isAdmin">
            <label ngbButtonLabel class="btn-primary">
-             <input ngbButton type="radio" [value]="0"> Student
+             <input (change)="onStudentClick()" ngbButton type="radio" [value]="0" > Student
            </label>
            <label ngbButtonLabel class="btn-primary">
-             <input ngbButton type="radio" [value]="1"> Adminstrator
+             <input (change)="onAdminClick()" ngbButton type="radio" [value]="1"> Adminstrator
            </label>
         </div>
        </div>
