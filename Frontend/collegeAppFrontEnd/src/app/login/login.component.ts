@@ -8,6 +8,10 @@ import { NotificationServicesService } from '../notification-services.service';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router'
 import { HttpClient } from '@angular/common/http';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+
+
+
 
 @Component({
   selector: 'app-login',
@@ -22,11 +26,30 @@ export class LoginComponent implements OnInit {
 
   useremail: string;
   password: string;
-  status: boolean;
+  //isAdmin: boolean;
 
   modalReference: any;
 
   modalStatus: boolean;
+  isAdmin: boolean;
+  collegeName:string;
+
+  //collegeList: JSON;
+  colleges: any;
+
+  formatter = (result: string) => result.toUpperCase();
+
+  search = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term => term === '' ? []
+        : this.colleges.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+    )
+
+
+
+
 
   constructor(public authServ: AuthService, private noteSvc: NotificationServicesService,private modalService: NgbModal, private router: Router, private httpClient: HttpClient) {
   }
@@ -36,17 +59,39 @@ export class LoginComponent implements OnInit {
     this.modalStatus = true;
   }
 
-  uploadToUserTable(uid:string,status:boolean) {
-        var temp = 'https://college-app-io.herokuapp.com/students/'+uid+'/'+status;
+  uploadToUserTable(uid:string,isAdmin:boolean) {
+
+      if(this.isAdmin){
+        this.httpClient.post('https://college-app-io.herokuapp.com/addAdmin', {
+          adminid: uid,
+          collegeName: this.collegeName
+        })
+          .subscribe(
+            res => {
+              console.log(res);
+            },
+            err => {
+              console.log("Error occured");
+            }
+          );
+      }else{
+        var temp = 'https://college-app-io.herokuapp.com/students/'+uid+'/'+isAdmin;
         this.httpClient.get(temp).subscribe(data => {
         console.log(data);
     })
     console.log('sent to the db');
-
+  }
   }
 
   ngOnInit() {
     this.authChanged();
+    console.log(this.isAdmin);
+    var temp = 'https://college-app-io.herokuapp.com/getCollegeName';
+    this.httpClient.get(temp).subscribe(data => {
+          this.colleges = data ;
+          console.log(this.colleges);
+
+    })
   }
 
   onGLogin() {
@@ -57,6 +102,16 @@ export class LoginComponent implements OnInit {
 
   onFBLogin() {
     this.authServ.loginWithFB();
+  }
+
+  onStudentClick(){
+
+    console.log(this.isAdmin);
+  }
+  onAdminClick(){
+
+      console.log(this.isAdmin);
+
   }
 
   onSignUp() {
@@ -184,7 +239,7 @@ export class LoginComponent implements OnInit {
         if(this.modalStatus){
           this.modalReference.close();
           //this.router.navigateByUrl('/home');
-          this.uploadToUserTable(user.uid,this.status);
+          this.uploadToUserTable(user.uid,this.isAdmin);
           this.modalStatus = false;
         }
         this.router.navigateByUrl('/home');
