@@ -37,6 +37,8 @@ export class LoginComponent implements OnInit {
   //collegeList: JSON;
   colleges: any;
 
+  typeOfUser: string;
+
   formatter = (result: string) => result.toUpperCase();
 
   search = (text$: Observable<string>) =>
@@ -74,10 +76,13 @@ export class LoginComponent implements OnInit {
               console.log("Error occured");
             }
           );
+
+          this.router.navigateByUrl('/AdminMainPage');
       }else{
-        var temp = 'https://college-app-io.herokuapp.com/students/'+uid+'/'+isAdmin;
+        var temp = 'https://college-app-io.herokuapp.com/students/'+uid+'/'+'0';
         this.httpClient.get(temp).subscribe(data => {
         console.log(data);
+        this.router.navigateByUrl('/home');
     })
     console.log('sent to the db');
   }
@@ -239,10 +244,35 @@ export class LoginComponent implements OnInit {
         if(this.modalStatus){
           this.modalReference.close();
           //this.router.navigateByUrl('/home');
+
           this.uploadToUserTable(user.uid,this.isAdmin);
           this.modalStatus = false;
         }
-        this.router.navigateByUrl('/home');
+        // this.router.navigateByUrl('/home');
+
+        var temp = 'https://college-app-io.herokuapp.com/getIDType/'+uid;
+        this.httpClient.get(temp).subscribe(data => {
+              // console.log(data);
+              // this.typeOfUser = data;
+              if(data === 'student'){
+                this.router.navigateByUrl('/home');
+              }else{
+                console.log('fucked up')
+                this.router.navigateByUrl('/AdminMainPage');
+              }
+        })
+
+        // console.log(this.typeOfUser);
+        // if(this.typeOfUser === 'student'){
+        //   this.router.navigateByUrl('/home');
+        // }else{
+        //   console.log('fucked up')
+        //   this.router.navigateByUrl('/AdminMainPage');
+        // }
+
+
+
+
       } else {
           console.log('user signed out');
         // User is signed out.
