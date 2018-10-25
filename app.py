@@ -128,14 +128,103 @@ def postResponse():
 
 def checkUser(studentid, collegeid):
 	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	con = None
+	try :
+		con = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs1 = con.cursor()
+		curs1.execute("SELECT applicationid FROM current_application WHERE collegeid = %s AND studentid = %s", (collegeid, studentid, ))
+		results = []
+		for rows in curs1:
+			objs = {
+				'applicationid' : rows
+			}
+			results.append(objs)
+		con.commit()
+		curs1.close()
+		return results
+	finally:
+		if con:
+			con.close()
+
+@app.route("/addAdmin", methods = ['POST'])
+def addAdmin():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	conn = None
+	try :
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs1 = conn.cursor()
+		text = ast.literal_eval(json.dumps(request.get_json()))
+		admin_id = text['adminid']
+		collegeName = text['collegeName']
+		res = checkAdminUser(admin_id, collegeName)
+		res_college = checkCollege(collegeName)
+		print res
+		response = None
+		if (len(res_college) == 0):
+			print "College Does Not Exist"
+			res_id = getCollegeid()
+			collegeid = int(res_id[0]['collegeid'][0]) + 1
+			curs1.execute("INSERT INTO colleges (collegeid, collegename) VALUES (%s, %s)", (collegeid, collegeName, ))
+		if (len(res) > 0):
+			response = jsonify("Admin User Exists")
+		else:
+			curs1.execute("INSERT INTO admin (admin_id, college) VALUES (%s, %s)", (admin_id, collegeName ))
+			response = jsonify("Added Admin User")
+		response.status_code = 200
+		conn.commit()
+		curs1.close()
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+def getCollegeid():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 	con = psycopg2.connect(conn_string)
 	print ("Connecting to database\n ->%s" % (conn_string))
 	curs1 = con.cursor()
-	curs1.execute("SELECT applicationid FROM current_application WHERE collegeid = %s AND studentid = %s", (collegeid, studentid, ))
+	curs1.execute("SELECT collegeid FROM colleges ORDER BY collegeid DESC LIMIT 1")
 	results = []
 	for rows in curs1:
 		objs = {
-			'applicationid' : rows
+			'collegeid' : rows
+		}
+		results.append(objs)
+	print results
+	con.commit()
+	curs1.close()
+	return results
+
+def checkCollege(collegeName):
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	con = psycopg2.connect(conn_string)
+	print ("Connecting to database\n ->%s" % (conn_string))
+	curs1 = con.cursor()
+	curs1.execute("SELECT collegeName FROM colleges WHERE collegeName = %s", (collegeName, ))
+	results = []
+	for rows in curs1:
+		objs = {
+			'collegeName' : rows
+		}
+		results.append(objs)
+	con.commit()
+	curs1.close()
+	return results
+
+
+def checkAdminUser(adminid, collegeName):
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	con = psycopg2.connect(conn_string)
+	print ("Connecting to database\n ->%s" % (conn_string))
+	curs1 = con.cursor()
+	curs1.execute("SELECT admin_fname, admin_lname FROM admin WHERE admin_id = %s AND college = %s", (adminid, collegeName, ))
+	results = []
+	for rows in curs1:
+		objs = {
+			'admin_fname' : rows[0],
+			'admin_lname' : rows[1]
 		}
 		results.append(objs)
 	con.commit()
