@@ -5,6 +5,10 @@ import * as firebase from 'firebase/app';
 import * as $ from 'jquery';
 import { NotificationServicesService } from '../notification-services.service';
 
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {Router} from '@angular/router'
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,8 +22,27 @@ export class LoginComponent implements OnInit {
 
   useremail: string;
   password: string;
+  status: boolean;
 
-  constructor(public authServ: AuthService, private noteSvc: NotificationServicesService) {
+  modalReference: any;
+
+  modalStatus: boolean;
+
+  constructor(public authServ: AuthService, private noteSvc: NotificationServicesService,private modalService: NgbModal, private router: Router, private httpClient: HttpClient) {
+  }
+
+  open(content) {
+    this.modalReference = this.modalService.open(content);
+    this.modalStatus = true;
+  }
+
+  uploadToUserTable(uid:string,status:boolean) {
+        var temp = 'https://college-app-io.herokuapp.com/students/'+uid+'/'+status;
+        this.httpClient.get(temp).subscribe(data => {
+        console.log(data);
+    })
+    console.log('sent to the db');
+
   }
 
   ngOnInit() {
@@ -37,7 +60,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSignUp() {
-
+    firebase.auth().signOut();
     if (this.useremail === undefined || this.password === undefined) {
         this.noteSvc.setNotification(
           'Missing Information',
@@ -80,18 +103,15 @@ export class LoginComponent implements OnInit {
         }
         console.log(error);
       });
+      console.log('hello')
     }
+    //firebase.auth().signOut();
   }
 
   onSignIn() {
     if (firebase.auth().currentUser) {
       // [START signout]
         firebase.auth().signOut();
-
-        $('#quickstart-sign-in').removeClass('btn-danger');
-        $('#quickstart-sign-in').addClass('btn-primary');
-
-
         document.getElementById('login-section').hidden = false;
       // [END signout]
     } else {
@@ -133,11 +153,6 @@ export class LoginComponent implements OnInit {
       });
       // [END authwithemail]
     }
-    $('#quickstart-sign-in').removeAttr('disabled');
-    $('#quickstart-sign-up').removeAttr('disabled');
-
-
-    // document.getElementById('quickstart-sign-in').disabled = true;
   }
 
   onGHubLogin() {
@@ -146,8 +161,8 @@ export class LoginComponent implements OnInit {
   }
 
   authChanged() {
-
     firebase.auth().onAuthStateChanged((user) => {
+
         // [START_EXCLUDE silent]
       $('#quickstart-sign-in').removeAttr('disabled');
      // document.getElementById('quickstart-verify-email').disabled = true;
@@ -161,25 +176,23 @@ export class LoginComponent implements OnInit {
         const isAnonymous = user.isAnonymous;
         const uid = user.uid;
         const providerData = user.providerData;
-        // [START_EXCLUDE]
-        document.getElementById('quickstart-sign-in').textContent = 'Sign out';
-        $('#quickstart-sign-in').removeClass('btn-primary');
-        $('#quickstart-sign-in').addClass('btn-danger');
-        document.getElementById('login-section').hidden = true;
 
-        if (!emailVerified) {
-          $('#quickstart-sign-in').removeAttr('disabled');
+         console.log(email);
+        // console.log(uid);
+        // console.log(this.status);
+
+        if(this.modalStatus){
+          this.modalReference.close();
+          //this.router.navigateByUrl('/home');
+          this.uploadToUserTable(user.uid,this.status);
+          this.modalStatus = false;
         }
-        // [END_EXCLUDE]
+        this.router.navigateByUrl('/home');
       } else {
+          console.log('user signed out');
         // User is signed out.
-        // [START_EXCLUDE]
-        document.getElementById('quickstart-sign-in').textContent = 'Sign in';
-        // [END_EXCLUDE]
       }
-      // [START_EXCLUDE silent]
-      $('#quickstart-sign-in').removeAttr('disabled');
-      // [END_EXCLUDE]
+
     });
   }
 

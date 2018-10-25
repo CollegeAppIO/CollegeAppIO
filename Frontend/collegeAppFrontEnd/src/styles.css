@@ -1,2 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
+@import 'node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+
+.mat-horizontal-stepper{
+  background-color: black;
+}
+/* .stepper{
+  background-color: black;
+} */
+.step{
+  background-color: black;
+  color: black;
+}
+
+.mat-step-header .mat-step-icon {
+  background-color: #007bff;
+
+}
+.mat-accent .mat-slider-thumb{
+  background-color: #007bff;
+}
+.mat-accent .mat-slider-track-fill{
+  background-color:  #007bff;
+}

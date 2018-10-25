@@ -1,0 +1,127 @@
+.applicationTitle{
+
+}
+.box{
+  /* width: 50%;
+  max-width: 500px;
+  margin: auto; */
+  /* text-align: center; */
+  /* margin-right: 50%;
+  height: 100%; */
+}
+.form-row{
+  align-self: center;
+}
+#bdayDay{
+  padding-left: 100px;
+}
+.contents{
+  margin-left: 150px;
+  /* margin-right: 0px; */
+}
+.dropdown-item{
+  overflow: visible;
+}
+.firstNameField{
+  /* margin-left: 30%; */
+}
+.lastNameField{
+  margin-left: 100px;
+}
+.gender{
+  padding-left: 100px;
+}
+.month{
+  padding-left: 0px;
+}
+.date{
+  padding-left: 100px;
+}
+.year{
+  padding-left: 100px;
+}
+.religion{
+  padding-left: 100px;
+}
+.nationality{
+  padding-left: 100px;
+}
+.address{
+  padding-left: 0px;
+  /* margin-bottom: 100px;
+  /* background-color: blue;
+  border: black; */
+
+}
+.addline1{
+  width: 500px;
+}
+.addline2{
+  padding-left: 100px;
+  width: 500px;
+}
+.state{
+  padding-left: 60px;
+}
+.city{
+  /* padding-left: 1px; */
+}
+.zip{
+  padding-left: 100px;
+}
+.country{
+  padding-left: 100px;
+}
+.gpa{
+  padding-left: 100px;
+}
+.sat{
+  padding-left: 100px;
+}
+.act{
+  padding-left: 100px;
+}
+.languages{
+  /* padding-left: 100px; */
+  width:100%;
+}
+.sliderValue{
+  /* padding-left: 400px; */
+  text-align: center;
+}
+.saveBtn{
+  float: right;
+  margin-right: 50px;
+  background-color: #007bff;
+  color: white;
+  width: 200px;
+}
+.nextBtn{
+  float:right;
+  background-color: #007bff;
+  color: white;
+  width: 200px;
+}
+.prevBtn{
+  background-color: #007bff;
+  color: white;
+  width: 200px;
+}
+.essay{
+  width:100%;
+  height:1000px;
+}
+input.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+select.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+textarea.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+/* .box{
+  width: 50%;
+  margin-left: 25%;
+
+} */

@@ -1,0 +1,22 @@
+  .container ul {
+   color: #E59934;
+  }
+
+  .container ul li {
+   margin-left: 5px;
+   margin-right: 5px;
+   margin-top: 5px;
+   margin-bottom: 20px;
+   padding:5px;
+   width: 250px;
+   height:250px;
+   float: left;
+   border: 1px solid lightgray;
+   list-style:none;
+   border-radius: 5px;
+
+  }
+
+  .container ul li:hover {
+   border: 2px solid orange;
+  }

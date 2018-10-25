@@ -1,0 +1,381 @@
+<app-nav-bar></app-nav-bar>
+<br>
+
+<div style="text-align: center">
+  <h1>Application Page</h1>
+</div>
+
+<!-- <button (click)="toHome()">Home</button> -->
+<!-- <div *ngIf="firstFormGroup.invalid && firstFormGroup.touched">
+  <p>Please Fill All Fields</p>
+</div> -->
+<mat-horizontal-stepper [linear]="isLinear" class=stepper>
+  <ng-template matStepperIcon="edit">
+    <mat-icon></mat-icon>
+  </ng-template>
+    <mat-step [stepControl]="firstFormGroup" label="Personal Information">
+
+    <form [formGroup]="firstFormGroup" required>
+      <div class="box">
+      <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; " >
+        <div class="form-group" >
+          <label>First Name</label>
+            <input  formControlName="firstName"  class="form-control"type="text"  id="firstname" name="firstname"
+            [(ngModel)]="firstNameStr" placeholder="First Name" required>
+      </div>
+      </div>
+      <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+        <div class="form-group">
+          <label>Last Name</label>
+            <input formControlName="lastName" [(ngModel)]="lastNameStr"class="form-control" type="text" id="lastname"   name="lastname"  placeholder="Last Name"  required>
+      </div>
+      </div>
+
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+      <div class="form-group">
+        <label>Handle</label>
+          <input formControlName="handle" [(ngModel)]="handleStr" type="text" class="form-control" id="handle" name="handle" placeholder="Handle" required>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label for="gender">Gender</label>
+      <select formControlName="gender" [(ngModel)]="genderStr" name="gender"id="gender" class="form-control">
+        <option  *ngFor="let gender of genders">{{gender}}</option>
+      </select>
+    </div>
+    </div>
+
+      <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+        <label>Birthday</label>
+      </div>
+      <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+      <div class="form-group">
+        <input formControlName="bday" [(ngModel)]="bdayStr" name="dob" type="date" class="form-control" id="exampleInputDOB1" placeholder="Date of Birth">
+      </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label>Race</label>
+      <select formControlName="race" [(ngModel)]="raceStr" name="race"id="race" class="form-control">
+        <option  *ngFor="let race of races">{{race.value}}</option>
+      </select>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label>Nationality</label>
+      <select formControlName="nationality" [(ngModel)]="nationalityStr" name="nationality"id="nationality" class="form-control">
+        <option  *ngFor="let nationality of nationalities">{{nationality.value}}</option>
+      </select>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label for="gender">Religion</label>
+      <select formControlName="religion" [(ngModel)]="religionStr" name="religion"id="religion" class="form-control">
+        <option  *ngFor="let religion of religions">{{religion.value}}</option>
+      </select>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+      <div class="card">
+    <div class="card-header">
+      Address
+    </div>
+    <div class="card-body">
+        <label>Street Address</label>
+        <input formControlName="street" [(ngModel)]="streetStr"type="text" class="form-control" id="street" name="street" placeholder="Address Line 1" required>
+        <br>
+        <label>City</label>
+          <input formControlName="city" [(ngModel)]="cityStr"type="text" class="form-control" id="city" name="city" placeholder="City" required>
+        <br>
+        <label>State</label>
+        <select formControlName="state" [(ngModel)]="stateStr" name="state"id="state" class="form-control">
+          <option  *ngFor="let state of states">{{state.value}}</option>
+        </select>
+        <br>
+        <label>Country</label>
+        <select formControlName="country"[(ngModel)]="countryStr" name="country"id="country" class="form-control">
+          <option  *ngFor="let country of countries">{{country}}</option>
+        </select>
+        <br>
+        <label>Zip Code</label>
+        <input formControlName="zip" [(ngModel)]="zipcodeStr"type="text" class="form-control" id="zip" name="zip" placeholder="Zip Code" required>
+    </div>
+  </div>
+</div>
+<div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+  <div class="form-group">
+    <label>Phone</label>
+      <input formControlName="phone" [(ngModel)]="phoneStr" type="text" class="form-control" id="phone" name="phone" placeholder="##########" required>
+</div>
+</div>
+
+  </div>
+    </form>
+    <div *ngIf="firstFormBool == false">
+        <div class="alert alert-danger" role="alert">
+          Please Fill in all the fields
+        </div>
+    </div>
+    <button ngbButtonLabel class="nextBtn" matStepperNext (click)="onSaveContinue()">Save & Continue</button>
+    <button ngbButtonLabel class="saveBtn" (click)="onSave()">Save</button>
+  </mat-step>
+  <mat-step  [stepControl]="academicInfoFormGroup" label="Academic Information">
+    <ng-template matStepperIcon="edit">
+      <mat-icon>edit</mat-icon>
+    </ng-template>
+    <form [formGroup]="academicInfoFormGroup" required >
+    <div class="box">
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+      <div class="form-group">
+        <label>High School</label>
+          <input  formControlName="highschool" [(ngModel)]="highschoolStr"type="text" class="form-control" id="highschool" name="highschool" placeholder="High School" required>
+        </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+      <div class="form-group">
+        <label>GPA</label>
+          <input formControlName="gpa" [(ngModel)]="gpaStr"type="text" class="form-control" id="gpa" name="gpa" placeholder="GPA" required>
+        </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+      <div class="form-group">
+        <label>SAT</label>
+          <input formControlName="sat"[(ngModel)]="satStr"type="text" class="form-control" id="sat" name="sat" placeholder="SAT" required>
+        </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+      <div class="form-group">
+        <label>ACT</label>
+          <input  formControlName="act"[(ngModel)]="actStr"type="text" class="form-control" id="act" name="act" placeholder="ACT" required>
+        </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+      <div class="form-group">
+        <label>Number of Languages Taken</label>
+        <mat-slider formControlName="numLangs" [(ngModel)]="numLanguages" name="languages" class=languages min="0" max="5" step="1"></mat-slider>
+        <p class=sliderValue>Languages Taken: {{numLanguages}}<p>
+        </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+      <div class="form-group">
+        <label>Number of APs Taken</label>
+        <mat-slider  formControlName="numAps" [(ngModel)]="numAPs" name="aps" class=languages min="0" max="5" step="1" ></mat-slider>
+        <p class=sliderValue>APs Taken: {{numAPs}}<p>
+        </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label>Have you participated in any Athletic Activities</label>
+      <select formControlName="athletes" [(ngModel)]="athleteStr" name="athlete"id="athlete" class="form-control">
+        <option  *ngFor="let option of yesNo">{{option}}</option>
+      </select>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label>Have you participated in any Speech and Debate Clubs</label>
+      <select formControlName="speechdebate" [(ngModel)]="speechStr" name="speech"id="speech" class="form-control">
+        <option  *ngFor="let option of yesNo">{{option}}</option>
+      </select>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label>Have you participated in Student Government</label>
+      <select formControlName="studentGov" [(ngModel)]="studentGovStr" name="gov"id="gov" class="form-control">
+        <option  *ngFor="let option of yesNo">{{option}}</option>
+      </select>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label>Have you participated in any Arts clubs</label>
+      <select formControlName="arts"[(ngModel)]="artsStr" name="arts"id="arts" class="form-control">
+        <option  *ngFor="let option of yesNo">{{option}}</option>
+      </select>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label>Have you participated in any Technology Clubs</label>
+      <select formControlName="tech"[(ngModel)]="techStr" name="tech"id="tech" class="form-control">
+        <option  *ngFor="let option of yesNo">{{option}}</option>
+      </select>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label>Have you participated in any Music clubs</label>
+      <select formControlName="music"[(ngModel)]="musicStr" name="music"id="music" class="form-control">
+        <option  *ngFor="let option of yesNo">{{option}}</option>
+      </select>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+    <div class="form-group">
+      <label>Have you participated in any Math or Science clubs</label>
+      <select formControlName="math"[(ngModel)]="mathStr" name="math"id="math" class="form-control">
+        <option  *ngFor="let option of yesNo">{{option}}</option>
+      </select>
+    </div>
+    </div>
+    <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+      <div class="form-group">
+        <label>Enter Number of Volunteer Hours</label>
+          <input formControlName="volunteer"[(ngModel)]="volunteerHoursStr"type="text" class="form-control" id="volunteer" name="volunteer" placeholder="Volunteer Hours" required>
+        </div>
+    </div>
+
+    <br>
+  </div>
+</form>
+  <div *ngIf="academicFormBool == false">
+    <div class="alert alert-danger" role="alert">
+      Please Fill in all the fields
+    </div>
+</div>
+    <button ngbButtonLabel class="prevBtn" matStepperPrevious>Previous</button>
+    <button ngbButtonLabel class="nextBtn" matStepperNext (click)="onSaveContinue()">Save & Continue</button>
+    <button ngbButtonLabel class="saveBtn" (click)="onSave()">Save</button>
+  </mat-step>
+  <mat-step label="Essay">
+    <ng-template matStepperIcon="edit">
+      <mat-icon>edit</mat-icon>
+    </ng-template>
+    <form [formGroup]="essayInfoFormGroup" required>
+      <div>
+      <div class="col-md-12" style="width: 70%; max-width: 700px;margin: auto; ">
+        <div class="form-group">
+          <label>Essay</label>
+            <br>
+
+            <textarea [(ngModel)]="essayStr"formControlName="essay" name="essay" id="essay" class="essay" required></textarea>
+          </div>
+      </div>
+    </div>
+  </form>
+  <div *ngIf="essayFormBool == false">
+    <div class="alert alert-danger" role="alert">
+      Please Fill in all the fields
+    </div>
+  </div>
+  <button ngbButtonLabel class="prevBtn" matStepperPrevious>Previous</button>
+  <button ngbButtonLabel class="nextBtn" matStepperNext (click)="onSubmit()">Submit</button>
+  <button ngbButtonLabel class="saveBtn" (click)="onSave()">Save</button>
+  </mat-step>
+  </mat-horizontal-stepper>
+  <!-- <mat-form-field class="gender"> -->
+    <!-- <mat-select  placeholder="Gender" formControlName="gender" required>
+  <mat-option #genderInput (click)="onGenderSelect(genderInput.value)"*ngFor="let gender of genders" [value]="gender.value" >
+    {{gender.value}}
+  </mat-option>
+</mat-select> -->
+<!-- </mat-form-field> -->
+  <!-- <h6>Handle</h6>
+  <mat-form-field class="handle">
+      <input #handleInput (keyup)="onHandleType(handleInput.value)"id="handle"  name="handle" matInput placeholder="Handle" formControlName="handle" required>
+</mat-form-field>
+  <h6>Date Of Birth</h6>
+  <mat-form-field class="month">
+    <mat-select placeholder="Month" formControlName="month" required>
+  <mat-option #monthInput (click)="onMonthSelect(monthInput.value)" *ngFor="let month of months" [value]="month.value" >
+    {{month.value}}
+  </mat-option>
+</mat-select>
+</mat-form-field>
+<mat-form-field class="date">
+  <mat-select placeholder="Date" formControlName="date" required>
+<mat-option #dayInput (click)="onDaySelect(dayInput.value)"*ngFor="let date of dates" [value]="date.value" >
+  {{date.value}}
+</mat-option>
+</mat-select>
+</mat-form-field>
+<mat-form-field class="year">
+    <input #yearInput (keyup)="onYearType(yearInput.value)"id="year"  name="year" matInput placeholder="Year" formControlName="year" required minlength="4">
+</mat-form-field>
+  <h6>Race<span style="padding-left:200px;">Religion<span style="padding-left:260px;">Nationality</span></span></h6>
+  <mat-form-field class="race">
+    <mat-select placeholder="Race" formControlName="race" required>
+  <mat-option #raceInput (click)="onRaceSelect(raceInput.value)"*ngFor="let race of races" [value]="race.value" >
+    {{race.value}}
+  </mat-option>
+  </mat-select>
+  </mat-form-field>
+  <mat-form-field class="religion">
+    <mat-select placeholder="Religion" formControlName="religion" required>
+  <mat-option #religionInput (click)="onReligionSelect(religionInput.value)"*ngFor="let religion of religions" [value]="religion.value" >
+    {{religion.value}}
+  </mat-option>
+  </mat-select>
+  </mat-form-field>
+  <mat-form-field class="nationality">
+    <mat-select placeholder="Nationality" formControlName="nationality" required>
+  <mat-option #nationalityInput (click)="onNationalitySelect(nationalityInput.value)"*ngFor="let nationality of nationalities" [value]="nationality.value" >
+    {{nationality.value}}
+  </mat-option>
+  </mat-select>
+  </mat-form-field>
+  <ul class=address>
+    <h6>Address</h6>
+    <mat-form-field class="addline1">
+      <input #addline1 (keyup)="onStreetType(addline1.value)"id="addline1"  name="addline1" matInput placeholder="Address Line 1" formControlName="address1" required>
+    </mat-form-field>
+    <mat-form-field class="state">
+      <mat-select placeholder="State" formControlName="state" required>
+    <mat-option #stateInput (click)="onStateSelect(stateInput.value)" *ngFor="let state of states" [value]="state.value" >
+      {{state.value}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+  <br>
+    <mat-form-field class="city">
+      <input #cityInput (keyup)="onCityType(cityInput.value)" id="city"  name="city" matInput placeholder="City" formControlName="city" required>
+    </mat-form-field>
+    <mat-form-field class="zip">
+      <input #zipInput (keyup)="onZipcodeType(zipInput.value)"id="zip"  name="zip" matInput placeholder="Zip Code" formControlName="zip" required>
+    </mat-form-field>
+    <mat-form-field class="country">
+      <input #countryInput (keyup)="onZipcodeType(countryInput.value)"id="zip"  name="zip" matInput placeholder="Country" formControlName="country" required>
+    </mat-form-field>
+    <h6>Phone</h6>
+    <mat-form-field class="phone">
+      <input #phoneInput (keyup)="onPhoneType(zipInput.value)"id="phone"  name="phone" matInput placeholder="Phone #" formControlName="phone" required minlength="10" >
+    </mat-form-field>
+  </ul>
+  </div>
+   </form>
+    </mat-step>
+  <mat-step label="Academic Information" [stepControl]="academicInfoFormGroup">
+    <ng-template matStepperIcon="done">
+      <mat-icon>done_all</mat-icon>
+    </ng-template>
+    <form [formGroup]="academicInfoFormGroup">
+    <div class=contents>
+      <h6>High School<span style="padding-left:190px;">Academic Info</span></h6>
+    <mat-form-field class=highschoolField>
+        <input #highSchool (keyup)="onHighSchoolType(highSchool.value)"id="highschool"  name="highschool" matInput placeholder="High School" formControlName="highschool" required>
+  </mat-form-field>
+  <mat-form-field class=gpa>
+      <input #gpaInput (keyup)="onGPAType(gpaInput.value)"id="gpa"  name="gpa" matInput placeholder="GPA" formControlName="gpa" required>
+</mat-form-field>
+<mat-form-field class=sat>
+    <input #satInput (keyup)="onSATType(satInput.value)"id="sat"  name="sat" matInput placeholder="SAT" >
+</mat-form-field>
+<mat-form-field class=act>
+    <input #actInput (keyup)="onACTType(gpaInput.value)"id="act"  name="act" matInput placeholder="ACT">
+</mat-form-field>
+<h6>Number of Languages Taken</h6>
+<span class="text-small">0</span><mat-slider  #numLanguagesInput (click)="onNumLanguagesSlider(numLanguagesInput.value)" class=languages min="0" max="5" step="1" value="3"></mat-slider><span class="text-small">5</span>
+<br>
+<p class=sliderValue>Languages Taken: {{numLanguagesInput.value}}<p>
+  <h6>Number of APs Taken</h6>
+  <span class="text-small">0</span><mat-slider  #numAPsInput (click)="onNumSlider(numAPsInput.value)" class=languages min="0" max="5" step="1" value="3"></mat-slider><span class="text-small">5</span>
+  <br>
+  <p class=sliderValue>APs Taken: {{numAPsInput.value}}<p>
+</div>
+</form>
+  </mat-step>
+  <mat-step label="Essay"></mat-step> -->
