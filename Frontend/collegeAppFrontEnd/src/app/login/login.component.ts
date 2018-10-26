@@ -86,6 +86,7 @@ export class LoginComponent implements OnInit {
         this.httpClient.get(temp).subscribe(data => {
         console.log(data);
         this.router.navigateByUrl('/home');
+        console.log('really fucked up in uploadToUserTable')
     })
     console.log('sent to the db');
   }
@@ -258,6 +259,7 @@ export class LoginComponent implements OnInit {
               // console.log(data);
               // this.typeOfUser = data;
               if(data === 'student' && this.checkRegisterType){
+                console.log('defintly fucked up')
                 this.router.navigateByUrl('/home');
               }else if(data === 'admin' && this.checkRegisterType){
                 console.log('fucked up')
