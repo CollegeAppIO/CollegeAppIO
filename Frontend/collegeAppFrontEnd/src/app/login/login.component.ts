@@ -39,6 +39,8 @@ export class LoginComponent implements OnInit {
 
   typeOfUser: string;
 
+  checkRegisterType: boolean = true;
+
   formatter = (result: string) => result.toUpperCase();
 
   search = (text$: Observable<string>) =>
@@ -62,11 +64,12 @@ export class LoginComponent implements OnInit {
   }
 
   uploadToUserTable(uid:string,isAdmin:boolean) {
-
+      this.checkRegisterType = false;
       if(this.isAdmin){
         this.httpClient.post('https://college-app-io.herokuapp.com/addAdmin', {
           adminid: uid,
           collegeName: this.collegeName
+
         })
           .subscribe(
             res => {
@@ -254,9 +257,9 @@ export class LoginComponent implements OnInit {
         this.httpClient.get(temp).subscribe(data => {
               // console.log(data);
               // this.typeOfUser = data;
-              if(data === 'student' && this.isAdmin == false){
+              if(data === 'student' && this.checkRegisterType){
                 this.router.navigateByUrl('/home');
-              }else{
+              }else if(data === 'admin' && this.checkRegisterType){
                 console.log('fucked up')
                 this.router.navigateByUrl('/AdminMainPage');
               }
