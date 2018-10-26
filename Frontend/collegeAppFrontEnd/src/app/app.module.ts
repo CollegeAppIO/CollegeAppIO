@@ -27,6 +27,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { CollegeSpecificPageComponent } from './college-specific-page/college-specific-page.component';
 import { ViewApplicationComponent } from './view-application/view-application.component';
 import { AdminMainPageComponent } from './admin-main-page/admin-main-page.component';
+import { AdminNavBarComponent } from './admin-nav-bar/admin-nav-bar.component';
 
 
 
@@ -42,6 +43,7 @@ import { AdminMainPageComponent } from './admin-main-page/admin-main-page.compon
     CollegeSpecificPageComponent,
     ViewApplicationComponent,
     AdminMainPageComponent,
+    AdminNavBarComponent,
 
   ],
   imports: [
