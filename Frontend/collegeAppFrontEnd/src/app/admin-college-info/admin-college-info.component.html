@@ -1,0 +1,71 @@
+<app-admin-nav-bar></app-admin-nav-bar>
+<p>
+  admin-college-info works!
+</p>
+
+
+<br>
+
+<div style="width: 80%; max-width: 1000px;margin: auto;">
+
+  <label for="exampleForm2">Image URL</label>
+  <input [(ngModel)]="imageURL" name="imageURL" type="text" id="imageURL" class="form-control">
+  
+  <label for="exampleForm2">Background Information</label>
+  <div class="md-form">
+    <textarea  [(ngModel)]="backgroundInfo" name="backgroundInfo"id="BackgroundInformation" class="form-control md-textarea" length="120" rows="3"></textarea>
+  </div>
+  <label for="exampleForm2">Deadline</label>
+  <input [(ngModel)]="deadline" name="deadline"type="text" id="Deadline" class="form-control">
+
+  <label for="exampleForm2">Undergraduate Students</label>
+  <input [(ngModel)]="undergradStudents" name="undergradStudents" type="text" id="UndergraduateStudents" class="form-control">
+
+  <label for="exampleForm2">Graduate Students</label>
+  <input [(ngModel)]="gradStudents" name="gradStudents" type="text" id="GraduateStudents" class="form-control">
+
+  <label for="exampleForm2">Total Enrollment</label>
+  <input [(ngModel)]="totalEnroll" name="totalEnroll" type="text" id="TotalEnrollment" class="form-control">
+
+  <label for="exampleForm2">Four Year Graduation Rate</label>
+  <input [(ngModel)]="fourYear" name="fourYear" type="text" id="FourYearGraduationRate" class="form-control">
+
+  <label for="exampleForm2">Academic Calander Type</label>
+  <input [(ngModel)]="academicCalender" name="academicCalender" type="text" id="AcademicCalanderType" class="form-control">
+
+  <label for="exampleForm2">Year Founded</label>
+  <input [(ngModel)]="yearFounded" name="yearFounded" type="text" id="YearFounded" class="form-control">
+
+  <label for="exampleForm2">Location</label>
+  <input [(ngModel)]="location" name="location" type="text" id="Location" class="form-control">
+
+  <label for="exampleForm2">Student Facaulty Ratio</label>
+  <input [(ngModel)]="studentFacaulty" name="studentFacaulty" type="text" id="StudentFacaultyRatio" class="form-control">
+
+  <label for="exampleForm2">Telephone</label>
+  <input [(ngModel)]="telephone" name="telephone" type="text" id="Telephone" class="form-control">
+
+  <label for="exampleForm2">In-state tuition and fees</label>
+  <input [(ngModel)]="inState" name="inState" type="text" id="In-statetuitionandfees" class="form-control">
+
+  <label for="exampleForm2">Out-of-state tuition and fees</label>
+  <input [(ngModel)]="outState" name="outState" type="text" id="Out-of-state" class="form-control">
+
+  <label for="exampleForm2">Question 1</label>
+  <div class="md-form">
+    <textarea [(ngModel)]="question1" name="question1" id="q1" class="form-control md-textarea" length="120" rows="3"></textarea>
+  </div>
+
+  <label for="exampleForm2">Question 2</label>
+  <div class="md-form">
+    <textarea [(ngModel)]="question2" name="question2" id="q2" class="form-control md-textarea" length="120" rows="3"></textarea>
+  </div>
+
+  <label for="exampleForm2">Question 3</label>
+  <div class="md-form">
+    <textarea [(ngModel)]="question3" name="question3" id="q3" class="form-control md-textarea" length="120" rows="3"></textarea>
+  </div>
+</div>
+
+<button type="button" class="btn btn-primary" (click)="submit()">Submit</button>
+<br>
