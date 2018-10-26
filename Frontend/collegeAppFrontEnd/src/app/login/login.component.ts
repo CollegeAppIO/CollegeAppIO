@@ -254,7 +254,7 @@ export class LoginComponent implements OnInit {
         this.httpClient.get(temp).subscribe(data => {
               // console.log(data);
               // this.typeOfUser = data;
-              if(data === 'student'){
+              if(data === 'student' && this.isAdmin == false){
                 this.router.navigateByUrl('/home');
               }else{
                 console.log('fucked up')
