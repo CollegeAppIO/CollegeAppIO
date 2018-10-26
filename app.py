@@ -527,17 +527,6 @@ def getCollegeName():
 	cur.close()
 	return response
 
-@app.route("/getCollegeNameForUID/<collegeid>", methods=['GET'])
-def getCollegeNameForUID(collegeid):
-	conn, cur = initDB()
-	cur.execute("SELECT * FROM colleges WHERE collegeid = %s", (collegeid, ))
-	row = cur.fetchone()
-	response = jsonify(row[1])
-	response.status_code = 200
-	conn.commit()
-	cur.close()
-	return response
-
 @app.route("/getIDType/<sid>", methods=['GET'])
 def getIDType(sid):
 	conn, cur = initDB()
@@ -552,6 +541,17 @@ def getIDType(sid):
 	conn.commit()
 	cur.close()
 	return response	
+
+@app.route("/getCollegeNameForUID/<uid>", methods=['GET'])
+def getCollegeNameForUID(uid):
+	conn, cur = initDB()
+	cur.execute("SELECT college FROM admin WHERE admin_id = %s", (uid, ))
+	row = cur.fetchone()
+	response = jsonify(row)
+	response.status_code = 200
+	conn.commit()
+	cur.close()
+	return response
 
 if __name__ == '__main__':
 	conn, cur = initDB()
