@@ -19,7 +19,16 @@ export class AdminNavBarComponent implements OnInit {
     console.log('signed out');
     firebase.auth().signOut();
     this.router.navigateByUrl('/');
+  }
 
-}
+  toCollegeInfo(){
+    console.log('to home page');
+    this.router.navigateByUrl('/AdminCollegeInfo');
+  }
+
+  home(){
+    console.log('go home page');
+    this.router.navigateByUrl('/AdminMainPage');
+  }
 
 }
