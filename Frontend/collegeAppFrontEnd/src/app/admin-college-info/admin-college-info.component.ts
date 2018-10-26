@@ -26,10 +26,12 @@ export class AdminCollegeInfoComponent implements OnInit {
   question3: string;
   uid:string;
   email:string;
-  collegeName:string;
+  collegeName:any;
   imageURL:string;
 
   collegeQuestions: JSON;
+  collegeList: JSON;
+
 
 
   constructor(private httpClient: HttpClient,public authServ: AuthService) { }
