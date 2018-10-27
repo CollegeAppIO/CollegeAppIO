@@ -113,8 +113,9 @@ def postResponse():
 		results = checkUser(studentid, collegeid)
 		print results
 		if (len(results) == 0):
-			query = "INSERT INTO current_application (studentid, collegeid, q1, q2, q3, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-			curs2.execute(query, (studentid, result[0]['collegeid'], q1, q2, q3, appliedStatus, major, ))
+			acceptancestatus = "0"
+			query = "INSERT INTO current_application (studentid, collegeid, acceptancestatus, q1, q2, q3, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+			curs2.execute(query, (studentid, result[0]['collegeid'], acceptancestatus, q1, q2, q3, appliedStatus, major, ))
 		else:
 			query = "UPDATE current_application SET (q1, q2, q3, appliedStatus, major) = (%s, %s, %s, %s, %s) WHERE studentid = %s AND collegeid = %s"
 			curs2.execute(query, (q1, q2, q3, appliedStatus, major, studentid, collegeid, ))
@@ -541,7 +542,7 @@ def getIDType(sid):
 	response = jsonify(ans)
 	conn.commit()
 	cur.close()
-	return response	
+	return response
 
 @app.route("/getCollegeNameForUID/<uid>", methods=['GET'])
 def getCollegeNameForUID(uid):
