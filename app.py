@@ -698,7 +698,7 @@ def getListOfAcceptedStudents(collegename):
     cur.execute("SELECT collegeid FROM colleges WHERE collegename = %s", (collegename, ))
     row = cur.fetchone()
     collegeid = (row, )
-    cur.execute("SELECT race, decision, sex, act, sat, num_ap, gpa FROM historicalapplication WHERE collegeid = %s", (collegeid, ))
+    cur.execute("SELECT race, decision, sex, act, sat, num_ap, major, gpa FROM historicalapplication WHERE collegeid = %s", (collegeid, ))
     result = []
     for row in cur:
         obj = {
@@ -708,10 +708,11 @@ def getListOfAcceptedStudents(collegename):
             'act' : row[3],
 			'sat' : row[4],
 			'num_ap' : row[5],
-			'gpa' : float(row[6]),
-
+			'major'  : row[6],
+			'gpa' : float(row[7]),
         }
         result.append(obj)
+		
     response = jsonify(result)
     response.status_code = 200
     conn.commit()
