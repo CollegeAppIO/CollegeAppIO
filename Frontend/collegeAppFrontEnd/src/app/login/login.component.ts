@@ -256,7 +256,7 @@ export class LoginComponent implements OnInit {
 
         var temp = 'https://college-app-io.herokuapp.com/getIDType/'+uid;
         this.httpClient.get(temp).subscribe(data => {
-              // console.log(data);
+              console.log(data);
               // this.typeOfUser = data;
               if(data === 'student' && this.checkRegisterType){
                 console.log('defintly fucked up')

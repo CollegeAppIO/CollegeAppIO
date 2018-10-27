@@ -467,6 +467,7 @@ constructor(public authServ: AuthService,private router: Router,private _formBui
       volunteer_hours: this.volunteerHoursStr,
       applicationstatus: this.applicationStatus,
       essay: this.essayStr,
+      email: this.emailStr,
 
     })
       .subscribe(
