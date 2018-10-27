@@ -521,11 +521,20 @@ def sendEmailStatus(email_id, collegename, studentid, accept_status):
 	collegeid = row[0]
 	print "collegeid = ", collegeid
 	print "acceptstatus = ", accept_status
-	
-	# query = "UPDATE current_application SET (q1, q2, q3, appliedStatus, major) = (%s, %s, %s, %s, %s) WHERE studentid = %s AND collegeid = %s"
-	# 		curs2.execute(query, (q1, q2, q3, appliedStatus, major, studentid, collegeid, ))
 	query = "UPDATE current_application SET acceptancestatus =  %s WHERE studentid = %s AND collegeid = %s"
 	cur.execute(query, (str(accept_status), studentid, collegeid,))
+	query = "SELECT race, act, sat, gpa, num_ap, sex,  current_application.major FROM students, current_application WHERE studentid = %s"
+	cur.execute(query, (studentid,))
+	row = cur.fetchone()
+	race = row[0]
+	act = row[1]
+	sat = row[2]
+	gpa = row[3]
+	num_ap = row[4]
+	sex = row[5]
+	major = row[6]
+	query = "INSERT INTO historicalapplication (race, act, sat, gpa, num_ap, sex, major) VALUES (%s, %s, %s, %s, %s, %s. %s)"
+	cur.execute(query, (race, act, sat, gpa, num_ap, sex, major, ))
 	conn.commit()
 	cur.close()
 	response = jsonify("OK")
@@ -660,7 +669,7 @@ def getStudentsForCollegeName(collegename):
 	result = []
 	for r in cur:
 		result.append(r)
-	
+
 	response = jsonify(result)
 	response.status_code = 200
 	conn.commit()
@@ -687,7 +696,7 @@ def getListOfAcceptedStudents(collegename):
     cur.close()
     return response
 
-	
+
 if __name__ == '__main__':
 	conn, cur = initDB()
 	app.run(debug=True)
