@@ -484,7 +484,7 @@ def sendEmailtoStudent(email_id, fname):
 	return jsonify("Sent")
 
 
-@app.route("/sendEmailAccept/<email_id>/<collegename>/<studentname>", methods = ['GET'])
+#@app.route("/sendEmailAccept/<email_id>/<collegename>/<studentname>", methods = ['GET'])
 def sendEmailAccept(email_id, collegename, studentname):
 	mail = initEmailService()
 	msg = Message('Hello', sender = 'collegeappio3@gmail.com', recipients = [email_id])
@@ -495,7 +495,7 @@ def sendEmailAccept(email_id, collegename, studentname):
 	return jsonify("Sent")
 
 
-@app.route("/sendEmailReject/<email_id>/<collegename>/<studentname>", methods = ['GET'])
+#@app.route("/sendEmailReject/<email_id>/<collegename>/<studentname>", methods = ['GET'])
 def sendEmailReject(email_id, collegename, studentname):
 	mail = initEmailService()
 	msg = Message('Hello', sender = 'collegeappio3@gmail.com', recipients = [email_id])
@@ -505,7 +505,32 @@ def sendEmailReject(email_id, collegename, studentname):
 	print "Response is:", response
 	return jsonify("Sent")
 
+@app.route("/sendEmailStatus/<email_id>/<collegename>/<studentid>/<accept_status>", methods = ['GET'])
+def sendEmailStatus(email_id, collegename, studentid, accept_status):
+	conn, cur = initDB()
+	cur.execute("SELECT fname, lname FROM students where studentid = %s", (studentid, ))
+	row = cur.fetchone()
+	name = row[0] + " " + row[1]
+	if int(accept_status) == 1:
+		sendEmailAccept(email_id, collegename, name)
+	elif int(accept_status) == 2:
+		sendEmailReject(email_id, collegename, name)
 
+	cur.execute("SELECT collegeid from colleges WHERE collegename = %s", (collegename, ))
+	row = cur.fetchone()
+	collegeid = row[0]
+	print "collegeid = ", collegeid
+	print "acceptstatus = ", accept_status
+	
+	# query = "UPDATE current_application SET (q1, q2, q3, appliedStatus, major) = (%s, %s, %s, %s, %s) WHERE studentid = %s AND collegeid = %s"
+	# 		curs2.execute(query, (q1, q2, q3, appliedStatus, major, studentid, collegeid, ))
+	query = "UPDATE current_application SET acceptancestatus =  %s WHERE studentid = %s AND collegeid = %s"
+	cur.execute(query, (str(accept_status), studentid, collegeid,))
+	conn.commit()
+	cur.close()
+	response = jsonify("OK")
+	response.status_code = 200
+	return response
 
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
