@@ -168,14 +168,15 @@ def getApplicationPool():
 			result.append(obj)
 		print result
 		collegeid = result[0]['collegeid']
-		curs1.execute("SELECT students.studentid, major, act, sat  FROM current_application, students WHERE collegeid = %s AND acceptancestatus = 0 AND students.studentid = current_application.studentid", collegeid)
+		curs1.execute("SELECT students.studentid, major, act, sat, gpa  FROM current_application, students WHERE collegeid = %s AND acceptancestatus = 0 AND students.studentid = current_application.studentid", collegeid)
 		result = []
 		for row in curs1:
 			obj = {
 				'studentid' : row[0],
 				'major' : row[1],
 				'act' : row[2],
-				'sat' : row[3]
+				'sat' : row[3],
+				'gpa' : row[4]
 			}
 			result.append(obj)
 		print result
