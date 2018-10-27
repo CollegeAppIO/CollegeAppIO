@@ -30,6 +30,7 @@ import { AdminMainPageComponent } from './admin-main-page/admin-main-page.compon
 import { AdminNavBarComponent } from './admin-nav-bar/admin-nav-bar.component';
 import { AdminCollegeInfoComponent } from './admin-college-info/admin-college-info.component';
 import { StudentApplicationDetailsComponent } from './student-application-details/student-application-details.component';
+import { HistoricalDataComponent } from './historical-data/historical-data.component';
 
 
 
@@ -48,6 +49,7 @@ import { StudentApplicationDetailsComponent } from './student-application-detail
     AdminNavBarComponent,
     AdminCollegeInfoComponent,
     StudentApplicationDetailsComponent,
+    HistoricalDataComponent,
 
   ],
   imports: [

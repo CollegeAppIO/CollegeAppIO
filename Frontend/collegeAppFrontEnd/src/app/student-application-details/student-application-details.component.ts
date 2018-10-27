@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient,HttpHeaders} from '@angular/common/http'
 import { ActivatedRoute } from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-student-application-details',
@@ -50,7 +51,7 @@ export class StudentApplicationDetailsComponent implements OnInit {
   idStudent:any;
   email:string;
   collegeName: string;
-  constructor(public http: HttpClient,  private route: ActivatedRoute) {
+  constructor(public http: HttpClient,  private route: ActivatedRoute, private router: Router) {
     // this.route.queryParams.subscribe(params => {
     //         console.log(params["id"]);
     //         this.idStudent =params["id"];
@@ -156,11 +157,13 @@ export class StudentApplicationDetailsComponent implements OnInit {
       .subscribe(
         res => {
           console.log(res);
+          this.router.navigateByUrl('/AdminMainPage');
         },
         err => {
           console.log("Error occured");
         }
       );
+
   }
 
   onReject(){
@@ -170,6 +173,7 @@ export class StudentApplicationDetailsComponent implements OnInit {
       .subscribe(
         res => {
           console.log(res);
+          this.router.navigateByUrl('/AdminMainPage');
         },
         err => {
           console.log("Error occured");
