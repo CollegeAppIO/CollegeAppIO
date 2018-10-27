@@ -373,7 +373,7 @@ def getCollegeStats():
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
 		print(collegeN)
-		curs.execute("SELECT college, avg(act), avg(sat), avg(num_ap), avg(gpa), race, count(race) FROM historicalapplication where college = %s GROUP BY college, race", collegeN)
+		curs.execute("SELECT college, avg(act), avg(sat), avg(num_ap), avg(gpa) FROM historicalapplication where college = %s GROUP BY college", collegeN)
 		result = []
 		for row in curs:
 			obj = {
@@ -381,9 +381,7 @@ def getCollegeStats():
 				'act': float(row[1]),
 				'sat': float(row[2]),
 				'num_ap': float(row[3]),
-				'gpa': float(row[4]),
-				'race': row[5],
-				'count_race': row[6]
+				'gpa': float(row[4])
 			}
 			result.append(obj)
 		print(result)
