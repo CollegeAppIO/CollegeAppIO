@@ -515,16 +515,14 @@ def sendEmailStatus(email_id, collegename, studentid, accept_status):
 		sendEmailAccept(email_id, collegename, name)
 	elif int(accept_status) == 2:
 		sendEmailReject(email_id, collegename, name)
-
 	cur.execute("SELECT collegeid from colleges WHERE collegename = %s", (collegename, ))
 	row = cur.fetchone()
 	collegeid = row[0]
-	print "collegeid = ", collegeid
-	print "acceptstatus = ", accept_status
+	print(row)
 	query = "UPDATE current_application SET acceptancestatus =  %s WHERE studentid = %s AND collegeid = %s"
 	cur.execute(query, (str(accept_status), studentid, collegeid,))
-	query = "SELECT race, act, sat, gpa, num_ap, sex,  current_application.major FROM students, current_application WHERE studentid = %s"
-	cur.execute(query, (studentid,))
+	query = "SELECT race, act, sat, gpa, num_ap, sex,  current_application.major FROM students, current_application WHERE students.studentid = %s AND collegeid  = %s"
+	cur.execute(query, (studentid, collegeid))
 	row = cur.fetchone()
 	race = row[0]
 	act = row[1]
@@ -533,11 +531,29 @@ def sendEmailStatus(email_id, collegename, studentid, accept_status):
 	num_ap = row[4]
 	sex = row[5]
 	major = row[6]
-	query = "INSERT INTO historicalapplication (race, act, sat, gpa, num_ap, sex, major) VALUES (%s, %s, %s, %s, %s, %s. %s)"
-	cur.execute(query, (race, act, sat, gpa, num_ap, sex, major, ))
+	sex_act = 1
+	print(row)
+	if (sex == "MALE"):
+		sex_act = 0
+	query = "SELECT collegeName FROM colleges WHERE collegeid = %s"
+	cur.execute(query, (collegeid, ))
+	row = cur.fetchone()
+	collegeName = row[0]
+	query = "SELECT historicalid FROM historicalapplication ORDER BY historicalid DESC LIMIT 1"
+	cur.execute(query)
+	row = cur.fetchone()
+	id  = row[0]
+	print(row)
+	if (row[0] is None):
+		id = 0
+	else:
+		id = int(row[0]) + 1
+	query = "INSERT INTO historicalapplication (historicalid, race, act, sat, gpa, num_ap, sex, major, collegeid, decision, college) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+	cur.execute(query, (id, race, act, sat, gpa, num_ap, sex_act, major, collegeid, int(accept_status), collegeName, ))
+	print("done")
 	conn.commit()
 	cur.close()
-	response = jsonify("OK")
+	response = jsonify("200")
 	response.status_code = 200
 	return response
 
