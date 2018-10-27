@@ -113,7 +113,7 @@ def postResponse():
 		results = checkUser(studentid, collegeid)
 		print results
 		if (len(results) == 0):
-			acceptancestatus = "0"
+			acceptancestatus = 0
 			query = "INSERT INTO current_application (studentid, collegeid, acceptancestatus, q1, q2, q3, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
 			curs2.execute(query, (studentid, result[0]['collegeid'], acceptancestatus, q1, q2, q3, appliedStatus, major, ))
 		else:
@@ -147,6 +147,48 @@ def checkUser(studentid, collegeid):
 	finally:
 		if con:
 			con.close()
+
+@app.route("/getApplicationPool")
+def getApplicationPool():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	conn = None
+	try :
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		curs1 = conn.cursor()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		curs.execute("SELECT collegeid FROM colleges WHERE collegeName = %s", collegeN)
+		result = []
+		for row in curs:
+			obj = {
+				'collegeid' : row
+			}
+			result.append(obj)
+		print result
+		collegeid = result[0]['collegeid']
+		curs1.execute("SELECT students.studentid, major, act, sat  FROM current_application, students WHERE collegeid = %s AND acceptancestatus = 0 AND students.studentid = current_application.studentid", collegeid)
+		result = []
+		for row in curs1:
+			obj = {
+				'studentid' : row[0],
+				'major' : row[1],
+				'act' : row[2],
+				'sat' : row[3]
+			}
+			result.append(obj)
+		print result
+		response = jsonify(result)
+		response.status_code = 200
+		conn.commit()
+		curs.close()
+		curs1.close()
+		return response
+	finally:
+		if conn:
+			conn.close()
+
 
 @app.route("/addAdmin", methods = ['POST'])
 def addAdmin():
