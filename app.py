@@ -28,7 +28,7 @@ def initEmailService():
 	app.config['MAIL_SERVER']='smtp.gmail.com'
 	app.config['MAIL_PORT'] = 465
 	app.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME']
-	app.config['MAIL_PASSWORD'] = os.environ['MAIL_PASSWORD'] #C0llegeApp1
+	app.config['MAIL_PASSWORD'] = os.environ['MAIL_PASSWORD']
 	app.config['MAIL_USE_TLS'] = False
 	app.config['MAIL_USE_SSL'] = True
 	mail = Mail(app)
@@ -484,6 +484,29 @@ def sendEmailtoStudent(email_id, fname):
 	return jsonify("Sent")
 
 
+@app.route("/sendEmailAccept/<email_id>/<collegename>/<studentname>", methods = ['GET'])
+def sendEmailAccept(email_id, collegename, studentname):
+	mail = initEmailService()
+	msg = Message('Hello', sender = 'collegeappio3@gmail.com', recipients = [email_id])
+	#msg.body = "Congratulations! You have applied to " + str(collegename) + ""
+	msg.html = render_template("email-template-accept.html", cname = collegename, sname = studentname)
+	response = mail.send(msg)
+	print "Response is:", response
+	return jsonify("Sent")
+
+
+@app.route("/sendEmailReject/<email_id>/<collegename>/<studentname>", methods = ['GET'])
+def sendEmailReject(email_id, collegename, studentname):
+	mail = initEmailService()
+	msg = Message('Hello', sender = 'collegeappio3@gmail.com', recipients = [email_id])
+	#msg.body = "Congratulations! You have applied to " + str(collegename) + ""
+	msg.html = render_template("email-template-reject.html", cname = collegename, sname = studentname)
+	response = mail.send(msg)
+	print "Response is:", response
+	return jsonify("Sent")
+
+
+
 @app.route("/putStudents", methods = ['POST'])
 def putStudents():
 	conn, cur = initDB()
@@ -593,6 +616,27 @@ def getCollegeNameForUID(uid):
 	cur.execute("SELECT college FROM admin WHERE admin_id = %s", (uid, ))
 	row = cur.fetchone()
 	response = jsonify(row)
+	response.status_code = 200
+	conn.commit()
+	cur.close()
+	return response
+
+@app.route("/getStudentsForCollegeName/<collegename>", methods=['GET'])
+def getStudentsForCollegeName(collegename):
+	#get first query to fetch collegeID for that collegename in collegetable
+	#get second query in curernt_applications table to fetch q1, q2, q3 and studentID for that collegeID
+	#for each row in second query, get the student details
+	conn, cur = initDB()
+	cur.execute("SELECT collegeid FROM colleges WHERE collegename = %s", (collegename, ))
+	row = cur.fetchone()
+	collegeid = (row, )
+	#cur.execute("SELECT q1, q2, q3, studentid FROM current_application WHERE collegeid = %s", collegeid)
+	cur.execute("SELECT current_application.q1, current_application.q2, current_application.q3, current_application.studentid, students.fname FROM current_application LEFT JOIN students on students.studentid = current_application.studentid WHERE current_application.collegeid = %s", collegeid)
+	result = []
+	for r in cur:
+		result.append(r)
+	
+	response = jsonify(result)
 	response.status_code = 200
 	conn.commit()
 	cur.close()
