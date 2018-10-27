@@ -541,7 +541,7 @@ def getIDType(sid):
 	response = jsonify(ans)
 	conn.commit()
 	cur.close()
-	return response	
+	return response
 
 @app.route("/getCollegeNameForUID/<uid>", methods=['GET'])
 def getCollegeNameForUID(uid):
