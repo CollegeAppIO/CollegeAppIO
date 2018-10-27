@@ -7,6 +7,7 @@ import { CollegeSpecificPageComponent } from '../college-specific-page/college-s
 import {ViewApplicationComponent}  from '../view-application/view-application.component';
 import {AdminMainPageComponent}  from '../admin-main-page/admin-main-page.component';
 import {AdminCollegeInfoComponent}  from '../admin-college-info/admin-college-info.component';
+import {StudentApplicationDetailsComponent}  from '../student-application-details/student-application-details.component';
 
 // @NgModule({
 //   imports: [
@@ -42,6 +43,9 @@ const routes: Routes = [
         },{
             path: 'AdminCollegeInfo',
             component: AdminCollegeInfoComponent,
+        },{
+            path: 'AdminStudentApplication',
+            component: StudentApplicationDetailsComponent,
         },
 
     ];

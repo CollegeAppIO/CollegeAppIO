@@ -29,6 +29,7 @@ import { ViewApplicationComponent } from './view-application/view-application.co
 import { AdminMainPageComponent } from './admin-main-page/admin-main-page.component';
 import { AdminNavBarComponent } from './admin-nav-bar/admin-nav-bar.component';
 import { AdminCollegeInfoComponent } from './admin-college-info/admin-college-info.component';
+import { StudentApplicationDetailsComponent } from './student-application-details/student-application-details.component';
 
 
 
@@ -46,6 +47,7 @@ import { AdminCollegeInfoComponent } from './admin-college-info/admin-college-in
     AdminMainPageComponent,
     AdminNavBarComponent,
     AdminCollegeInfoComponent,
+    StudentApplicationDetailsComponent,
 
   ],
   imports: [
