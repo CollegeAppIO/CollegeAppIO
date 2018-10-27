@@ -363,6 +363,39 @@ def getStudentResponse():
 		if con:
 			con.close()
 
+@app.route("/getCollegeStats", methods = ['GET'])
+def getCollegeStats():
+	con = None
+	try:
+		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		print(collegeN)
+		curs.execute("SELECT college, avg(act), avg(sat), avg(num_ap), avg(gpa), race, count(race) FROM historicalapplication where college = %s GROUP BY college, race", collegeN)
+		result = []
+		for row in curs:
+			obj = {
+				'college': row[0],
+				'act': float(row[1]),
+				'sat': float(row[2]),
+				'num_ap': float(row[3]),
+				'gpa': float(row[4]),
+				'race': row[5],
+				'count_race': row[6]
+			}
+			result.append(obj)
+		print(result)
+		response = jsonify(result)
+		response.status_code = 200
+		conn.commit()
+		curs.close()
+		return response
+	finally:
+		if con:
+			con.close()
+
 @app.route("/getCollegeInfo", methods = ['GET'])
 def getCollegesInfo():
 	con = None
@@ -482,7 +515,6 @@ def sendEmailtoStudent(email_id, fname):
 	response = mail.send(msg)
 	print "Response is:", response
 	return jsonify("Sent")
-
 
 #@app.route("/sendEmailAccept/<email_id>/<collegename>/<studentname>", methods = ['GET'])
 def sendEmailAccept(email_id, collegename, studentname):
@@ -703,7 +735,7 @@ def getListOfAcceptedStudents(collegename):
     for row in cur:
         obj = {
             'race' : row[0],
-            'decision' : row[1],	
+            'decision' : row[1],
 			'sex' : row[2],
             'act' : row[3],
 			'sat' : row[4],
@@ -712,7 +744,7 @@ def getListOfAcceptedStudents(collegename):
 			'gpa' : float(row[7]),
         }
         result.append(obj)
-		
+
     response = jsonify(result)
     response.status_code = 200
     conn.commit()
