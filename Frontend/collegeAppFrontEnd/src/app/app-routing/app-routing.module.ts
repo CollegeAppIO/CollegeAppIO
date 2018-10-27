@@ -8,6 +8,8 @@ import {ViewApplicationComponent}  from '../view-application/view-application.co
 import {AdminMainPageComponent}  from '../admin-main-page/admin-main-page.component';
 import {AdminCollegeInfoComponent}  from '../admin-college-info/admin-college-info.component';
 import {StudentApplicationDetailsComponent}  from '../student-application-details/student-application-details.component';
+import {HistoricalDataComponent}  from '../historical-data/historical-data.component';
+
 
 // @NgModule({
 //   imports: [
@@ -46,6 +48,10 @@ const routes: Routes = [
         },{
             path: 'AdminStudentApplication',
             component: StudentApplicationDetailsComponent,
+        },
+        {
+            path: 'HistoricalData',
+            component: HistoricalDataComponent,
         },
 
     ];

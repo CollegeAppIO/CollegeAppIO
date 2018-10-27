@@ -1,0 +1,31 @@
+<app-admin-nav-bar></app-admin-nav-bar>
+<br>
+
+<div style="width: 80%; max-width: 1000px;margin: auto;">
+    <table class="table table-striped custab">
+  <thead>
+    <tr>
+      <th>Student ID</th>
+      <th>Race</th>
+      <th>Sex</th>
+      <th>Major</th>
+      <th>GPA</th>
+      <th>SAT</th>
+      <th>ACT</th>
+      <th>Decision</th>
+    </tr>
+  </thead>
+  <tbody>
+   <tr *ngFor="let student of studentTable; let studentIndex = index" (click)="openStudentDetails(student)">
+     <th>{{studentIndex + 1}}</th>
+     <td>{{ student.race }}</td>
+     <td>{{ student.sex }}</td>
+     <td>{{ student.major }}</td>
+     <td>{{ student.gpa }}</td>
+     <td>{{ student.sat }}</td>
+     <td>{{ student.act }}</td>
+     <td>{{ student.decision }}</td>
+   </tr>
+ </tbody>
+</table>
+</div>
