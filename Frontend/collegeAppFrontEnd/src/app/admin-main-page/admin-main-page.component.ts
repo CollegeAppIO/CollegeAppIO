@@ -13,6 +13,8 @@ import {StudentApplicationDetailsComponent}  from '../student-application-detail
 export class AdminMainPageComponent implements OnInit {
   studentTable: JSON;
   collegeName: any;
+  uid: any;
+  email: any;
 
 
   constructor(private httpClient: HttpClient,public authServ: AuthService,private router: Router) { }
