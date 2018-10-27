@@ -1,1 +1,24 @@
 <app-admin-nav-bar></app-admin-nav-bar>
+<br>
+<div style="width: 80%; max-width: 1000px;margin: auto;">
+    <table class="table table-striped custab">
+  <thead>
+    <tr>
+      <th>Student ID</th>
+      <th>Major</th>
+      <th>GPA</th>
+      <th>SAT</th>
+      <th>ACT</th>
+    </tr>
+  </thead>
+  <tbody>
+   <tr *ngFor="let student of studentTable" (click)="openStudentDetails(student)">
+     <th>{{ student.studentid }}</th>
+     <td>{{ student.major }}</td>
+     <td>{{ student.gpa }}</td>
+     <td>{{ student.sat }}</td>
+     <td>{{ student.act }}</td>
+   </tr>
+ </tbody>
+</table>
+</div>
