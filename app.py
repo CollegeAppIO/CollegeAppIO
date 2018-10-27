@@ -667,6 +667,27 @@ def getStudentsForCollegeName(collegename):
 	cur.close()
 	return response
 
+@app.route("/getListOfAcceptedStudents/<collegename>", methods=['GET'])
+def getListOfAcceptedStudents(collegename):
+    conn, cur = initDB()
+    cur.execute("SELECT collegeid FROM colleges WHERE collegename = %s", (collegename, ))
+    row = cur.fetchone()
+    collegeid = (row, )
+    cur.execute("SELECT studentid, acceptancestatus FROM current_application WHERE collegeid = %s", (collegeid, ))
+    result = []
+    for row in cur:
+        obj = {
+            'studentid' : row[0],
+            'acceptancestatus' : row[1]
+        }
+        result.append(obj)
+    response = jsonify(result)
+    response.status_code = 200
+    conn.commit()
+    cur.close()
+    return response
+
+	
 if __name__ == '__main__':
 	conn, cur = initDB()
 	app.run(debug=True)
