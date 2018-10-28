@@ -368,7 +368,7 @@ def getCategories():
 	con = None
 	try:
 		con, curs = initDB()
-		query = "SELECT column_name from INFORMATION_SCHEMA.COLUMNS where table_name = 'historicalapplication'"
+		query = "SELECT column_name from INFORMATION_SCHEMA.COLUMNS where table_name = 'historicalapplication' AND column_name = 'historicalid'"
 		curs.execute(query)
 		result = []
 		for row in curs:
