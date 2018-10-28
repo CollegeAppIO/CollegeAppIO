@@ -363,6 +363,37 @@ def getStudentResponse():
 		if con:
 			con.close()
 
+@app.route("/getData", methods = ['GET'])
+def getData():
+	con = None
+	try:
+		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		collegeName = request.headers.get('collegeName')
+		param1 = request.headers.get('param1')
+		param2 = request.headers.get('param2')
+		collegeN = (collegeName, )
+		query = "SELECT " + param1 + ", " + param2 + " FROM historicalapplication WHERE college = %s"
+		curs.execute(query, collegeN)
+		result = []
+		for row in curs:
+			obj = {
+				'param1': row[0],
+				'param2': float(row[1]),
+			}
+			result.append(obj)
+		print(result)
+		response = jsonify(result)
+		response.status_code = 200
+		conn.commit()
+		curs.close()
+		return response
+	finally:
+		if con:
+			con.close()
+
+
 @app.route("/getCollegeStats", methods = ['GET'])
 def getCollegeStats():
 	con = None
@@ -372,7 +403,6 @@ def getCollegeStats():
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
-		print(collegeN)
 		curs.execute("SELECT college, avg(act), avg(sat), avg(num_ap), avg(gpa) FROM historicalapplication where college = %s GROUP BY college", collegeN)
 		result = []
 		for row in curs:
@@ -384,7 +414,6 @@ def getCollegeStats():
 				'gpa': float(row[4])
 			}
 			result.append(obj)
-		print(result)
 		response = jsonify(result)
 		response.status_code = 200
 		conn.commit()
