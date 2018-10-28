@@ -363,6 +363,30 @@ def getStudentResponse():
 		if con:
 			con.close()
 
+@app.route("/getCategories", methods=['GET'])
+def getCategories():
+	con = None
+	try:
+		con, curs = initDB()
+		query = "SELECT column_name from INFORMATION_SCHEMA.COLUMNS where table_name = 'historicalapplication'"
+		curs.execute(query)
+		result = []
+		for row in curs:
+			obj = {
+				'categories': row[0]
+			}
+			result.append(obj)
+		print result
+		response = jsonify(result)
+		response.status_code = 200
+		con.commit()
+		curs.close
+		return response
+	finally:
+		if con:
+			con.close()
+
+
 @app.route("/getData", methods = ['GET'])
 def getData():
 	con = None
