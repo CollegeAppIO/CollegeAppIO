@@ -826,13 +826,14 @@ def getListOfAcceptedStudents(collegename):
 def getStatsEachStudent():
 	conn, cur = initDB()
 	collegename = request.headers.get('collegeName')
-	cur.execute("SELECT act, sat, num_ap, gpa, race, major FROM historicalapplication where college = %s", (collegename, ))
+	cur.execute("SELECT act, sat, num_ap, gpa, race, major, CASE WHEN sex = '1' then 'Female' WHEN sex = '0' then 'Other' WHEN sex = '2' then 'Male' END AS SEX FROM historicalapplication where college = %s", (collegename, ))
 	result1 = []
 	result2 = []
 	result3 = []
 	result4 = []
 	result5 = []
 	result6 = []
+	result7 = [] 
 	result = []
 	for row in cur:
 		obj1 = {
@@ -865,12 +866,18 @@ def getStatsEachStudent():
 		}
 		result6.append(obj6)
 
+		obj7 = {
+			'sex' : row[6]
+		}
+		result7.append(obj7)
+
 	result.append(result1)
 	result.append(result2)
 	result.append(result3)
 	result.append(result4)
 	result.append(result5)
 	result.append(result6)
+	result.append(result7)
 
 	response = jsonify(result)
 	response.status_code = 200
