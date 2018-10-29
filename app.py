@@ -438,6 +438,26 @@ def getCollegeStats():
 				'gpa': float(row[4])
 			}
 			result.append(obj)
+		result2 = []
+		curs2 = conn.cursor()
+		curs2.execute("SELECT race, count(race) FROM historicalapplication where college = %s GROUP BY race", collegeN)
+		for row in curs2:
+			obj = {
+				'race' : row[0], 
+				'count' : float(row[1])
+			}
+			result2.append(obj)
+		result.append(result2)
+		result3 = []
+		curs3 = conn.cursor()
+		curs3.execute("SELECT sex, count(sex) FROM historicalapplication where college = %s GROUP BY sex", collegeN)
+		for row in curs3:
+			obj = {
+				'sex' : row[0], 
+				'count' : float(row[1])
+			}
+			result3.append(obj)
+		result.append(result3)
 		response = jsonify(result)
 		response.status_code = 200
 		conn.commit()
