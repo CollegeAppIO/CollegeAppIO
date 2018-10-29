@@ -57,6 +57,10 @@ export class DataVisualizationComponent implements OnInit {
 
   }
   onCategoryChange(){
+    // var temp2 = 'http://college-app-io.herokuapp.com/getCollegeStats'
+    // this.httpClient.get(temp1,{headers: {'collegeName': this.collegeName}}).subscribe(data1 => {
+    //   console.log(data1);
+    // })
     //var cat1 = this.category1;
     var cat1: JSON;
     var cat2: JSON;
@@ -71,6 +75,7 @@ export class DataVisualizationComponent implements OnInit {
            var gpaData = data1[3]
            var raceData = data1[4]
            var majorData = data1[5];
+           var sexData = data1[6];
            //var sexes = data1[2] as JSON;
           if(this.category1 == 'act'){
             cat1 = actData.map(actData => actData.act);
@@ -90,10 +95,8 @@ export class DataVisualizationComponent implements OnInit {
           else if(this.category1 == 'major'){
             cat1 = majorData.map(majorData => majorData.major);
           }
-
           else if(this.category1 == 'sex'){
-            //console.log(userData.num_ap);
-            //cat1 = sexes.map(sexes => sexes.sex);
+            cat1 = sexData.map(sexData => sexData.sex);
           }
           if(this.category2 == 'act'){
             cat2 = actData.map(actData => actData.act);
@@ -113,6 +116,9 @@ export class DataVisualizationComponent implements OnInit {
           else if(this.category2 == 'major'){
             cat2 = majorData.map(majorData => majorData.major);
           }
+          else if(this.category2 == 'sex'){
+            cat2 = sexData.map(sexData => sexData.sex);
+          }
 
           console.log('hi');
           console.log(this.category1);
@@ -128,7 +134,7 @@ export class DataVisualizationComponent implements OnInit {
                   {
 
                     data: cat2,
-                    borderColor: '#3cba9f',
+                    borderColor: '#4169e1',
                     fill: false,
                     borderWidth: 1,
                   },
