@@ -1,0 +1,19 @@
+<app-admin-nav-bar></app-admin-nav-bar>
+<br>
+<label>Please choose the categories you want to compare with</label>
+<div >
+
+  <select  style="width: 70%; max-width: 100px; float:left; " [(ngModel)]="category1" name="category1"id="category1" class="form-control">
+    <option *ngFor="let category of categories">{{category.categories}}</option>
+  </select>
+
+  <select style="width: 70%; max-width: 100px;margin-left:10px; float:left; " [(ngModel)]="category2" name="category2"id="category2" class="form-control">
+    <option *ngFor="let category of categories">{{category.categories}}</option>
+  </select>
+
+  <button style="margin-left:10px; float:left;" (click)="onCategoryChange()" type="button" class="btn btn-primary">Apply Filter</button>
+</div>
+
+<div *ngIf="chart">
+  <canvas id="canvas">{{chart}}</canvas>
+</div>
