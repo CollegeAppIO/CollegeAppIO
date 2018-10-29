@@ -450,7 +450,7 @@ def getCollegeStats():
 		result.append(result2)
 		result3 = []
 		curs3 = conn.cursor()
-		curs3.execute("SELECT sex, count(sex) FROM historicalapplication where college = %s GROUP BY sex", collegeN)
+		curs3.execute("SELECT CASE WHEN sex = '1' then 'Female' WHEN sex = '0' then 'Other' WHEN sex = '2' then 'Male' END AS SEX, count(sex) FROM historicalapplication where college = %s GROUP BY sex", collegeN)
 		for row in curs3:
 			obj = {
 				'sex' : row[0], 
