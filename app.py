@@ -822,6 +822,61 @@ def getListOfAcceptedStudents(collegename):
     cur.close()
     return response
 
+@app.route("/getStatsEachStudent", methods=['GET'])
+def getStatsEachStudent():
+	conn, cur = initDB()
+	collegename = request.headers.get('collegeName')
+	cur.execute("SELECT act, sat, num_ap, gpa, race, major FROM historicalapplication where college = %s", (collegename, ))
+	result1 = []
+	result2 = []
+	result3 = []
+	result4 = []
+	result5 = []
+	result6 = []
+	result = []
+	for row in cur:
+		obj1 = {
+			'act' : row[0]
+		}
+		result1.append(obj1)
+
+		obj2 = {
+			'sat' : row[1]
+		}
+		result2.append(obj2)
+
+		obj3 = {
+			'num_ap' : row[2]
+		}
+		result3.append(obj3)
+
+		obj4 = {
+			'gpa' : float(row[3])
+		}
+		result4.append(obj4)
+
+		obj5 = {
+			'race' : row[4]
+		}
+		result5.append(obj5)
+
+		obj6 = {
+			'major' : row[5]
+		}
+		result6.append(obj6)
+
+	result.append(result1)
+	result.append(result2)
+	result.append(result3)
+	result.append(result4)
+	result.append(result5)
+	result.append(result6)
+
+	response = jsonify(result)
+	response.status_code = 200
+	conn.commit()
+	cur.close()
+	return response
 
 if __name__ == '__main__':
 	conn, cur = initDB()
