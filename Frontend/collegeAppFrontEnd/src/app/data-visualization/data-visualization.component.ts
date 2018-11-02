@@ -21,6 +21,8 @@ export class DataVisualizationComponent implements OnInit {
 
   ngOnInit() {
 
+
+
     this.route.queryParams.subscribe(params => {
             this.collegeName = params["collegeName"];
             console.log(params["collegeName"]);
@@ -53,14 +55,12 @@ export class DataVisualizationComponent implements OnInit {
           //this.studentTable = data as JSON;
     })
 
+    
 
 
   }
   onCategoryChange(){
-    // var temp2 = 'http://college-app-io.herokuapp.com/getCollegeStats'
-    // this.httpClient.get(temp1,{headers: {'collegeName': this.collegeName}}).subscribe(data1 => {
-    //   console.log(data1);
-    // })
+
     //var cat1 = this.category1;
     var cat1: JSON;
     var cat2: JSON;
