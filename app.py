@@ -888,7 +888,6 @@ def getStatsEachStudent():
 	return response
 
 
-#from config import S3_KEY, S3_SECRET, S3_BUCKET
 
 def upload_file_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
 	try:
@@ -910,7 +909,6 @@ def upload_file_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
 
 	#return "{}{}".format(app.config[S3_LOCATION], file.filename)
 	return "{}{}".format(S3_LOCATION, file.filename)
-
 
 
 
