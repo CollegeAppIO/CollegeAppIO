@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 from flask_cors import CORS, cross_origin
 from flask_restful import Resource, Api
 from json import dumps
@@ -8,6 +8,8 @@ import jinja2
 import json, ast
 from sendgrid.helpers.mail import *
 from flask_mail import Mail, Message
+import boto3, botocore
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 api = Api(app)
@@ -22,7 +24,7 @@ def initDB():
 	return conn, curr
 
 
-conn, cur = initDB()
+#conn, cur = initDB()
 import os
 def initEmailService():
 	app.config['MAIL_SERVER']='smtp.gmail.com'
@@ -884,6 +886,111 @@ def getStatsEachStudent():
 	conn.commit()
 	cur.close()
 	return response
+
+
+#from config import S3_KEY, S3_SECRET, S3_BUCKET
+
+def upload_file_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
+	try:
+		s3.upload_fileobj(
+			file,
+			bucket_name,
+			file.filename, #KEY
+			ExtraArgs={
+				"ACL": acl,
+				"ContentType": file.content_type
+
+			}
+		)
+
+	except Exception as e:
+		# This is a catch all exception, edit this part to fit your needs.
+		print "Something Happened: ", e
+		return e
+
+	#return "{}{}".format(app.config[S3_LOCATION], file.filename)
+	return "{}{}".format(S3_LOCATION, file.filename)
+
+
+
+
+
+@app.route("/postImage", methods=['POST'])
+def postImage():
+	S3_BUCKET                 = os.environ.get("S3_BUCKET_NAME")
+	S3_KEY                    = os.environ.get("S3_ACCESS_KEY")
+	S3_SECRET                 = os.environ.get("S3_SECRET_ACCESS_KEY")
+	S3_LOCATION               = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET)
+	SECRET_KEY                = os.urandom(32)
+	DEBUG                     = True
+	PORT                      = 5000
+
+	s3 = boto3.client(
+		"s3",
+		aws_access_key_id=S3_KEY,
+		aws_secret_access_key=S3_SECRET,
+
+	)
+
+	if 'image' not in request.files:
+		return "No image key in request.files"
+	"""
+        These attributes are also available
+
+        file.filename               # The actual name of the file
+        file.content_type
+        file.content_length
+        file.mimetype
+
+    """
+
+	file  = request.files['image']
+	if file.filename == "":
+		return "Please select a file"
+	
+	#if file and allowed_file(file.filename):
+	if file:
+		file.filename = secure_filename(file.filename)
+		output = upload_file_to_s3(s3, S3_LOCATION, file, S3_BUCKET)
+
+		# con, cur = initDB()
+		# admin_id = "c7AVg6my0gQFPgX2yKkOJO9BUgE3"
+		# query = "UPDATE admin SET profilepic = %s WHERE admin_id = %s"
+		# cur.execute(query, (output, admin_id, ))
+		# con.commit()
+		# cur.close()
+
+		# print "S3_BUCKET is", S3_BUCKET
+		# print "TYPE OF S3_BUCKET is ", type(S3_BUCKET)
+		# print "TYPE OF STR S3_BUCKET is ", type(str(S3_BUCKET))
+		# print "FILE NAME IS ", file.filename
+		# print "S3 Location is ", S3_LOCATION
+
+		rekognition = boto3.client("rekognition", "us-east-2")
+		
+		response = rekognition.detect_text(
+			Image={
+				'S3Object': {
+					'Bucket': S3_BUCKET,
+					'Name': file.filename,
+				}
+			}
+		)
+		
+		for label in response['TextDetections']:
+			#print "RESPONSE IS ", label['DetectedText'] 
+			if label['DetectedText'].lower().replace("-", "") == 'university':
+				for label2 in response['TextDetections']:
+					if label2['DetectedText'].lower().replace("-", "") == 'administrator' or label2['DetectedText'].lower().replace("-", "") == 'admin':
+						return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
+		
+		return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
+
+		#print "RESPONSE IS ", label['DetectedText'] 
+		#return output
+	else:
+		return redirect("/")
+	
 
 if __name__ == '__main__':
 	conn, cur = initDB()
