@@ -953,12 +953,6 @@ def postImage():
 		file.filename = secure_filename(file.filename)
 		output = upload_file_to_s3(s3, S3_LOCATION, file, S3_BUCKET)
 
-		# con, cur = initDB()
-		# admin_id = "c7AVg6my0gQFPgX2yKkOJO9BUgE3"
-		# query = "UPDATE admin SET profilepic = %s WHERE admin_id = %s"
-		# cur.execute(query, (output, admin_id, ))
-		# con.commit()
-		# cur.close()
 
 		# print "S3_BUCKET is", S3_BUCKET
 		# print "TYPE OF S3_BUCKET is ", type(S3_BUCKET)
