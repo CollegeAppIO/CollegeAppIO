@@ -969,13 +969,13 @@ def postImage():
 			}
 		)
 		
+		map = {}
 		for label in response['TextDetections']:
-			#print "RESPONSE IS ", label['DetectedText'] 
-			if label['DetectedText'].lower().replace("-", "") == 'university':
-				for label2 in response['TextDetections']:
-					if label2['DetectedText'].lower().replace("-", "") == 'administrator' or label2['DetectedText'].lower().replace("-", "") == 'admin':
-						return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
-		
+			map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
+			
+		if "university" in map and "administrator" in map or "admin" in map:
+			return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
+
 		return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 
 		#print "RESPONSE IS ", label['DetectedText'] 
