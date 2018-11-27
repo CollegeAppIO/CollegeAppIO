@@ -24,7 +24,7 @@ def initDB():
 	return conn, curr
 
 
-#conn, cur = initDB()
+conn, cur = initDB()
 import os
 def initEmailService():
 	app.config['MAIL_SERVER']='smtp.gmail.com'
@@ -915,9 +915,9 @@ def upload_file_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
 
 @app.route("/postImage", methods=['POST'])
 def postImage():
-	S3_BUCKET                 = os.environ.get("S3_BUCKET_NAME")
-	S3_KEY                    = os.environ.get("S3_ACCESS_KEY")
-	S3_SECRET                 = os.environ.get("S3_SECRET_ACCESS_KEY")
+	S3_BUCKET                 = os.environ.get("S3_BUCKET")
+	S3_KEY                    = os.environ.get("aws_access_key_id")
+	S3_SECRET                 = os.environ.get("aws_secret_access_key")
 	S3_LOCATION               = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET)
 	SECRET_KEY                = os.urandom(32)
 	DEBUG                     = True
@@ -927,19 +927,15 @@ def postImage():
 		"s3",
 		aws_access_key_id=S3_KEY,
 		aws_secret_access_key=S3_SECRET,
-
 	)
 
 	if 'image' not in request.files:
 		return "No image key in request.files"
 	"""
-        These attributes are also available
-
         file.filename               # The actual name of the file
         file.content_type
         file.content_length
         file.mimetype
-
     """
 
 	file  = request.files['image']
@@ -973,8 +969,9 @@ def postImage():
 		for label in response['TextDetections']:
 			map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
 			
-		if "university" in map and "administrator" in map or "admin" in map:
-			return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
+		if "university" in map:
+			if "administrator" in map or "admin" in map:
+				return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
 
 		return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 
