@@ -284,7 +284,9 @@ def getQuestions():
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
 		curs = conn.cursor()
+		print "This: ", request.headers
 		collegeName = request.headers.get('collegeName')
+		print collegeName
 		collegeN = (collegeName, )
 		curs.execute("SELECT q1, q2, q3 FROM colleges WHERE collegeName = %s", collegeN)
 		result = []
@@ -445,7 +447,7 @@ def getCollegeStats():
 		curs2.execute("SELECT race, count(race) FROM historicalapplication where college = %s GROUP BY race", collegeN)
 		for row in curs2:
 			obj = {
-				'race' : row[0], 
+				'race' : row[0],
 				'count' : float(row[1])
 			}
 			result2.append(obj)
@@ -455,7 +457,7 @@ def getCollegeStats():
 		curs3.execute("SELECT CASE WHEN sex = '1' then 'Female' WHEN sex = '0' then 'Other' WHEN sex = '2' then 'Male' END AS SEX, count(sex) FROM historicalapplication where college = %s GROUP BY sex", collegeN)
 		for row in curs3:
 			obj = {
-				'sex' : row[0], 
+				'sex' : row[0],
 				'count' : float(row[1])
 			}
 			result3.append(obj)
@@ -835,7 +837,7 @@ def getStatsEachStudent():
 	result4 = []
 	result5 = []
 	result6 = []
-	result7 = [] 
+	result7 = []
 	result = []
 	for row in cur:
 		obj1 = {
@@ -941,7 +943,7 @@ def postImage():
 	file  = request.files['image']
 	if file.filename == "":
 		return "Please select a file"
-	
+
 	#if file and allowed_file(file.filename):
 	if file:
 		file.filename = secure_filename(file.filename)
@@ -955,7 +957,7 @@ def postImage():
 		# print "S3 Location is ", S3_LOCATION
 
 		rekognition = boto3.client("rekognition", "us-east-2")
-		
+
 		response = rekognition.detect_text(
 			Image={
 				'S3Object': {
@@ -964,22 +966,22 @@ def postImage():
 				}
 			}
 		)
-		
+
 		map = {}
 		for label in response['TextDetections']:
 			map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
-			
+
 		if "university" in map:
 			if "administrator" in map or "admin" in map:
 				return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
 
 		return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 
-		#print "RESPONSE IS ", label['DetectedText'] 
+		#print "RESPONSE IS ", label['DetectedText']
 		#return output
 	else:
 		return redirect("/")
-	
+
 
 if __name__ == '__main__':
 	conn, cur = initDB()
