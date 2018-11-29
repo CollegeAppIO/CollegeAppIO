@@ -47,20 +47,6 @@ def dbinfo():
     info = "Con: " + str (conn) + "Curr: " + str(cur)
     return jsonify(info)
 
-class Employees(Resource):
-    def get(self):
-        return {'employees': [{'id':1, 'name':'Balram'},{'id':2, 'name':'Tom'}]}
-
-class Employees_Name(Resource):
-    def get(self, employee_id):
-        print('Employee id:' + employee_id)
-        result = {'data': {'id':1, 'name':'Balram'}}
-        return jsonify(result)
-
-
-api.add_resource(Employees, '/employees') # Route_1
-api.add_resource(Employees_Name, '/employees/<employee_id>') # Route_3
-
 class Students(Resource):
     def get (self, id, adbool):
         print('id, adbool: ' + id + " " + adbool)
@@ -149,6 +135,88 @@ def checkUser(studentid, collegeid):
 	finally:
 		if con:
 			con.close()
+
+@app.route("/addCollegeQuestions", methods = ['GET'])
+def addCollegeQuestions():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	conn = None
+	try :
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		curs1 = conn.cursor()
+		college = (request.headers.get('collegeName'), )
+		question = request.headers.get('question')
+		curs.execute("SELECT questions FROM colleges WHERE collegename = %s", college)
+		result = []
+		for row in curs:
+			obj = {
+				'questions' : row
+			}
+			if obj['questions'][0] is not None:
+				result.append(obj['questions'][0][0])
+		print result
+		if (len(result) == 0):
+			questions = []
+			questions.append(question)
+			query = (questions, college, )
+			curs1.execute("UPDATE colleges SET questions =  %s WHERE collegename = %s ", query)
+		else:
+			questions = result
+			questions.append(question)
+			query = (questions, college, )
+			curs1.execute("UPDATE colleges SET questions =  %s WHERE collegename = %s ", query)
+		conn.commit()
+		curs.close()
+		curs1.close()
+		response = jsonify("200")
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/addWatchList", methods = ['GET'])
+def addWatchList():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	conn = None
+	try :
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		curs1 = conn.cursor()
+		college = request.headers.get('collegeName')
+		studentid = request.headers.get('studentid')
+		print studentid
+		studid = (studentid, )
+		curs.execute("SELECT watchlist FROM students WHERE studentid = %s", studid)
+		result = []
+		for row in curs:
+			obj = {
+				'watchlist' : row
+			}
+			if obj['watchlist'][0] is not None:
+				result.append(obj['watchlist'][0][0])
+		print result
+		if (len(result) == 0):
+			colleges = []
+			colleges.append(college)
+			query = (colleges, studentid, )
+			curs1.execute("UPDATE students SET watchlist =  %s WHERE studentid = %s ", query)
+		else:
+			colleges = result
+			colleges.append(college)
+			query = (colleges, studentid, )
+			curs1.execute("UPDATE students SET watchlist =  %s WHERE studentid = %s ", query)
+		conn.commit()
+		curs.close()
+		curs1.close()
+		response = jsonify("200")
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
 
 @app.route("/getApplicationPool")
 def getApplicationPool():
@@ -445,7 +513,7 @@ def getCollegeStats():
 		curs2.execute("SELECT race, count(race) FROM historicalapplication where college = %s GROUP BY race", collegeN)
 		for row in curs2:
 			obj = {
-				'race' : row[0], 
+				'race' : row[0],
 				'count' : float(row[1])
 			}
 			result2.append(obj)
@@ -455,7 +523,7 @@ def getCollegeStats():
 		curs3.execute("SELECT CASE WHEN sex = '1' then 'Female' WHEN sex = '0' then 'Other' WHEN sex = '2' then 'Male' END AS SEX, count(sex) FROM historicalapplication where college = %s GROUP BY sex", collegeN)
 		for row in curs3:
 			obj = {
-				'sex' : row[0], 
+				'sex' : row[0],
 				'count' : float(row[1])
 			}
 			result3.append(obj)
@@ -835,7 +903,7 @@ def getStatsEachStudent():
 	result4 = []
 	result5 = []
 	result6 = []
-	result7 = [] 
+	result7 = []
 	result = []
 	for row in cur:
 		obj1 = {
@@ -941,7 +1009,7 @@ def postImage():
 	file  = request.files['image']
 	if file.filename == "":
 		return "Please select a file"
-	
+
 	#if file and allowed_file(file.filename):
 	if file:
 		file.filename = secure_filename(file.filename)
@@ -955,7 +1023,7 @@ def postImage():
 		# print "S3 Location is ", S3_LOCATION
 
 		rekognition = boto3.client("rekognition", "us-east-2")
-		
+
 		response = rekognition.detect_text(
 			Image={
 				'S3Object': {
@@ -964,22 +1032,22 @@ def postImage():
 				}
 			}
 		)
-		
+
 		map = {}
 		for label in response['TextDetections']:
 			map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
-			
+
 		if "university" in map:
 			if "administrator" in map or "admin" in map:
 				return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
 
 		return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 
-		#print "RESPONSE IS ", label['DetectedText'] 
+		#print "RESPONSE IS ", label['DetectedText']
 		#return output
 	else:
 		return redirect("/")
-	
+
 
 if __name__ == '__main__':
 	conn, cur = initDB()
