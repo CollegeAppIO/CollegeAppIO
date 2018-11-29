@@ -5,6 +5,9 @@ import {Router} from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from "../data.service";
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+
 
 @Component({
   selector: 'app-home-page',
@@ -15,7 +18,22 @@ export class HomePageComponent implements OnInit {
   collegeList: JSON;
   message:string;
 
+  //collegeList: JSON;
+  colleges: any;
+  collegeNameSearch:string;
+
+
   
+
+  formatter = (result: string) => result.toUpperCase();
+
+  search = (text$: Observable<string>) =>
+  text$.pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    map(term => term === '' ? []
+      : this.colleges.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+  )
 
 
 
@@ -34,6 +52,14 @@ export class HomePageComponent implements OnInit {
           this.collegeList = data as JSON;
           console.log(this.collegeList);
     })
+
+    var temp = 'https://college-app-io.herokuapp.com/getCollegeName';
+    this.httpClient.get(temp).subscribe(data => {
+          this.colleges = data ;
+          console.log(this.colleges);
+
+    })
+
   }
 
   onSignOut(){
@@ -61,6 +87,12 @@ export class HomePageComponent implements OnInit {
     })
     console.log('sent to the db');
 
+  }
+
+  searchMethod() {
+    console.log('college search and send');
+    console.log(this.collegeNameSearch);
+    this.openCollege(this.collegeNameSearch);
   }
 
   newMessage(collegeName:string) {
