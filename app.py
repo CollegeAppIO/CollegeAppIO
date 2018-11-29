@@ -347,10 +347,11 @@ def checkAdminUser(adminid, collegeName):
 
 @app.route("/getQuestions", methods = ['GET'])
 def getQuestions():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
+		conn = psycopg2.connect(conn_string)
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
@@ -369,15 +370,16 @@ def getQuestions():
 		curs.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 @app.route("/getStudentResponse", methods = ['GET'])
 def getStudentResponse():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
+		conn = psycopg2.connect(conn_string)
 		curs = conn.cursor()
 		curs1 = conn.cursor()
 		curs2 = conn.cursor()
@@ -430,12 +432,11 @@ def getStudentResponse():
 		curs2.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 @app.route("/getCategories", methods=['GET'])
 def getCategories():
-	con = None
 	try:
 		con, curs = initDB()
 		query = "SELECT column_name from INFORMATION_SCHEMA.COLUMNS where table_name = 'historicalapplication' AND column_name != 'historicalid'"
@@ -459,10 +460,11 @@ def getCategories():
 
 @app.route("/getData", methods = ['GET'])
 def getData():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
+		conn = psycopg2.connect(conn_string)
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		param1 = request.headers.get('param1')
@@ -484,13 +486,13 @@ def getData():
 		curs.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 
 @app.route("/getCollegeStats", methods = ['GET'])
 def getCollegeStats():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
@@ -534,15 +536,16 @@ def getCollegeStats():
 		curs.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 @app.route("/getCollegeInfo", methods = ['GET'])
 def getCollegesInfo():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
+		conn = psycopg2.connect(conn_string)
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
@@ -572,15 +575,16 @@ def getCollegesInfo():
 		curs.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 
 @app.route("/getColleges", methods = ['GET'])
 def getCollege():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+		conn = psycopg2.connect(conn_string)
 		print ("Connecting to database\n ->%s" % (conn_string))
 		curs = conn.cursor()
 		curs.execute("SELECT collegename, image_link FROM COLLEGES")
@@ -597,8 +601,8 @@ def getCollege():
 		curs.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 def insertIntoDB(tablename, keyval, conn, cursor):
     columns = ','.join (k for k in keyval)
