@@ -355,15 +355,14 @@ def getQuestions():
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
-		curs.execute("SELECT q1, q2, q3 FROM colleges WHERE collegeName = %s", collegeN)
+		curs.execute("SELECT questions FROM colleges WHERE collegeName = %s", collegeN)
 		result = []
 		for row in curs:
 			obj = {
-				'q1' : row[0],
-				'q2' : row[1],
-				'q3' : row[2]
+				'questions' : row[0]
 			}
-			result.append(obj)
+			result = obj['questions']
+		print result
 		response = jsonify(result)
 		response.status_code = 200
 		conn.commit()
