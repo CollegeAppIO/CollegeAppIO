@@ -1,0 +1,30 @@
+<app-admin-nav-bar></app-admin-nav-bar>
+
+<p>
+  admin-questions works!
+</p>
+
+<!-- <div *ngFor="let field of questions">
+  <div>
+      <input type="text" [ngModel]="field" name="LastName" value={{field}}>
+      <button (click)="deleteQuestion(field)">Delete</button>
+      <br>
+  </div>
+</div> -->
+
+<table>
+  <tr *ngFor="let x of questions;let i = index;trackBy:customTrackBy">
+    <td>{{ i+ 1 }}</td>
+    <input [(ngModel)]="questions[i]">
+    <button (click)="deleteQuestion(x)">Delete</button>
+  </tr>
+</table>
+
+
+
+<button (click)="addQuestion()">Add Question</button>
+
+
+<button (click)="submitQuestions()">Submit</button>
+
+
