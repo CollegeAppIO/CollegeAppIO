@@ -1,5 +1,3 @@
-
-
 <!-- <base href="/home"> -->
 
 <app-nav-bar></app-nav-bar>
@@ -17,8 +15,14 @@
 
 <div style="text-align: center;">
       <form class="form-inline center" style="width: 500px; margin: 0 auto;" >
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width: 415px;">
-          <button class="btn btn-success" type="submit">Search</button>
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width: 415px;" id="typeahead-format" name ="collegeNameSearch" [(ngModel)]="collegeNameSearch" [ngbTypeahead]="search" [resultFormatter]="formatter" />
+        <button class="btn btn-success" type="submit" (click)="searchMethod()">Search</button>
+        <div *ngIf="collegeNotThere">
+          <div class="alert alert-danger" role="alert" style="width: 415px;">
+            College is not found!
+          </div>
+        </div>
+       
       </form>
 </div>
 
@@ -65,3 +69,5 @@
         </ul>
     </div>
 </div>
+
+
