@@ -70,13 +70,24 @@ export class AdminQuestionsComponent implements OnInit {
     var myString = "";
     for(let questionsIter of this.questions){
       
+      if(questionsIter.trim().length > 0){
+
       
-      myString += questionsIter.trim();
-      myString += "||";
+        myString += questionsIter.trim();
+        myString += "||";
+      }
     }
     myString = myString.substring(0, myString.length - 2); 
     console.log(myString);
 
+ 
+
+
+        var url = 'http://college-app-io.herokuapp.com/addCollegeQuestions';
+        this.httpClient.get(url,{headers: {'collegename': this.collegeName, 'question':myString}}).subscribe(data => {
+              // this.userData = data[0] as JSON;
+              console.log(data);
+        })
   
 
     
