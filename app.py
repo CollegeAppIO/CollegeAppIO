@@ -154,7 +154,8 @@ def addCollegeQuestions():
 				'questions' : row
 			}
 			if obj['questions'][0] is not None:
-				result.append(obj['questions'][0][0])
+				result = obj['questions'][0]
+				print result
 		print result
 		if (len(result) == 0):
 			questions = []
@@ -163,6 +164,7 @@ def addCollegeQuestions():
 			curs1.execute("UPDATE colleges SET questions =  %s WHERE collegename = %s ", query)
 		else:
 			questions = result
+			print "THIS IS QUESTIONS: ", questions
 			questions.append(question)
 			query = (questions, college, )
 			curs1.execute("UPDATE colleges SET questions =  %s WHERE collegename = %s ", query)
