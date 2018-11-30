@@ -138,50 +138,6 @@ def checkUser(studentid, collegeid):
 		if con:
 			con.close()
 
-@app.route("/removeCollegeQuestions", methods = ['GET'])
-def removeCollegeQuestions():
-	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
-	conn = None
-	try :
-		conn = psycopg2.connect(conn_string)
-		print ("Connecting to database\n ->%s" % (conn_string))
-		curs = conn.cursor()
-		curs1 = conn.cursor()
-		college = (request.headers.get('collegeName'), )
-		question = request.headers.get('question')
-		curs.execute("SELECT questions FROM colleges WHERE collegename = %s", college)
-		result = []
-		for row in curs:
-			obj = {
-				'questions' : row
-			}
-			if obj['questions'][0] is not None:
-				result = obj['questions'][0]
-		print result.index(question)
-		if (len(result) == 0):
-			response = jsonify("NO QUESTION FOUND")
-		else:
-			query = (question, college, )
-			curs1.execute("UPDATE colleges SET questions = array_remove(questions, %s) WHERE collegename = %s ", query)
-		curs2 = conn.cursor()
-		curs2.execute("SELECT QUESTIONS FROM colleges WHERE collegename = %s", college)
-		result = []
-		for row in curs2:
-			obj = {
-				'questions': row
-			}
-			print obj
-		conn.commit()
-		curs.close()
-		curs1.close()
-		curs2.close()
-		response = jsonify("200")
-		response.status_code = 200
-		return response
-	finally:
-		if conn:
-			conn.close()
-
 @app.route("/addCollegeQuestions", methods = ['GET'])
 def addCollegeQuestions():
 	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
