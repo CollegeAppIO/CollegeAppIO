@@ -10,6 +10,7 @@ import {AdminCollegeInfoComponent}  from '../admin-college-info/admin-college-in
 import {StudentApplicationDetailsComponent}  from '../student-application-details/student-application-details.component';
 import {HistoricalDataComponent}  from '../historical-data/historical-data.component';
 import {DataVisualizationComponent}  from '../data-visualization/data-visualization.component';
+import {AdminQuestionsComponent} from '../admin-questions/admin-questions.component';
 
 
 // @NgModule({
@@ -57,6 +58,10 @@ const routes: Routes = [
         {
             path: 'DataVisualization',
             component: DataVisualizationComponent,
+        },
+        {
+            path: 'AdminQuestions',
+            component: AdminQuestionsComponent,
         },
 
     ];
