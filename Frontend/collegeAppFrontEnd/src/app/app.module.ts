@@ -34,6 +34,7 @@ import { HistoricalDataComponent } from './historical-data/historical-data.compo
 import { DataVisualizationComponent } from './data-visualization/data-visualization.component';
 import { Chart }  from 'chart.js';
 import { WatchListComponent } from './watch-list/watch-list.component';
+import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
 
 
 
@@ -56,6 +57,7 @@ import { WatchListComponent } from './watch-list/watch-list.component';
     HistoricalDataComponent,
     DataVisualizationComponent,
     WatchListComponent,
+    AdminQuestionsComponent,
 
   ],
   imports: [

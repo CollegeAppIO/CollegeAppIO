@@ -5,6 +5,9 @@ import {Router} from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from "../data.service";
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+
 
 @Component({
   selector: 'app-home-page',
@@ -14,9 +17,30 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 export class HomePageComponent implements OnInit {
   collegeList: JSON;
   message:string;
+
   uid: string;
   watchlist: any;
   addedToWatchList: boolean = true;
+
+
+  //collegeList: JSON;
+  colleges: any;
+  collegeNameSearch:string;
+  collegeNotThere: boolean = false;
+
+
+
+
+
+  formatter = (result: string) => result.toUpperCase();
+
+  search = (text$: Observable<string>) =>
+  text$.pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    map(term => term === '' ? []
+      : this.colleges.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+  )
 
 
 
@@ -38,6 +62,7 @@ export class HomePageComponent implements OnInit {
     })
 
 
+
     this.authServ.fireAuth.authState.subscribe(user => {
         if(user) {
           this.uid = user.uid;
@@ -50,6 +75,14 @@ export class HomePageComponent implements OnInit {
           })
         }
       })
+
+    var temp = 'https://college-app-io.herokuapp.com/getCollegeName';
+    this.httpClient.get(temp).subscribe(data => {
+          this.colleges = data ;
+          console.log(this.colleges);
+
+    })
+
   }
 
   onSignOut(){
@@ -75,6 +108,21 @@ export class HomePageComponent implements OnInit {
         console.log(data);
     })
     console.log('sent to the db');
+
+  }
+
+  searchMethod() {
+    console.log('college search and send');
+    console.log(this.collegeNameSearch);
+
+    if(this.colleges.indexOf(this.collegeNameSearch) > -1) {
+      console.log('there bitch');
+      this.openCollege(this.collegeNameSearch);
+      this.collegeNotThere = false;
+    }else{
+      console.log('not there bitch');
+      this.collegeNotThere = true;
+    }
 
   }
 

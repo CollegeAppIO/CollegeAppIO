@@ -105,10 +105,6 @@ export class AdminCollegeInfoComponent implements OnInit {
         tuition_in: this.inState,
         tuition_out: this.outState,
         yr_grad: this.fourYear,
-        q1: this.question1,
-        q2: this.question2,
-        q3: this.question3
-
     })
       .subscribe(
         res => {

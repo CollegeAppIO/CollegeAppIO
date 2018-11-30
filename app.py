@@ -47,20 +47,6 @@ def dbinfo():
     info = "Con: " + str (conn) + "Curr: " + str(cur)
     return jsonify(info)
 
-class Employees(Resource):
-    def get(self):
-        return {'employees': [{'id':1, 'name':'Balram'},{'id':2, 'name':'Tom'}]}
-
-class Employees_Name(Resource):
-    def get(self, employee_id):
-        print('Employee id:' + employee_id)
-        result = {'data': {'id':1, 'name':'Balram'}}
-        return jsonify(result)
-
-
-api.add_resource(Employees, '/employees') # Route_1
-api.add_resource(Employees_Name, '/employees/<employee_id>') # Route_3
-
 class Students(Resource):
     def get (self, id, adbool):
         print('id, adbool: ' + id + " " + adbool)
@@ -88,21 +74,17 @@ def postResponse():
 		print "text", text
 		studentid = text['studentid']
 		collegeName = text['collegeName']
-		q1 = ""
-		if 'q1' in text:
-			q1 = text['q1']
-		q2 = ""
-		if 'q2' in text:
-			q2 = text['q2']
-		q3 = ""
-		if 'q3' in text:
-			q3 = text['q3']
+
+		questions = []
+		if 'questions' in text:
+			questions = text['questions'].split("||")
 		appliedStatus = text['appliedStatus']
 		major = ""
 		if 'major' in text:
 			major = text['major']
 		curs = con.cursor()
 		curs2 = con.cursor()
+		curs3 = con.cursor()
 		collegeN = (collegeName, )
 		curs.execute("SELECT collegeid FROM COLLEGES WHERE collegename = %s", collegeN)
 		result = []
@@ -116,14 +98,20 @@ def postResponse():
 		print results
 		if (len(results) == 0):
 			acceptancestatus = 0
-			query = "INSERT INTO current_application (studentid, collegeid, acceptancestatus, q1, q2, q3, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-			curs2.execute(query, (studentid, result[0]['collegeid'], acceptancestatus, q1, q2, q3, appliedStatus, major, ))
+			query = "INSERT INTO current_application (studentid, collegeid, acceptancestatus, questions, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+			curs2.execute(query, (studentid, result[0]['collegeid'], acceptancestatus, questions, appliedStatus, major, ))
 		else:
-			query = "UPDATE current_application SET (q1, q2, q3, appliedStatus, major) = (%s, %s, %s, %s, %s) WHERE studentid = %s AND collegeid = %s"
-			curs2.execute(query, (q1, q2, q3, appliedStatus, major, studentid, collegeid, ))
+			tup = ()
+			for i in range(0, len(questions)):
+				tup = tup + (questions[i], )
+			query_u = "UPDATE current_application SET questions = %s WHERE studentid = %s AND collegeid = %s"
+			curs3.execute(query_u, (questions, studentid, collegeid, ))
+			query = "UPDATE current_application SET (appliedStatus, major) = (%s, %s) WHERE studentid = %s AND collegeid = %s"
+			curs2.execute(query, (appliedStatus, major, studentid, collegeid, ))
 		con.commit()
 		curs.close()
 		curs2.close()
+		curs3.close()
 		return jsonify("200")
 	finally:
 		if con:
@@ -149,6 +137,136 @@ def checkUser(studentid, collegeid):
 	finally:
 		if con:
 			con.close()
+
+@app.route("/addCollegeQuestions", methods = ['GET'])
+def addCollegeQuestions():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	conn = None
+	try :
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		curs1 = conn.cursor()
+		college = (request.headers.get('collegeName'), )
+		question = request.headers.get('question')
+		questions = question.split("||")
+		query = (questions, college, )
+		curs1.execute("UPDATE colleges SET questions =  %s WHERE collegename = %s ", query)
+		conn.commit()
+		curs.close()
+		curs1.close()
+		response = jsonify("200")
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/removeWatchList", methods = ['GET'])
+def removeWatchList():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	conn = None
+	try :
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		curs1 = conn.cursor()
+		studentid = request.headers.get('studentid')
+		college = request.headers.get('collegename')
+		studid = (studentid, )
+		curs.execute("SELECT watchlist FROM students WHERE studentid = %s", studid)
+		result = []
+		for row in curs:
+			obj = {
+				'watchlist': row
+			}
+			if obj['watchlist'][0] is not None:
+				result = obj['watchlist'][0]
+		if (len(result) == 0):
+			response = jsonify("NO WATCHLIST FOUND")
+		else:
+			print college
+			query = (college, studentid, )
+			print query
+			curs1.execute("UPDATE students SET watchlist = array_remove(watchlist, %s) WHERE studentid = %s", query)
+		conn.commit()
+		curs1.close()
+		curs.close()
+		response = jsonify("200")
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/getWatchList", methods = ['GET'])
+def getWatchList():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	conn = None
+	try :
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		studentid = request.headers.get('studentid')
+		studid = (studentid, )
+		curs.execute("SELECT watchlist FROM students WHERE studentid = %s", studid)
+		result = []
+		for row in curs:
+			obj = {
+				'watchlist': row
+			}
+			if obj['watchlist'][0] is not None:
+				result = obj['watchlist'][0]
+		response = jsonify(result)
+		response.status_code = 200
+		conn.commit()
+		curs.close()
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/addWatchList", methods = ['GET'])
+def addWatchList():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	conn = None
+	try :
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		curs1 = conn.cursor()
+		college = request.headers.get('collegeName')
+		studentid = request.headers.get('studentid')
+		print studentid
+		studid = (studentid, )
+		curs.execute("SELECT watchlist FROM students WHERE studentid = %s", studid)
+		result = []
+		for row in curs:
+			obj = {
+				'watchlist' : row
+			}
+			if obj['watchlist'][0] is not None:
+				result = obj['watchlist'][0]
+		print result
+		if (len(result) == 0):
+			colleges = []
+			colleges.append(college)
+			query = (colleges, studentid, )
+			curs1.execute("UPDATE students SET watchlist =  %s WHERE studentid = %s ", query)
+		else:
+			colleges = result
+			colleges.append(college)
+			query = (colleges, studentid, )
+			curs1.execute("UPDATE students SET watchlist =  %s WHERE studentid = %s ", query)
+		conn.commit()
+		curs.close()
+		curs1.close()
+		response = jsonify("200")
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
 
 @app.route("/getApplicationPool")
 def getApplicationPool():
@@ -279,37 +397,38 @@ def checkAdminUser(adminid, collegeName):
 
 @app.route("/getQuestions", methods = ['GET'])
 def getQuestions():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
+		conn = psycopg2.connect(conn_string)
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
-		curs.execute("SELECT q1, q2, q3 FROM colleges WHERE collegeName = %s", collegeN)
+		curs.execute("SELECT questions FROM colleges WHERE collegeName = %s", collegeN)
 		result = []
 		for row in curs:
 			obj = {
-				'q1' : row[0],
-				'q2' : row[1],
-				'q3' : row[2]
+				'questions' : row[0]
 			}
-			result.append(obj)
+			result = obj['questions']
+		print result
 		response = jsonify(result)
 		response.status_code = 200
 		conn.commit()
 		curs.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 @app.route("/getStudentResponse", methods = ['GET'])
 def getStudentResponse():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
+		conn = psycopg2.connect(conn_string)
 		curs = conn.cursor()
 		curs1 = conn.cursor()
 		curs2 = conn.cursor()
@@ -344,14 +463,12 @@ def getStudentResponse():
 		if (int(appliedStatus) == 1):
 			response = jsonify("Student Already Applied")
 		if (int(appliedStatus) == 0):
-			curs2.execute("SELECT q1, q2, q3, major FROM current_application WHERE collegeid = %s and studentid = %s", collegeN)
+			curs2.execute("SELECT questions, major FROM current_application WHERE collegeid = %s and studentid = %s", collegeN)
 			result = []
 			for row in curs2:
 				obj = {
-					'q1' : row[0],
-					'q2' : row[1],
-					'q3' : row[2],
-					'major' : row[3]
+					'questions' : row[0],
+					'major' : row[1]
 				}
 				result.append(obj)
 			response = jsonify(result)
@@ -362,12 +479,11 @@ def getStudentResponse():
 		curs2.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 @app.route("/getCategories", methods=['GET'])
 def getCategories():
-	con = None
 	try:
 		con, curs = initDB()
 		query = "SELECT column_name from INFORMATION_SCHEMA.COLUMNS where table_name = 'historicalapplication' AND column_name != 'historicalid'"
@@ -391,10 +507,11 @@ def getCategories():
 
 @app.route("/getData", methods = ['GET'])
 def getData():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
+		conn = psycopg2.connect(conn_string)
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		param1 = request.headers.get('param1')
@@ -416,13 +533,13 @@ def getData():
 		curs.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 
 @app.route("/getCollegeStats", methods = ['GET'])
 def getCollegeStats():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
@@ -445,7 +562,7 @@ def getCollegeStats():
 		curs2.execute("SELECT race, count(race) FROM historicalapplication where college = %s GROUP BY race", collegeN)
 		for row in curs2:
 			obj = {
-				'race' : row[0], 
+				'race' : row[0],
 				'count' : float(row[1])
 			}
 			result2.append(obj)
@@ -455,7 +572,7 @@ def getCollegeStats():
 		curs3.execute("SELECT CASE WHEN sex = '1' then 'Female' WHEN sex = '0' then 'Other' WHEN sex = '2' then 'Male' END AS SEX, count(sex) FROM historicalapplication where college = %s GROUP BY sex", collegeN)
 		for row in curs3:
 			obj = {
-				'sex' : row[0], 
+				'sex' : row[0],
 				'count' : float(row[1])
 			}
 			result3.append(obj)
@@ -466,15 +583,16 @@ def getCollegeStats():
 		curs.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 @app.route("/getCollegeInfo", methods = ['GET'])
 def getCollegesInfo():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
+		conn = psycopg2.connect(conn_string)
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
@@ -504,15 +622,16 @@ def getCollegesInfo():
 		curs.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 
 @app.route("/getColleges", methods = ['GET'])
 def getCollege():
-	con = None
+	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+		conn = psycopg2.connect(conn_string)
 		print ("Connecting to database\n ->%s" % (conn_string))
 		curs = conn.cursor()
 		curs.execute("SELECT collegename, image_link FROM COLLEGES")
@@ -529,8 +648,8 @@ def getCollege():
 		curs.close()
 		return response
 	finally:
-		if con:
-			con.close()
+		if conn:
+			conn.close()
 
 def insertIntoDB(tablename, keyval, conn, cursor):
     columns = ','.join (k for k in keyval)
@@ -786,7 +905,7 @@ def getStudentsForCollegeName(collegename):
 	row = cur.fetchone()
 	collegeid = (row, )
 	#cur.execute("SELECT q1, q2, q3, studentid FROM current_application WHERE collegeid = %s", collegeid)
-	cur.execute("SELECT current_application.q1, current_application.q2, current_application.q3, current_application.studentid, students.fname FROM current_application LEFT JOIN students on students.studentid = current_application.studentid WHERE current_application.collegeid = %s", collegeid)
+	cur.execute("SELECT current_application.questions, current_application.studentid, students.fname FROM current_application LEFT JOIN students on students.studentid = current_application.studentid WHERE current_application.collegeid = %s", collegeid)
 	result = []
 	for r in cur:
 		result.append(r)
@@ -835,7 +954,7 @@ def getStatsEachStudent():
 	result4 = []
 	result5 = []
 	result6 = []
-	result7 = [] 
+	result7 = []
 	result = []
 	for row in cur:
 		obj1 = {
@@ -941,7 +1060,7 @@ def postImage():
 	file  = request.files['image']
 	if file.filename == "":
 		return "Please select a file"
-	
+
 	#if file and allowed_file(file.filename):
 	if file:
 		file.filename = secure_filename(file.filename)
@@ -955,7 +1074,7 @@ def postImage():
 		# print "S3 Location is ", S3_LOCATION
 
 		rekognition = boto3.client("rekognition", "us-east-2")
-		
+
 		response = rekognition.detect_text(
 			Image={
 				'S3Object': {
@@ -964,22 +1083,22 @@ def postImage():
 				}
 			}
 		)
-		
+
 		map = {}
 		for label in response['TextDetections']:
 			map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
-			
+
 		if "university" in map:
 			if "administrator" in map or "admin" in map:
 				return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
 
 		return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 
-		#print "RESPONSE IS ", label['DetectedText'] 
+		#print "RESPONSE IS ", label['DetectedText']
 		#return output
 	else:
 		return redirect("/")
-	
+
 
 if __name__ == '__main__':
 	conn, cur = initDB()
