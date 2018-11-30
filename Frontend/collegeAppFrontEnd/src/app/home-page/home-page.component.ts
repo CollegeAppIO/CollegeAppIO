@@ -21,6 +21,7 @@ export class HomePageComponent implements OnInit {
   //collegeList: JSON;
   colleges: any;
   collegeNameSearch:string;
+  collegeNotThere: boolean = false;
 
 
   
@@ -92,7 +93,16 @@ export class HomePageComponent implements OnInit {
   searchMethod() {
     console.log('college search and send');
     console.log(this.collegeNameSearch);
-    this.openCollege(this.collegeNameSearch);
+
+    if(this.colleges.indexOf(this.collegeNameSearch) > -1) {
+      console.log('there bitch');
+      this.openCollege(this.collegeNameSearch);
+      this.collegeNotThere = false;
+    }else{
+      console.log('not there bitch');
+      this.collegeNotThere = true;
+    }
+  
   }
 
   newMessage(collegeName:string) {
