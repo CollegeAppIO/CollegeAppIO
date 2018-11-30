@@ -224,6 +224,70 @@ def addCollegeQuestions():
 		if conn:
 			conn.close()
 
+@app.route("/removeWatchList", methods = ['GET'])
+def removeWatchList():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	conn = None
+	try :
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		curs1 = conn.cursor()
+		studentid = request.headers.get('studentid')
+		college = request.headers.get('collegename')
+		studid = (studentid, )
+		curs.execute("SELECT watchlist FROM students WHERE studentid = %s", studid)
+		result = []
+		for row in curs:
+			obj = {
+				'watchlist': row
+			}
+			if obj['watchlist'][0] is not None:
+				result = obj['watchlist'][0]
+		if (len(result) == 0):
+			response = jsonify("NO WATCHLIST FOUND")
+		else:
+			print college
+			query = (college, studentid, )
+			print query
+			curs1.execute("UPDATE students SET watchlist = array_remove(watchlist, %s) WHERE studentid = %s", query)
+		conn.commit()
+		curs1.close()
+		curs.close()
+		response = jsonify("200")
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/getWatchList", methods = ['GET'])
+def getWatchList():
+	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+	conn = None
+	try :
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		studentid = request.headers.get('studentid')
+		studid = (studentid, )
+		curs.execute("SELECT watchlist FROM students WHERE studentid = %s", studid)
+		result = []
+		for row in curs:
+			obj = {
+				'watchlist': row
+			}
+			if obj['watchlist'][0] is not None:
+				result = obj['watchlist'][0]
+		response = jsonify(result)
+		response.status_code = 200
+		conn.commit()
+		curs.close()
+		return response
+	finally:
+		if conn:
+			conn.close()
+
 @app.route("/addWatchList", methods = ['GET'])
 def addWatchList():
 	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
