@@ -193,27 +193,9 @@ def addCollegeQuestions():
 		curs1 = conn.cursor()
 		college = (request.headers.get('collegeName'), )
 		question = request.headers.get('question')
-		curs.execute("SELECT questions FROM colleges WHERE collegename = %s", college)
-		result = []
-		for row in curs:
-			obj = {
-				'questions' : row
-			}
-			if obj['questions'][0] is not None:
-				result = obj['questions'][0]
-				print result
-
-		if (len(result) == 0):
-			questions = []
-			questions.append(question)
-			query = (questions, college, )
-			curs1.execute("UPDATE colleges SET questions =  %s WHERE collegename = %s ", query)
-		else:
-			questions = result
-			print "THIS IS QUESTIONS: ", questions
-			questions.append(question)
-			query = (questions, college, )
-			curs1.execute("UPDATE colleges SET questions =  %s WHERE collegename = %s ", query)
+		questions = question.split("||")
+		query = (questions, college, )
+		curs1.execute("UPDATE colleges SET questions =  %s WHERE collegename = %s ", query)
 		conn.commit()
 		curs.close()
 		curs1.close()
