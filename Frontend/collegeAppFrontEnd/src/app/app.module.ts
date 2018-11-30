@@ -33,6 +33,7 @@ import { StudentApplicationDetailsComponent } from './student-application-detail
 import { HistoricalDataComponent } from './historical-data/historical-data.component';
 import { DataVisualizationComponent } from './data-visualization/data-visualization.component';
 import { Chart }  from 'chart.js';
+import { WatchListComponent } from './watch-list/watch-list.component';
 import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
 
 
@@ -55,6 +56,7 @@ import { AdminQuestionsComponent } from './admin-questions/admin-questions.compo
     StudentApplicationDetailsComponent,
     HistoricalDataComponent,
     DataVisualizationComponent,
+    WatchListComponent,
     AdminQuestionsComponent,
 
   ],

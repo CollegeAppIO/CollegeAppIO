@@ -18,13 +18,19 @@ export class HomePageComponent implements OnInit {
   collegeList: JSON;
   message:string;
 
+  uid: string;
+  watchlist: any;
+  addedToWatchList: boolean = true;
+
+
   //collegeList: JSON;
   colleges: any;
   collegeNameSearch:string;
   collegeNotThere: boolean = false;
 
 
-  
+
+
 
   formatter = (result: string) => result.toUpperCase();
 
@@ -46,13 +52,29 @@ export class HomePageComponent implements OnInit {
 
 
   ngOnInit() {
-    this.data.currentMessage.subscribe(message => this.message = message)
+    console.log(this.addedToWatchList);
+    this.data.currentMessage.subscribe(message => this.message = message);
 
     var temp = 'https://college-app-io.herokuapp.com/getColleges';
     this.httpClient.get(temp).subscribe(data => {
           this.collegeList = data as JSON;
           console.log(this.collegeList);
     })
+
+
+
+    this.authServ.fireAuth.authState.subscribe(user => {
+        if(user) {
+          this.uid = user.uid;
+          console.log(user.uid);
+          var url = 'http://college-app-io.herokuapp.com/getWatchList';
+          this.httpClient.get(url,{headers: {'studentid':user.uid}}).subscribe(data => {
+                // this.userData = data[0] as JSON;
+                this.watchlist = data;
+                console.log(data);
+          })
+        }
+      })
 
     var temp = 'https://college-app-io.herokuapp.com/getCollegeName';
     this.httpClient.get(temp).subscribe(data => {
@@ -67,7 +89,6 @@ export class HomePageComponent implements OnInit {
       console.log('signed out');
       firebase.auth().signOut();
       this.router.navigateByUrl('/');
-
   }
 
   openCollege(name: string){
@@ -102,11 +123,46 @@ export class HomePageComponent implements OnInit {
       console.log('not there bitch');
       this.collegeNotThere = true;
     }
-  
+
   }
 
   newMessage(collegeName:string) {
     this.data.changeMessage(collegeName);
   }
+  addToWatchList(collegeName){
+    var url = 'http://college-app-io.herokuapp.com/addWatchList';
+    this.httpClient.get(url,{headers: {'collegename': collegeName, 'studentid':this.uid}}).subscribe(data => {
+          // this.userData = data[0] as JSON;
+          console.log(data);
+          this.getWatchList();
+    })
+
+      console.log(collegeName);
+
+
+}
+
+removeFromWatchList(college){
+  console.log(college);
+  var url = 'http://college-app-io.herokuapp.com/removeWatchList';
+  this.httpClient.get(url,{headers: {'collegename': college, 'studentid':this.uid}}).subscribe(data => {
+        // this.userData = data[0] as JSON;
+        console.log(data);
+        this.getWatchList();
+  })
+
+
+
+}
+
+getWatchList(){
+  var url = 'http://college-app-io.herokuapp.com/getWatchList';
+  this.httpClient.get(url,{headers: {'studentid':this.uid}}).subscribe(data => {
+        // this.userData = data[0] as JSON;
+        this.watchlist = data;
+        console.log(data);
+  })
+}
+
 
 }

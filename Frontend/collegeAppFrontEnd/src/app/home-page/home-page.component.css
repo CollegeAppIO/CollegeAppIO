@@ -9,7 +9,7 @@
    margin-bottom: 20px;
    padding:5px;
    width: 250px;
-   height:250px;
+   height:300px;
    float: left;
    border: 1px solid lightgray;
    list-style:none;
@@ -19,4 +19,12 @@
 
   .container ul li:hover {
    border: 2px solid orange;
+  }
+  .watchlist{
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-right: 5px;
+    /* padding-top:5px; */
+    float: right;
+    width: 190px;
   }

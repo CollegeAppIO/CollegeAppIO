@@ -2,6 +2,9 @@
 
 <app-nav-bar></app-nav-bar>
 
+
+
+
 <!-- <nav class="navbar navbar-dark bg-primary">
   <button  type="button" class="btn btn-success" (click)="toApplication()">Application</button>
   <h1 class="navbar-brand" style="font-size: 48px">CollegeApp.IO</h1>
@@ -27,6 +30,18 @@
 </div>
 
 
+<div class="watchlist">
+  <!-- <app-watch-list></app-watch-list> -->
+<label style="margin-left: 40px">Watch List</label>
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let college of watchlist">
+    <button (click)="removeFromWatchList(college)" style="float:right; width:10px margin-right: 10px"class="btn btn-danger" type="button" name="button">X</button>
+    <div (click)="openCollege(college)">
+        {{college}}
+    </div>
+  </li>
+</ul>
+</div>
 
 
 
@@ -36,17 +51,21 @@
 
 <div class="container">
     <div *ngFor="let hero of collegeList;let i = index">
-        <ul (click)="openCollege(hero.collegeName)">
+        <ul >
             <li >
                 <!-- <img src={{hero.image_link}} style="width:240px;height:240px;">
                 <p><b>{{hero.collegeName}}</b></p> -->
 
                 <ngb-carousel style="width:240px;height:240px;">
                   <ng-template ngbSlide>
-                    <img src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
+                    <img (click)="openCollege(hero.collegeName)" src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
                     <div class="carousel-caption">
                       <p>{{hero.collegeName}}</p>
                     </div>
+                    <div>
+                    <button (click)="addToWatchList(hero.collegeName)" style= "margin-left:50px; margin-bottom:10px; margin-top:3px"class="btn btn-primary" type="button" name="button">Add to watchlist</button>
+                    </div>
+
                   </ng-template>
                   <!-- <ng-template ngbSlide>
                     <img src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
