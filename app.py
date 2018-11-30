@@ -74,21 +74,17 @@ def postResponse():
 		print "text", text
 		studentid = text['studentid']
 		collegeName = text['collegeName']
-		q1 = ""
-		if 'q1' in text:
-			q1 = text['q1']
-		q2 = ""
-		if 'q2' in text:
-			q2 = text['q2']
-		q3 = ""
-		if 'q3' in text:
-			q3 = text['q3']
+
+		questions = []
+		if 'questions' in text:
+			questions = text['questions'].split("||")
 		appliedStatus = text['appliedStatus']
 		major = ""
 		if 'major' in text:
 			major = text['major']
 		curs = con.cursor()
 		curs2 = con.cursor()
+		curs3 = con.cursor()
 		collegeN = (collegeName, )
 		curs.execute("SELECT collegeid FROM COLLEGES WHERE collegename = %s", collegeN)
 		result = []
@@ -102,14 +98,20 @@ def postResponse():
 		print results
 		if (len(results) == 0):
 			acceptancestatus = 0
-			query = "INSERT INTO current_application (studentid, collegeid, acceptancestatus, q1, q2, q3, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-			curs2.execute(query, (studentid, result[0]['collegeid'], acceptancestatus, q1, q2, q3, appliedStatus, major, ))
+			query = "INSERT INTO current_application (studentid, collegeid, acceptancestatus, questions, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+			curs2.execute(query, (studentid, result[0]['collegeid'], acceptancestatus, questions, appliedStatus, major, ))
 		else:
-			query = "UPDATE current_application SET (q1, q2, q3, appliedStatus, major) = (%s, %s, %s, %s, %s) WHERE studentid = %s AND collegeid = %s"
-			curs2.execute(query, (q1, q2, q3, appliedStatus, major, studentid, collegeid, ))
+			tup = ()
+			for i in range(0, len(questions)):
+				tup = tup + (questions[i], )
+			query_u = "UPDATE current_application SET questions = %s WHERE studentid = %s AND collegeid = %s"
+			curs3.execute(query_u, (questions, studentid, collegeid, ))
+			query = "UPDATE current_application SET (appliedStatus, major) = (%s, %s) WHERE studentid = %s AND collegeid = %s"
+			curs2.execute(query, (appliedStatus, major, studentid, collegeid, ))
 		con.commit()
 		curs.close()
 		curs2.close()
+		curs3.close()
 		return jsonify("200")
 	finally:
 		if con:
@@ -242,7 +244,7 @@ def addWatchList():
 				'watchlist' : row
 			}
 			if obj['watchlist'][0] is not None:
-				result.append(obj['watchlist'][0][0])
+				result = obj['watchlist'][0]
 		print result
 		if (len(result) == 0):
 			colleges = []
@@ -459,14 +461,12 @@ def getStudentResponse():
 		if (int(appliedStatus) == 1):
 			response = jsonify("Student Already Applied")
 		if (int(appliedStatus) == 0):
-			curs2.execute("SELECT q1, q2, q3, major FROM current_application WHERE collegeid = %s and studentid = %s", collegeN)
+			curs2.execute("SELECT questions, major FROM current_application WHERE collegeid = %s and studentid = %s", collegeN)
 			result = []
 			for row in curs2:
 				obj = {
-					'q1' : row[0],
-					'q2' : row[1],
-					'q3' : row[2],
-					'major' : row[3]
+					'questions' : row[0],
+					'major' : row[1]
 				}
 				result.append(obj)
 			response = jsonify(result)
@@ -903,7 +903,7 @@ def getStudentsForCollegeName(collegename):
 	row = cur.fetchone()
 	collegeid = (row, )
 	#cur.execute("SELECT q1, q2, q3, studentid FROM current_application WHERE collegeid = %s", collegeid)
-	cur.execute("SELECT current_application.q1, current_application.q2, current_application.q3, current_application.studentid, students.fname FROM current_application LEFT JOIN students on students.studentid = current_application.studentid WHERE current_application.collegeid = %s", collegeid)
+	cur.execute("SELECT current_application.questions, current_application.studentid, students.fname FROM current_application LEFT JOIN students on students.studentid = current_application.studentid WHERE current_application.collegeid = %s", collegeid)
 	result = []
 	for r in cur:
 		result.append(r)
