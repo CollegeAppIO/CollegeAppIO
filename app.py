@@ -74,7 +74,6 @@ def postResponse():
 		print "text", text
 		studentid = text['studentid']
 		collegeName = text['collegeName']
-
 		questions = []
 		if 'questions' in text:
 			questions = text['questions'].split("||")
@@ -93,12 +92,13 @@ def postResponse():
 				'collegeid' : row
 			}
 		result.append(obj)
+		print result
 		collegeid = result[0]['collegeid']
 		results = checkUser(studentid, collegeid)
 		print results
 		if (len(results) == 0):
 			acceptancestatus = 0
-			query = "INSERT INTO current_application (studentid, collegeid, acceptancestatus, questions, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+			query = "INSERT INTO current_application (studentid, collegeid, acceptancestatus, questions, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s)"
 			curs2.execute(query, (studentid, result[0]['collegeid'], acceptancestatus, questions, appliedStatus, major, ))
 		else:
 			tup = ()
@@ -543,6 +543,7 @@ def getCollegeStats():
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
+		conn = psycopg2.connect(conn_string)
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
