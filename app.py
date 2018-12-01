@@ -9,6 +9,7 @@ import json, ast
 from sendgrid.helpers.mail import *
 from flask_mail import Mail, Message
 import boto3, botocore
+import logistic_reg as model
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -635,14 +636,8 @@ def getCollege():
 		conn = psycopg2.connect(conn_string)
 		print ("Connecting to database\n ->%s" % (conn_string))
 		curs = conn.cursor()
-		curs.execute("SELECT collegename, image_link FROM COLLEGES")
-		result = []
-		for row in curs:
-			obj = {
-				'collegeName' : row[0],
-        		'image_link' : row[1],
-			}
-			result.append(obj)
+		uid = request.headers.get("studentid")
+		result = model.main(uid)
 		response = jsonify(result)
 		response.status_code = 200
 		conn.commit()
