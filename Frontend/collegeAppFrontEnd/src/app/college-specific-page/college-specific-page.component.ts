@@ -26,7 +26,7 @@ export class CollegeSpecificPageComponent implements OnInit {
   collegeName: string;
   message:string;
   testarea:string;
-  
+
   questions: any;
   answers: string[] = [];
 
@@ -42,12 +42,12 @@ export class CollegeSpecificPageComponent implements OnInit {
         if(user) {
           this.uid = user.uid;
           this.email = user.email;          //console.log(this.uid);
-        
+
         }
 
         var temp = 'http://college-app-io.herokuapp.com/getStudentResponse';
         this.httpClient.get(temp,{headers: {'collegeName': this.message, 'studentid':this.uid}}).subscribe(data => {
-              
+
 
               if(data == 'Student Already Applied'){
                 this.isDisabled = true;
@@ -55,13 +55,18 @@ export class CollegeSpecificPageComponent implements OnInit {
               }else{
                 this.isDisabled = false;
               }
-              
+
               console.log(data[0].major);
               console.log(data[0].questions);
 
               this.major = data[0].major;
-              this.answers = data[0].questions;
-              
+              if(data[0].questions == null){
+                this.answers = [''];
+              }else{
+                this.answers = data[0].questions;
+              }
+
+              console.log(this.answers);
 
               // this.q1 = data[0].q1;
               // this.q2 = data[0].q2;
@@ -136,7 +141,7 @@ export class CollegeSpecificPageComponent implements OnInit {
         myString += "||";
       }
     }
-    myString = myString.substring(0, myString.length - 2); 
+    myString = myString.substring(0, myString.length - 2);
     console.log(myString);
 
     this.httpClient.post('https://college-app-io.herokuapp.com/postResponse', {
@@ -178,7 +183,7 @@ export class CollegeSpecificPageComponent implements OnInit {
         myString += "||";
       }
     }
-    myString = myString.substring(0, myString.length - 2); 
+    myString = myString.substring(0, myString.length - 2);
     console.log(myString);
 
     this.httpClient.post('https://college-app-io.herokuapp.com/postResponse', {
