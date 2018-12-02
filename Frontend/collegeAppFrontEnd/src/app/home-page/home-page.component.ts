@@ -73,6 +73,12 @@ export class HomePageComponent implements OnInit {
                 this.watchlist = data;
                 console.log(data);
           })
+
+          var temp = 'https://college-app-io.herokuapp.com/getColleges';
+            this.httpClient.get(temp,{headers: {'studentid':user.uid}}).subscribe(data => {
+            this.collegeList = data as JSON;
+            console.log(this.collegeList);
+          })
         }
       })
 
