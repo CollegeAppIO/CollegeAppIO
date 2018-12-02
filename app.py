@@ -627,9 +627,33 @@ def getCollegesInfo():
 		if conn:
 			conn.close()
 
-
 @app.route("/getColleges", methods = ['GET'])
-def getCollege():
+def getColleges():
+	conn = None
+	try:
+		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+		conn = psycopg2.connect(conn_string)
+		print ("Connecting to database\n ->%s" % (conn_string))
+		curs = conn.cursor()
+		curs.execute("SELECT collegename, image_link FROM COLLEGES")
+		result = []
+		for row in curs:
+			obj = {
+				'collegename' : row[0],
+				'image_link' : row[1]
+			}
+			result.append(obj)
+		response = jsonify(result)
+		response.status_code = 200
+		conn.commit()
+		curs.close()
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/getrecommendedColleges", methods = ['GET'])
+def getrecommendedColleges():
 	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
@@ -638,16 +662,28 @@ def getCollege():
 		curs = conn.cursor()
 		uid = request.headers.get("studentid")
 		result = model.main(uid)
+		results = []
 		if result == "Finish Application":
 			curs.execute("SELECT collegename, image_link FROM COLLEGES")
-			result = []
 			for row in curs:
 				obj = {
 					'collegename' : row[0],
 					'image_link' : row[1]
 				}
-				result.append(obj)
-		response = jsonify(result)
+				results.append(obj)
+		else:
+			for i in range(0, len(result)):
+				print result
+				college = result[i]
+				collegeName = (result[i], )
+				curs.execute("SELECT image_link FROM COLLEGES WHERE collegename = %s", collegeName)
+				for row in curs:
+					obj = {
+						'collegename' : college,
+						'image_link' : row[0]
+					}
+					results.append(obj)
+		response = jsonify(results)
 		response.status_code = 200
 		conn.commit()
 		curs.close()

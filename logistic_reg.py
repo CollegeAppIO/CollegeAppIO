@@ -2,8 +2,6 @@ from sklearn.linear_model import LogisticRegression
 import numpy as np
 import psycopg2
 
-
-
 def ml_train(clf, X, y):
     clf.fit(X, y)
 
@@ -36,7 +34,7 @@ def college_train(college):
         if conn:
             conn.close()
 
-def college_predcit(student_id):
+def college_predict(student_id):
         conn = None
         try:
             conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
@@ -94,27 +92,26 @@ def main(uid):
         y = []
         for j in range(len(data)):
             temp = []
-            temp.append(data[j]['act'])
-            temp.append(data[j]['sat'])
-            temp.append(data[j]['num_ap'])
-            temp.append(data[j]['gpa'])
+            temp.append(float(data[j]['act']))
+            temp.append(float(data[j]['sat']))
+            temp.append(float(data[j]['num_ap']))
+            temp.append(float(data[j]['gpa']))
             X.append(temp)
-            y.append(data[j]['decision'])
+            y.append(float(data[j]['decision']))
         un = list(set(y))
         if len(un) > 1:
             train_X = np.array(X)
             train_y = np.array(y).reshape(-1, 1)
             ml_train(clf, train_X, y)
-            pred = college_predcit(uid)
-            print pred[0]
+            pred = college_predict(uid)
             if None not in pred[0].values():
                 preds = []
                 for j in range(len(pred)):
                     temp = []
-                    temp.append(pred[j]['act'])
-                    temp.append(pred[j]['sat'])
-                    temp.append(pred[j]['num_ap'])
-                    temp.append(pred[j]['gpa'])
+                    temp.append(float(pred[j]['act']))
+                    temp.append(float(pred[j]['sat']))
+                    temp.append(float(pred[j]['num_ap']))
+                    temp.append(float(pred[j]['gpa']))
                     preds.append(temp)
                 predict = np.array(preds).reshape(-1, 1)
                 probs =  ml_predict(clf, preds)
