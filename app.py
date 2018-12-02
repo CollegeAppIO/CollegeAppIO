@@ -11,7 +11,6 @@ from flask_mail import Mail, Message
 import boto3, botocore
 import logistic_reg as model
 from werkzeug.utils import secure_filename
-from PIL import Image
 from io import BytesIO
 import io
 import base64
