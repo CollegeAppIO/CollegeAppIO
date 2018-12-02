@@ -638,6 +638,15 @@ def getCollege():
 		curs = conn.cursor()
 		uid = request.headers.get("studentid")
 		result = model.main(uid)
+		if result == "Finish Application":
+			curs.execute("SELECT collegename, image_link FROM COLLEGES")
+			result = []
+			for row in curs:
+				obj = {
+					'collegename' : row[0],
+					'image_link' : row[1]
+				}
+				result.append(obj)
 		response = jsonify(result)
 		response.status_code = 200
 		conn.commit()
