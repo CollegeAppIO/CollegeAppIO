@@ -35,6 +35,7 @@ import { DataVisualizationComponent } from './data-visualization/data-visualizat
 import { Chart }  from 'chart.js';
 import { WatchListComponent } from './watch-list/watch-list.component';
 import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
+import { StandardDVComponent } from './standard-dv/standard-dv.component';
 
 
 
@@ -58,6 +59,7 @@ import { AdminQuestionsComponent } from './admin-questions/admin-questions.compo
     DataVisualizationComponent,
     WatchListComponent,
     AdminQuestionsComponent,
+    StandardDVComponent,
 
   ],
   imports: [
