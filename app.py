@@ -18,8 +18,8 @@ import base64
 app = Flask(__name__)
 api = Api(app)
 
-CORS(app,resources={r"/postImage": {"origins": "http://localhost:4200"}})
-app.config['CORS_HEADERS'] = 'Content-Type','Access-Control-Allow-Origin'
+# CORS(app,resources={r"/postImage": {"origins": "http://localhost:4200"}})
+# app.config['CORS_HEADERS'] = 'Content-Type','Access-Control-Allow-Origin'
 
 def initDB():
 	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
