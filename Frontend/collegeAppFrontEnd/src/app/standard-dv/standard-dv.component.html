@@ -1,9 +1,6 @@
 
 <app-admin-nav-bar></app-admin-nav-bar>
-<p>
-  standard-dv works! btohc
-</p>
 
-
-
-
+<div *ngIf="chart">
+  <canvas id="canvas">{{chart}}</canvas>
+</div>
