@@ -5,7 +5,7 @@ from json import dumps
 from flask_jsonpify import jsonify
 import psycopg2
 import jinja2
-import json, ast 
+import json, ast
 from sendgrid.helpers.mail import *
 from flask_mail import Mail, Message
 import boto3, botocore
@@ -501,6 +501,7 @@ def getCategories():
 			result.append(obj)
 		print result
 		response = jsonify(result)
+		print result
 		response.status_code = 200
 		con.commit()
 		curs.close
@@ -992,7 +993,7 @@ def getListOfAcceptedStudents(collegename):
 def getStatsEachStudent():
 	conn, cur = initDB()
 	collegename = request.headers.get('collegeName')
-	cur.execute("SELECT act, sat, num_ap, gpa, race, major, CASE WHEN sex = '1' then 'Female' WHEN sex = '0' then 'Other' WHEN sex = '2' then 'Male' END AS SEX FROM historicalapplication where college = %s", (collegename, ))
+	cur.execute("SELECT act, sat, num_ap, gpa, race, major, decision, CASE WHEN sex = '1' then 'Female' WHEN sex = '0' then 'Other' WHEN sex = '2' then 'Male' END AS SEX FROM historicalapplication where college = %s", (collegename, ))
 	result1 = []
 	result2 = []
 	result3 = []
@@ -1000,6 +1001,7 @@ def getStatsEachStudent():
 	result5 = []
 	result6 = []
 	result7 = []
+	result8 = []
 	result = []
 	for row in cur:
 		obj1 = {
@@ -1033,10 +1035,13 @@ def getStatsEachStudent():
 		result6.append(obj6)
 
 		obj7 = {
-			'sex' : row[6]
+			'sex' : row[7]
 		}
 		result7.append(obj7)
-
+		obj8 = {
+			'decision' : row[6]
+		}
+		result8.append(obj8)
 	result.append(result1)
 	result.append(result2)
 	result.append(result3)
@@ -1044,7 +1049,7 @@ def getStatsEachStudent():
 	result.append(result5)
 	result.append(result6)
 	result.append(result7)
-
+	result.append(result8)
 	response = jsonify(result)
 	response.status_code = 200
 	conn.commit()
@@ -1053,7 +1058,7 @@ def getStatsEachStudent():
 
 @app.route("/getCollegeStatsEachMajor", methods=['GET'])
 def getCollegeStatsEachMajor():
-	
+
 	collegename = request.headers.get('collegeName')
 
 	result = []
@@ -1069,7 +1074,7 @@ def getCollegeStatsEachMajor():
 		}
 		result.append(obj)
 	conn.close()
-	
+
 	return jsonify(result)
 
 def upload_file_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
@@ -1113,7 +1118,7 @@ def postImage():
 	SECRET_KEY                = os.urandom(32)
 	DEBUG                     = True
 	PORT                      = 5000
-	
+
 	print "DIDD IT EVEN GET HERE AT ALL????"
 	print request.headers
 	print "request files:", request.files
@@ -1127,7 +1132,7 @@ def postImage():
 	keyval = json.loads(request.data)
 	for key, value in keyval.iteritems():
 		print key
-	
+
 	image = keyval['image']
 	blobject = 'hi'
 	if 'image':
@@ -1145,7 +1150,7 @@ def postImage():
         file.content_length
         file.mimetype
     """
-	
+
 	print "IT GOT HERER ALREADY"
 	# file  = request.files['image']
 	# if file.filename == "":
@@ -1156,7 +1161,7 @@ def postImage():
 	# 	file.filename = secure_filename(file.filename)
 	# 	output = upload_file_to_s3(s3, S3_LOCATION, file, S3_BUCKET)
 
-	
+
 	output = upload_file_to_s3(s3, S3_LOCATION, image, S3_BUCKET)
 	#output = upload_plain_object_to_s3(s3, S3_LOCATION, image, S3_BUCKET)
 	# 	# print "S3_BUCKET is", S3_BUCKET
