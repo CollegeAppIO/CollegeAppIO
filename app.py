@@ -542,27 +542,32 @@ def getData():
 		if conn:
 			conn.close()
 
-
-@app.route("/getCollegeStatsEachMajor", methods=['GET'])
-def getCollegeStatsEachMajor():
-
-	collegename = request.headers.get('collegeName')
-
-	result = []
-	conn, cur = initDB()
-	cur.execute("SELECT major, AVG(act), AVG(sat), AVG(num_ap), AVG(gpa) FROM historicalapplication where college = %s GROUP BY major", (collegename,))
-	for row in cur:
-		obj = {
-			'major' : row[0],
-			'act' : float(row[1]),
-			'sat' : float(row[2]),
-			'num_ap' : float(row[3]),
-			'gpa' : float(row[4]),
-		}
-		result.append(obj)
-	conn.close()
-
-	return jsonify(result)
+@app.route("/getCollegeStatsMajor", methods=['GET'])
+def getCollegeStatsMajor():
+	conn = None
+	try:
+		result = []
+		conn, cur = initDB()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		cur.execute("SELECT major, AVG(act), AVG(sat), AVG(num_ap), AVG(gpa) FROM historicalapplication where college = %s GROUP BY major", collegeN)
+		for row in cur:
+			obj = {
+				'major' : row[0],
+				'act' : float(row[1]),
+				'sat' : float(row[2]),
+				'num_ap' : float(row[3]),
+				'gpa' : float(row[4]),
+			}
+			result.append(obj)
+		conn.commit()
+		cur.close()
+		response = jsonify(result)
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
 
 @app.route("/getCollegeStats", methods = ['GET'])
 def getCollegeStats():
