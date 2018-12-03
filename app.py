@@ -1104,7 +1104,7 @@ def upload_plain_object_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-re
 
 
 @app.route("/postImage", methods=['POST'])
-@cross_origin(origin='http://localhost:4200',headers=['Content-Type','Authorization','Access-Control-Allow-Origin','Access-Control-Allow-Methods'])
+#@cross_origin(origin='http://localhost:4200',headers=['Content-Type','Authorization','Access-Control-Allow-Origin','Access-Control-Allow-Methods'])
 def postImage():
 	S3_BUCKET                 = os.environ.get("S3_BUCKET")
 	S3_KEY                    = os.environ.get("aws_access_key_id")
@@ -1190,7 +1190,7 @@ def postImage():
 
 	# return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 	response = jsonify({'ADMIN' : 'FALSE', 's3URL': output})
-	response.headers.add('Access-Control-Allow-Origin', '*')
+	# response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
 
 		#print "RESPONSE IS ", label['DetectedText']
