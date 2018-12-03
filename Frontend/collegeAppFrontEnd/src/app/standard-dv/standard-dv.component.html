@@ -1,6 +1,14 @@
 
 <app-admin-nav-bar></app-admin-nav-bar>
 
-<div *ngIf="chart">
+<div *ngIf="chart" style="width: 40%">
   <canvas id="canvas">{{chart}}</canvas>
+</div>
+<br>
+<div *ngIf="chart1" style="width: 40%">
+    <canvas id="canvas1">{{chart1}}</canvas>
+</div>
+<br>
+<div *ngIf="chart2" style="width: 40%">
+    <canvas id="canvas2">{{chart2}}</canvas>
 </div>
