@@ -5,18 +5,22 @@ from json import dumps
 from flask_jsonpify import jsonify
 import psycopg2
 import jinja2
-import json, ast
+import json, ast 
 from sendgrid.helpers.mail import *
 from flask_mail import Mail, Message
 import boto3, botocore
 import logistic_reg as model
 from werkzeug.utils import secure_filename
+from io import BytesIO
+import io
+import base64
 
 app = Flask(__name__)
 api = Api(app)
 
 CORS(app)
 #comment
+
 def initDB():
 	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 	conn = psycopg2.connect(conn_string)
@@ -1047,14 +1051,34 @@ def getStatsEachStudent():
 	cur.close()
 	return response
 
+@app.route("/getCollegeStatsEachMajor", methods=['GET'])
+def getCollegeStatsEachMajor():
+	
+	collegename = request.headers.get('collegeName')
 
+	result = []
+	conn, cur = initDB()
+	cur.execute("SELECT major, AVG(act), AVG(sat), AVG(num_ap), AVG(gpa) FROM historicalapplication where college = %s GROUP BY major", (collegename,))
+	for row in cur:
+		obj = {
+			'major' : row[0],
+			'act' : float(row[1]),
+			'sat' : float(row[2]),
+			'num_ap' : float(row[3]),
+			'gpa' : float(row[4]),
+		}
+		result.append(obj)
+	conn.close()
+	
+	return jsonify(result)
 
 def upload_file_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
 	try:
 		s3.upload_fileobj(
 			file,
 			bucket_name,
-			file.filename, #KEY
+			#file.filename, #KEY
+			"foo57.png",
 			ExtraArgs={
 				"ACL": acl,
 				"ContentType": file.content_type
@@ -1070,10 +1094,17 @@ def upload_file_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
 	#return "{}{}".format(app.config[S3_LOCATION], file.filename)
 	return "{}{}".format(S3_LOCATION, file.filename)
 
-
+def upload_plain_object_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
+	try:
+		s3.put_object(Body=file, Bucket=bucket_name, Key="foo25.png", ContentType='image/png')
+		#s3.upload_file(file, bucket_name, "foo22.png")
+	except Exception as e:
+		print "Something upload_plain_object_to_s3 Happened: ", e
+		return e
 
 
 @app.route("/postImage", methods=['POST'])
+#@cross_origin(origin='http://localhost:4200',headers=['Content-Type','Authorization','Access-Control-Allow-Origin','Access-Control-Allow-Methods'])
 def postImage():
 	S3_BUCKET                 = os.environ.get("S3_BUCKET")
 	S3_KEY                    = os.environ.get("aws_access_key_id")
@@ -1082,6 +1113,10 @@ def postImage():
 	SECRET_KEY                = os.urandom(32)
 	DEBUG                     = True
 	PORT                      = 5000
+	
+	print "DIDD IT EVEN GET HERE AT ALL????"
+	print request.headers
+	print "request files:", request.files
 
 	s3 = boto3.client(
 		"s3",
@@ -1089,7 +1124,20 @@ def postImage():
 		aws_secret_access_key=S3_SECRET,
 	)
 
-	if 'image' not in request.files:
+	keyval = json.loads(request.data)
+	for key, value in keyval.iteritems():
+		print key
+	
+	image = keyval['image']
+	blobject = 'hi'
+	if 'image':
+		print "CORRECT"
+		#Image.open(image)
+		#blobject = image.decode('base64')
+		#print("img_file_size png: ", blobject)
+
+	if 'image' not in keyval:
+		print "IT GET HERE "
 		return "No image key in request.files"
 	"""
         file.filename               # The actual name of the file
@@ -1097,48 +1145,58 @@ def postImage():
         file.content_length
         file.mimetype
     """
+	
+	print "IT GOT HERER ALREADY"
+	# file  = request.files['image']
+	# if file.filename == "":
+	# 	return "Please select a file"
 
-	file  = request.files['image']
-	if file.filename == "":
-		return "Please select a file"
+	# #if file and allowed_file(file.filename):
+	# if file:
+	# 	file.filename = secure_filename(file.filename)
+	# 	output = upload_file_to_s3(s3, S3_LOCATION, file, S3_BUCKET)
 
-	#if file and allowed_file(file.filename):
-	if file:
-		file.filename = secure_filename(file.filename)
-		output = upload_file_to_s3(s3, S3_LOCATION, file, S3_BUCKET)
+	
+	output = upload_file_to_s3(s3, S3_LOCATION, image, S3_BUCKET)
+	#output = upload_plain_object_to_s3(s3, S3_LOCATION, image, S3_BUCKET)
+	# 	# print "S3_BUCKET is", S3_BUCKET
+	# 	# print "TYPE OF S3_BUCKET is ", type(S3_BUCKET)
+	# 	# print "TYPE OF STR S3_BUCKET is ", type(str(S3_BUCKET))
+	# 	# print "FILE NAME IS ", file.filename
+	# 	# print "S3 Location is ", S3_LOCATION
 
+	# rekognition = boto3.client("rekognition", "us-east-2")
+	# print "DID IT GET HEERE?????"
+	# response = rekognition.detect_text(
+	# 	Image={
+	# 		'S3Object': {
+	# 			'Bucket': S3_BUCKET,
+	# 			'Name': image,
+	# 		}
+	# 	}
+	# )
 
-		# print "S3_BUCKET is", S3_BUCKET
-		# print "TYPE OF S3_BUCKET is ", type(S3_BUCKET)
-		# print "TYPE OF STR S3_BUCKET is ", type(str(S3_BUCKET))
-		# print "FILE NAME IS ", file.filename
-		# print "S3 Location is ", S3_LOCATION
+	print "OH SHIT IT DID!!!!"
 
-		rekognition = boto3.client("rekognition", "us-east-2")
+	# map = {}
+	# for label in response['TextDetections']:
+	# 	map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
 
-		response = rekognition.detect_text(
-			Image={
-				'S3Object': {
-					'Bucket': S3_BUCKET,
-					'Name': file.filename,
-				}
-			}
-		)
+	# if "university" in map:
+	# 	if "administrator" in map or "admin" in map:
+	# 		return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
+	# 		# response.body = jsonify({'ADMIN' : 'TRUE', 's3URL': output})
+	# 		# return response
 
-		map = {}
-		for label in response['TextDetections']:
-			map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
-
-		if "university" in map:
-			if "administrator" in map or "admin" in map:
-				return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
-
-		return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
+	# return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
+	response = jsonify({'ADMIN' : 'FALSE', 's3URL': output})
+	# response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 
 		#print "RESPONSE IS ", label['DetectedText']
 		#return output
-	else:
-		return redirect("/")
+	# else:
+	# 	return redirect("/")
 
 
 if __name__ == '__main__':

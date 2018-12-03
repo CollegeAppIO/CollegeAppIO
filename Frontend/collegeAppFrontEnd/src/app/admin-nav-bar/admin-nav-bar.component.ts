@@ -52,6 +52,11 @@ export class AdminNavBarComponent implements OnInit {
     this.router.navigateByUrl('/AdminQuestions');
   }
 
+  onStaticDataVisualization(){
+    console.log('go home page');
+    this.router.navigateByUrl('/StandardDV');
+  }
+
   onHistoricalData(){
     console.log('go historical data');
     //this.router.navigateByUrl('/HistoricalData');
