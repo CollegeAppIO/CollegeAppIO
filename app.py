@@ -543,6 +543,27 @@ def getData():
 			conn.close()
 
 
+@app.route("/getCollegeStatsEachMajor", methods=['GET'])
+def getCollegeStatsEachMajor():
+
+	collegename = request.headers.get('collegeName')
+
+	result = []
+	conn, cur = initDB()
+	cur.execute("SELECT major, AVG(act), AVG(sat), AVG(num_ap), AVG(gpa) FROM historicalapplication where college = %s GROUP BY major", (collegename,))
+	for row in cur:
+		obj = {
+			'major' : row[0],
+			'act' : float(row[1]),
+			'sat' : float(row[2]),
+			'num_ap' : float(row[3]),
+			'gpa' : float(row[4]),
+		}
+		result.append(obj)
+	conn.close()
+
+	return jsonify(result)
+
 @app.route("/getCollegeStats", methods = ['GET'])
 def getCollegeStats():
 	conn = None
@@ -663,7 +684,6 @@ def getrecommendedColleges():
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		conn = psycopg2.connect(conn_string)
-		print ("Connecting to database\n ->%s" % (conn_string))
 		curs = conn.cursor()
 		uid = request.headers.get("studentid")
 		result = model.main(uid)
