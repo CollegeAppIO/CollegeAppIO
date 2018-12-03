@@ -569,6 +569,78 @@ def getCollegeStatsMajor():
 		if conn:
 			conn.close()
 
+@app.route("/getCollegeCountMajor", methods=['GET'])
+def getCollegeCounts():
+	conn = None
+	try:
+		result = []
+		conn, cur = initDB()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		cur.execute("SELECT major, COUNT(major)FROM historicalapplication where college = %s GROUP BY college, major", collegeN)
+		for row in cur:
+			obj = {
+				'Major' : row[0],
+				'Count' : float(row[1])
+			}
+			result.append(obj)
+		conn.commit()
+		cur.close()
+		response = jsonify(result)
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/getCollegeCountSex", methods=['GET'])
+def getCollegeCountSex():
+	conn = None
+	try:
+		result = []
+		conn, cur = initDB()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		cur.execute("SELECT sex, COUNT(sex) FROM historicalapplication where college = %s GROUP BY college, sex", collegeN)
+		for row in cur:
+			obj = {
+				'Sex' : row[0],
+				'Count' : float(row[1])
+			}
+			result.append(obj)
+		conn.commit()
+		cur.close()
+		response = jsonify(result)
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/getCollegeCountRace", methods=['GET'])
+def getCollegeCountRace():
+	conn = None
+	try:
+		result = []
+		conn, cur = initDB()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		cur.execute("SELECT race, COUNT(race)FROM historicalapplication where college = %s GROUP BY college, race", collegeN)
+		for row in cur:
+			obj = {
+				'Race' : row[0],
+				'Count' : float(row[1])
+			}
+			result.append(obj)
+		conn.commit()
+		cur.close()
+		response = jsonify(result)
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
+
 @app.route("/getCollegeStats", methods = ['GET'])
 def getCollegeStats():
 	conn = None
