@@ -1174,35 +1174,22 @@ def getCollegeStatsEachMajor():
 
 	return jsonify(result)
 
-def upload_file_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
+
+def upload_plain_object_to_s3(s3, S3_LOCATION, file, bucket_name, fname, acl="public-read"):
 	try:
-		s3.upload_fileobj(
-			file,
-			bucket_name,
-			#file.filename, #KEY
-			"foo57.png",
-			ExtraArgs={
-				"ACL": acl,
-				"ContentType": file.content_type
-
-			}
+		
+		s3.put_object(
+			Body=file, 
+			Bucket=bucket_name, 
+			Key=fname, 
+			ContentType="image/png"
 		)
-
+		
 	except Exception as e:
-		# This is a catch all exception, edit this part to fit your needs.
 		print "Something Happened: ", e
 		return e
 
-	#return "{}{}".format(app.config[S3_LOCATION], file.filename)
-	return "{}{}".format(S3_LOCATION, file.filename)
-
-def upload_plain_object_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
-	try:
-		s3.put_object(Body=file, Bucket=bucket_name, Key="foo25.png", ContentType='image/png')
-		#s3.upload_file(file, bucket_name, "foo22.png")
-	except Exception as e:
-		print "Something upload_plain_object_to_s3 Happened: ", e
-		return e
+	return "{}{}".format(S3_LOCATION, fname)
 
 
 @app.route("/postImage", methods=['POST'])
@@ -1216,89 +1203,72 @@ def postImage():
 	DEBUG                     = True
 	PORT                      = 5000
 
-	print "DIDD IT EVEN GET HERE AT ALL????"
-	print request.headers
-	print "request files:", request.files
-
+	#Establish a connection to S3
 	s3 = boto3.client(
 		"s3",
 		aws_access_key_id=S3_KEY,
 		aws_secret_access_key=S3_SECRET,
 	)
 
+	# Load Json Payload into dict
 	keyval = json.loads(request.data)
-	for key, value in keyval.iteritems():
-		print key
 
-	image = keyval['image']
-	blobject = 'hi'
-	if 'image':
-		print "CORRECT"
-		#Image.open(image)
-		#blobject = image.decode('base64')
-		#print("img_file_size png: ", blobject)
+	# Iterate over headers in request.data
+	# for key, value in keyval.iteritems():
+	# 	print key
 
+	# Issue of FileReader.readAsDataURL() in angular sending a string that cannot be directly decoded as Base64
+	# To fix this issue we must remove "data:image/png;base64," from the start of the Blob
+	# more information here: https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
+	head, data = keyval['image'].split(',')
+
+	# decode the image
+	decoded = data.decode('base64','strict')
+	
+	# If image is not found in keyval then t
 	if 'image' not in keyval:
-		print "IT GET HERE "
-		return "No image key in request.files"
-	"""
-        file.filename               # The actual name of the file
-        file.content_type
-        file.content_length
-        file.mimetype
-    """
+		return "No image key found in the server side when /postImage was called. Set Header as 'image':'{data}'"
+	
+	if 'fname' not in keyval:
+		return "No object name found in the server"
+	fname = keyval['fname']
 
-	print "IT GOT HERER ALREADY"
-	# file  = request.files['image']
-	# if file.filename == "":
-	# 	return "Please select a file"
+	# Make the upload to S3 service
+	output = upload_plain_object_to_s3(s3, S3_LOCATION, decoded, S3_BUCKET, fname)
 
-	# #if file and allowed_file(file.filename):
-	# if file:
-	# 	file.filename = secure_filename(file.filename)
-	# 	output = upload_file_to_s3(s3, S3_LOCATION, file, S3_BUCKET)
-
-
-	output = upload_file_to_s3(s3, S3_LOCATION, image, S3_BUCKET)
-	#output = upload_plain_object_to_s3(s3, S3_LOCATION, image, S3_BUCKET)
 	# 	# print "S3_BUCKET is", S3_BUCKET
 	# 	# print "TYPE OF S3_BUCKET is ", type(S3_BUCKET)
 	# 	# print "TYPE OF STR S3_BUCKET is ", type(str(S3_BUCKET))
 	# 	# print "FILE NAME IS ", file.filename
 	# 	# print "S3 Location is ", S3_LOCATION
 
-	# rekognition = boto3.client("rekognition", "us-east-2")
-	# print "DID IT GET HEERE?????"
-	# response = rekognition.detect_text(
-	# 	Image={
-	# 		'S3Object': {
-	# 			'Bucket': S3_BUCKET,
-	# 			'Name': image,
-	# 		}
-	# 	}
-	# )
+	# Connect to recognition service
+	rekognition = boto3.client("rekognition", "us-east-2")
+	
+	response = rekognition.detect_text(
+		Image={
+			'S3Object': {
+				'Bucket': S3_BUCKET,
+				'Name': fname,
+			}
+		}
+	)
 
-	print "OH SHIT IT DID!!!!"
+	# Load the text from recognition into map
+	map = {}
+	for label in response['TextDetections']:
+		# Fix any anomalies in text detection
+		map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
 
-	# map = {}
-	# for label in response['TextDetections']:
-	# 	map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
+	# Check for valid keywords
+	if "university" in map:
+		if "administrator" in map or "admin" in map:
+			return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
 
-	# if "university" in map:
-	# 	if "administrator" in map or "admin" in map:
-	# 		return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
-	# 		# response.body = jsonify({'ADMIN' : 'TRUE', 's3URL': output})
-	# 		# return response
-
-	# return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 	response = jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 	# response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
 
-		#print "RESPONSE IS ", label['DetectedText']
-		#return output
-	# else:
-	# 	return redirect("/")
 
 
 if __name__ == '__main__':
