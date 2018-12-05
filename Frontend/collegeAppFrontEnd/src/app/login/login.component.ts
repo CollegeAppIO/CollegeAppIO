@@ -9,8 +9,10 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router'
 import { HttpClient } from '@angular/common/http';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
-import {Http, RequestOptions} from '@angular/http';
-
+import { HttpRequest } from "@angular/common/http";
+import { HttpEventType } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 @Component({
@@ -26,6 +28,8 @@ export class LoginComponent implements OnInit {
   loggedIn = false;
   userObj: any;
 
+  pDone: any;
+
   useremail: string;
   password: string;
   //isAdmin: boolean;
@@ -34,6 +38,7 @@ export class LoginComponent implements OnInit {
 
   modalStatus: boolean;
   isAdmin: boolean;
+  isAdminProof: any;
   collegeName:string;
 
   //collegeList: JSON;
@@ -84,29 +89,58 @@ export class LoginComponent implements OnInit {
 
   }
 
+  // progbar is used as a listener for HTML progressbar to load
+  progbar() {
+    return this.pDone;
+  }
+  
   uploadFileBlob(blob:any, filename:string) {
       console.log({blob})
       console.log({filename})
-   
-     
-      return this.httpClient.post('https://college-app-io.herokuapp.com/postImage', {
-        image: blob,
-        fname: filename,
-        headers: {
-          'Content-Type': 'image/png',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET,POST,OPTIONS,DELETE,PUT'
+
+      const req = new HttpRequest('POST', 'https://college-app-io.herokuapp.com/postImage', 
+      {'image':blob, 'fname':filename},
+      {reportProgress: true},
+      );
+      this.httpClient.request(req).subscribe(event => {
+        // Via this API, you get access to the raw event stream.
+        // Look for upload progress events.
+        if (event.type === HttpEventType.UploadProgress) {
+          // This is an upload progress event. Compute and show the % done:
+          const percentDone = Math.round(100 * event.loaded / event.total);
+          this.pDone = percentDone;
+
+          console.log(`File is ${percentDone}% uploaded.`);
+          this.progbar();
+          
+          console.log(event)
+        } else if (event instanceof HttpResponse) {
+          console.log('File is completely uploaded!');
+          console.log(event.body['ADMIN'])
+          this.isAdminProof = event.body['ADMIN'];
+          
+          
         }
-      })
-      .subscribe(
-          res => {
-            console.log(res);
-          },
-          err => {
-            console.log(err);
-          }
-        )
-        ;
+      });
+      // return this.httpClient.post('https://college-app-io.herokuapp.com/postImage', {
+      //   image: blob,
+      //   fname: filename,
+      //   headers: {
+      //     reportProgress: true,
+      //     'Content-Type': 'image/png',
+      //     'Access-Control-Allow-Origin': '*',
+      //     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS,DELETE,PUT'
+      //   }
+      // })
+      // .subscribe(
+      //     event => {
+      //       console.log(event)
+      //     },
+      //     err => {
+      //       console.log(err);
+      //     }
+      //   )
+      //   ;
 
     }
 
@@ -172,7 +206,7 @@ export class LoginComponent implements OnInit {
 
   onSignUp() {
     firebase.auth().signOut();
-    if (this.useremail === undefined || this.password === undefined) {
+    if (this.useremail === undefined || this.password === undefined || this.isAdminProof === 'FALSE') {
         this.noteSvc.setNotification(
           'Missing Information',
           'User name and password are mandatory!'

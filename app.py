@@ -1236,12 +1236,6 @@ def postImage():
 	# Make the upload to S3 service
 	output = upload_plain_object_to_s3(s3, S3_LOCATION, decoded, S3_BUCKET, fname)
 
-	# 	# print "S3_BUCKET is", S3_BUCKET
-	# 	# print "TYPE OF S3_BUCKET is ", type(S3_BUCKET)
-	# 	# print "TYPE OF STR S3_BUCKET is ", type(str(S3_BUCKET))
-	# 	# print "FILE NAME IS ", file.filename
-	# 	# print "S3 Location is ", S3_LOCATION
-
 	# Connect to recognition service
 	rekognition = boto3.client("rekognition", "us-east-2")
 	
@@ -1262,12 +1256,12 @@ def postImage():
 
 	# Check for valid keywords
 	if "university" in map:
-		if "administrator" in map or "admin" in map:
-			return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
-
-	response = jsonify({'ADMIN' : 'FALSE', 's3URL': output})
-	# response.headers.add('Access-Control-Allow-Origin', '*')
-	return response
+		for k, v in map.iteritems():
+			
+			if "admin" in k:
+				return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
+	
+	return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 
 
 
