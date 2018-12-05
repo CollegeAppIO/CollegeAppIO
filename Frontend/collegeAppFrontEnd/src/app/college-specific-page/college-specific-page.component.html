@@ -50,6 +50,7 @@
 
 <div style="text-align:center;">
 <button class="btn btn-lg btn-primary" [disabled]="isDisabled" (click)="open(content)">Apply to College</button>
+<button class="btn btn-lg btn-primary" [disabled]="isDisabled" (click)="addToWatchList(collegeName)">Add to WatchList</button>
 </div>
 
 <ng-template #content let-modal>

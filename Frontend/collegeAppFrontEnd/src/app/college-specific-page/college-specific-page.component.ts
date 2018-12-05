@@ -41,7 +41,7 @@ export class CollegeSpecificPageComponent implements OnInit {
         if(user) {
           this.uid = user.uid;
           this.email = user.email;          //console.log(this.uid);
-        
+
         }
 
         var temp = 'http://college-app-io.herokuapp.com/getStudentResponse';
@@ -204,6 +204,14 @@ export class CollegeSpecificPageComponent implements OnInit {
 
   cancel(){
     this.modalReference.close();
+  }
+
+  addToWatchList(collegeName){
+    var url = 'http://college-app-io.herokuapp.com/addWatchList';
+    this.httpClient.get(url,{headers: {'collegename': collegeName, 'studentid':this.uid}}).subscribe(data => {
+          // this.userData = data[0] as JSON;
+          console.log(data);
+    })
   }
 
 }
