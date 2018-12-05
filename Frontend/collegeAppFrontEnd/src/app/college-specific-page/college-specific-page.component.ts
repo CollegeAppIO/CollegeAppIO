@@ -111,6 +111,16 @@ export class CollegeSpecificPageComponent implements OnInit {
 
   }
 
+  addToWatchList(){
+    var url = 'http://college-app-io.herokuapp.com/addWatchList';
+    this.httpClient.get(url,{headers: {'collegename': this.message, 'studentid':this.uid}}).subscribe(data => {
+          // this.userData = data[0] as JSON;
+
+          console.log(data);
+    })
+    console.log(this.collegeName);
+  }
+
   open(content) {
     this.modalReferenceMainModal = this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
 
@@ -145,7 +155,7 @@ export class CollegeSpecificPageComponent implements OnInit {
     console.log(myString);
 
     this.httpClient.post('https://college-app-io.herokuapp.com/postResponse', {
-      
+
       collegeName: this.message,
       studentid: this.uid,
       questions: myString,
@@ -245,12 +255,6 @@ export class CollegeSpecificPageComponent implements OnInit {
     this.modalReference.close();
   }
 
-  addToWatchList(collegeName){
-    var url = 'http://college-app-io.herokuapp.com/addWatchList';
-    this.httpClient.get(url,{headers: {'collegename': collegeName, 'studentid':this.uid}}).subscribe(data => {
-          // this.userData = data[0] as JSON;
-          console.log(data);
-    })
-  }
+
 
 }
