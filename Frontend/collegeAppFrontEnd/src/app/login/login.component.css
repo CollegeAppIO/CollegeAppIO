@@ -1,1 +1,22 @@
-
+.row.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  
+  .row.no-gutters > [class^="col-"],
+  .row.no-gutters > [class*=" col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  
+  .button-controls .btn-group .btn:last-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .button-controls .progress,
+  .button-controls .progress-bar {
+    height: 30px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
