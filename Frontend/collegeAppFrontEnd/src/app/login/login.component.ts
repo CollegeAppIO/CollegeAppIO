@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit,Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import * as firebase from 'firebase/app';
@@ -9,7 +9,7 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router'
 import { HttpClient } from '@angular/common/http';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
-
+import {Http, RequestOptions} from '@angular/http';
 
 
 
@@ -18,8 +18,10 @@ import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+@Injectable()
 export class LoginComponent implements OnInit {
 
+  public fileString
   user: string;
   loggedIn = false;
   userObj: any;
@@ -36,6 +38,7 @@ export class LoginComponent implements OnInit {
 
   //collegeList: JSON;
   colleges: any;
+  user_file: any;
 
   typeOfUser: string;
 
@@ -56,12 +59,56 @@ export class LoginComponent implements OnInit {
 
 
   constructor(public authServ: AuthService, private noteSvc: NotificationServicesService,private modalService: NgbModal, private router: Router, private httpClient: HttpClient) {
+    this.fileString
   }
 
   open(content) {
     this.modalReference = this.modalService.open(content);
     this.modalStatus = true;
   }
+
+  uploadProfilePic() {
+    
+    var f = (<HTMLInputElement>document.getElementById('ufile')).files[0];
+    console.log({f});
+    
+    var r = new FileReader();
+    var data;
+    r.onload = () => {
+      console.log(r.result)
+      data = r.result
+      this.uploadFileBlob(data,f.name)
+    }
+    
+    r.readAsDataURL(f);
+
+  }
+
+  uploadFileBlob(blob:any, filename:string) {
+      console.log({blob})
+      console.log({filename})
+   
+     
+      return this.httpClient.post('https://college-app-io.herokuapp.com/postImage', {
+        image: blob,
+        fname: filename,
+        headers: {
+          'Content-Type': 'image/png',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,POST,OPTIONS,DELETE,PUT'
+        }
+      })
+      .subscribe(
+          res => {
+            console.log(res);
+          },
+          err => {
+            console.log(err);
+          }
+        )
+        ;
+
+    }
 
   uploadToUserTable(uid:string,isAdmin:boolean) {
       this.checkRegisterType = false;

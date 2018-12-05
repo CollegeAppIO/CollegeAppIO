@@ -46,6 +46,15 @@
            <label for="typeahead-format">College Name</label>
            <input id="typeahead-format" type="text" class="form-control" [(ngModel)]="collegeName"  id="collegeName" name="collegeName" [ngbTypeahead]="search" [resultFormatter]="formatter" />
            <!-- <pre>Model: {{ model | json }}</pre> -->
+           <div>
+            <form action="/" method="POST" enctype="multipart/form-data">
+              <label for="user_file">Upload Your File</label>
+
+              <input [(ngModel)]="user_file" type="file" id = "ufile" name="user_file">
+
+              <button (click)="uploadProfilePic()" type="submit">Upload</button>
+            </form>
+          </div>
            <br>
          </div>
 
