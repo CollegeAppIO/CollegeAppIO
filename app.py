@@ -538,14 +538,25 @@ def getData():
 			collegeN = collegeN + (str(qual_var), )
 		curs.execute(query, collegeN)
 		result = []
+		result1 = []
+		result2 = []
+		result3 = []
 		for row in curs:
 			obj = {
 				'param1': float(row[0]),
-				'param2': float(row[1]),
+			}
+			obj1 = {
+				'param2': float(row[1])
+			}
+			obj2 = {
 				'decision': row[2]
 			}
-			result.append(obj)
-		print(result)
+			result1.append(obj)
+			result2.append(obj1)
+			result3.append(obj2)
+		result.append(result1)
+		result.append(result2)
+		result.append(result3)
 		response = jsonify(result)
 		response.status_code = 200
 		conn.commit()
