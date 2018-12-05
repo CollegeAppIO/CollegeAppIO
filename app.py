@@ -1255,7 +1255,7 @@ def postImage():
 		map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
 
 	# Check for valid keywords
-	if "university" in map:
+	if "university" in map or "college" in map:
 		for k, v in map.iteritems():
 			
 			if "admin" in k:
