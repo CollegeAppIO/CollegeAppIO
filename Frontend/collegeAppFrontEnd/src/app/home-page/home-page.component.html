@@ -18,8 +18,10 @@
 
 <div style="text-align: center;">
       <form class="form-inline center" style="width: 500px; margin: 0 auto;" >
+        <div>
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width: 415px;" id="typeahead-format" name ="collegeNameSearch" [(ngModel)]="collegeNameSearch" [ngbTypeahead]="search" [resultFormatter]="formatter" />
         <button class="btn btn-success" type="submit" (click)="searchMethod()">Search</button>
+        </div>
         <div *ngIf="collegeNotThere">
           <div class="alert alert-danger" role="alert" style="width: 415px;">
             College is not found!
@@ -35,7 +37,7 @@
 <label style="margin-left: 40px">Watch List</label>
 <ul class="list-group">
   <li class="list-group-item" *ngFor="let college of watchlist">
-    <button (click)="removeFromWatchList(college)" style="float:right; width:10px;margin-right: 10px"class="btn btn-danger" type="button" name="button">X</button>
+    <button (click)="removeFromWatchList(college)" style="float:right;margin-right: 10px"class="btn btn-danger" type="button" name="button">X</button>
     <div (click)="openCollege(college)">
         {{college}}
     </div>
