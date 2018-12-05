@@ -21,7 +21,7 @@ export class HomePageComponent implements OnInit {
   uid: string;
   watchlist: any;
   addedToWatchList: boolean = true;
-
+  recommendedList: any;
 
   //collegeList: JSON;
   colleges: any;
@@ -73,6 +73,12 @@ export class HomePageComponent implements OnInit {
                 this.watchlist = data;
                 console.log(data);
           })
+          var url1 = 'http://college-app-io.herokuapp.com/getrecommendedColleges'
+          this.httpClient.get(url1,{headers: {'studentid':user.uid}}).subscribe(data => {
+            // this.userData = data[0] as JSON;
+            this.recommendedList = data;
+            console.log(data);
+      })
 
           var temp = 'https://college-app-io.herokuapp.com/getColleges';
             this.httpClient.get(temp,{headers: {'studentid':user.uid}}).subscribe(data => {
