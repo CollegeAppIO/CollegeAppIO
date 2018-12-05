@@ -145,6 +145,7 @@ export class CollegeSpecificPageComponent implements OnInit {
     console.log(myString);
 
     this.httpClient.post('https://college-app-io.herokuapp.com/postResponse', {
+      
       collegeName: this.message,
       studentid: this.uid,
       questions: myString,
