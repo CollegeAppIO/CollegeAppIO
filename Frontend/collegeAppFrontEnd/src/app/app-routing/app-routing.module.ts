@@ -11,6 +11,7 @@ import {StudentApplicationDetailsComponent}  from '../student-application-detail
 import {HistoricalDataComponent}  from '../historical-data/historical-data.component';
 import {DataVisualizationComponent}  from '../data-visualization/data-visualization.component';
 import {AdminQuestionsComponent} from '../admin-questions/admin-questions.component';
+import {StandardDVComponent} from '../standard-dv/standard-dv.component';
 
 
 // @NgModule({
@@ -62,6 +63,9 @@ const routes: Routes = [
         {
             path: 'AdminQuestions',
             component: AdminQuestionsComponent,
+        },{
+            path: 'StandardDV',
+            component: StandardDVComponent,
         },
 
     ];

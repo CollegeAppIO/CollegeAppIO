@@ -9,12 +9,17 @@ import json, ast
 from sendgrid.helpers.mail import *
 from flask_mail import Mail, Message
 import boto3, botocore
+import logistic_reg as model
 from werkzeug.utils import secure_filename
+from io import BytesIO
+import io
+import base64
 
 app = Flask(__name__)
 api = Api(app)
 
 CORS(app)
+#comment
 
 def initDB():
 	conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
@@ -74,7 +79,6 @@ def postResponse():
 		print "text", text
 		studentid = text['studentid']
 		collegeName = text['collegeName']
-
 		questions = []
 		if 'questions' in text:
 			questions = text['questions'].split("||")
@@ -93,12 +97,13 @@ def postResponse():
 				'collegeid' : row
 			}
 		result.append(obj)
+		print result
 		collegeid = result[0]['collegeid']
 		results = checkUser(studentid, collegeid)
 		print results
 		if (len(results) == 0):
 			acceptancestatus = 0
-			query = "INSERT INTO current_application (studentid, collegeid, acceptancestatus, questions, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+			query = "INSERT INTO current_application (studentid, collegeid, acceptancestatus, questions, appliedStatus, major) VALUES (%s, %s, %s, %s, %s, %s)"
 			curs2.execute(query, (studentid, result[0]['collegeid'], acceptancestatus, questions, appliedStatus, major, ))
 		else:
 			tup = ()
@@ -496,6 +501,7 @@ def getCategories():
 			result.append(obj)
 		print result
 		response = jsonify(result)
+		print result
 		response.status_code = 200
 		con.commit()
 		curs.close
@@ -536,6 +542,104 @@ def getData():
 		if conn:
 			conn.close()
 
+@app.route("/getCollegeStatsMajor", methods=['GET'])
+def getCollegeStatsMajor():
+	conn = None
+	try:
+		result = []
+		conn, cur = initDB()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		cur.execute("SELECT major, AVG(act), AVG(sat), AVG(num_ap), AVG(gpa) FROM historicalapplication where college = %s GROUP BY major", collegeN)
+		for row in cur:
+			obj = {
+				'major' : row[0],
+				'act' : float(row[1]),
+				'sat' : float(row[2]),
+				'num_ap' : float(row[3]),
+				'gpa' : float(row[4]),
+			}
+			result.append(obj)
+		conn.commit()
+		cur.close()
+		response = jsonify(result)
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/getCollegeCountMajor", methods=['GET'])
+def getCollegeCounts():
+	conn = None
+	try:
+		result = []
+		conn, cur = initDB()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		cur.execute("SELECT major, COUNT(major)FROM historicalapplication where college = %s GROUP BY college, major", collegeN)
+		for row in cur:
+			obj = {
+				'Major' : row[0],
+				'Count' : float(row[1])
+			}
+			result.append(obj)
+		conn.commit()
+		cur.close()
+		response = jsonify(result)
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/getCollegeCountSex", methods=['GET'])
+def getCollegeCountSex():
+	conn = None
+	try:
+		result = []
+		conn, cur = initDB()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		cur.execute("SELECT sex, COUNT(sex) FROM historicalapplication where college = %s GROUP BY college, sex", collegeN)
+		for row in cur:
+			obj = {
+				'Sex' : row[0],
+				'Count' : float(row[1])
+			}
+			result.append(obj)
+		conn.commit()
+		cur.close()
+		response = jsonify(result)
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/getCollegeCountRace", methods=['GET'])
+def getCollegeCountRace():
+	conn = None
+	try:
+		result = []
+		conn, cur = initDB()
+		collegeName = request.headers.get('collegeName')
+		collegeN = (collegeName, )
+		cur.execute("SELECT race, COUNT(race)FROM historicalapplication where college = %s GROUP BY college, race", collegeN)
+		for row in cur:
+			obj = {
+				'Race' : row[0],
+				'Count' : float(row[1])
+			}
+			result.append(obj)
+		conn.commit()
+		cur.close()
+		response = jsonify(result)
+		response.status_code = 200
+		return response
+	finally:
+		if conn:
+			conn.close()
 
 @app.route("/getCollegeStats", methods = ['GET'])
 def getCollegeStats():
@@ -543,6 +647,7 @@ def getCollegeStats():
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
 		print ("Connecting to database\n ->%s" % (conn_string))
+		conn = psycopg2.connect(conn_string)
 		curs = conn.cursor()
 		collegeName = request.headers.get('collegeName')
 		collegeN = (collegeName, )
@@ -625,9 +730,8 @@ def getCollegesInfo():
 		if conn:
 			conn.close()
 
-
 @app.route("/getColleges", methods = ['GET'])
-def getCollege():
+def getColleges():
 	conn = None
 	try:
 		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
@@ -638,11 +742,50 @@ def getCollege():
 		result = []
 		for row in curs:
 			obj = {
-				'collegeName' : row[0],
-        		'image_link' : row[1],
+				'collegename' : row[0],
+				'image_link' : row[1]
 			}
 			result.append(obj)
 		response = jsonify(result)
+		response.status_code = 200
+		conn.commit()
+		curs.close()
+		return response
+	finally:
+		if conn:
+			conn.close()
+
+@app.route("/getrecommendedColleges", methods = ['GET'])
+def getrecommendedColleges():
+	conn = None
+	try:
+		conn_string = "host='ec2-54-83-50-145.compute-1.amazonaws.com' dbname='dad8agdskdaqda' port='5432' user='bxzszdjesssvjx' password='30a8521fc6b32229540335c47af5265bb684216e4f58fa81520a91e1d086a5de'"
+		conn = psycopg2.connect(conn_string)
+		curs = conn.cursor()
+		uid = request.headers.get("studentid")
+		result = model.main(uid)
+		results = []
+		if result == "Finish Application":
+			curs.execute("SELECT collegename, image_link FROM COLLEGES")
+			for row in curs:
+				obj = {
+					'collegename' : row[0],
+					'image_link' : row[1]
+				}
+				results.append(obj)
+		else:
+			for i in range(0, len(result)):
+				print result
+				college = result[i]
+				collegeName = (result[i], )
+				curs.execute("SELECT image_link FROM COLLEGES WHERE collegename = %s", collegeName)
+				for row in curs:
+					obj = {
+						'collegename' : college,
+						'image_link' : row[0]
+					}
+					results.append(obj)
+		response = jsonify(results)
 		response.status_code = 200
 		conn.commit()
 		curs.close()
@@ -947,7 +1090,7 @@ def getListOfAcceptedStudents(collegename):
 def getStatsEachStudent():
 	conn, cur = initDB()
 	collegename = request.headers.get('collegeName')
-	cur.execute("SELECT act, sat, num_ap, gpa, race, major, CASE WHEN sex = '1' then 'Female' WHEN sex = '0' then 'Other' WHEN sex = '2' then 'Male' END AS SEX FROM historicalapplication where college = %s", (collegename, ))
+	cur.execute("SELECT act, sat, num_ap, gpa, race, major, decision, CASE WHEN sex = '1' then 'Female' WHEN sex = '0' then 'Other' WHEN sex = '2' then 'Male' END AS SEX FROM historicalapplication where college = %s", (collegename, ))
 	result1 = []
 	result2 = []
 	result3 = []
@@ -955,6 +1098,7 @@ def getStatsEachStudent():
 	result5 = []
 	result6 = []
 	result7 = []
+	result8 = []
 	result = []
 	for row in cur:
 		obj1 = {
@@ -988,10 +1132,13 @@ def getStatsEachStudent():
 		result6.append(obj6)
 
 		obj7 = {
-			'sex' : row[6]
+			'sex' : row[7]
 		}
 		result7.append(obj7)
-
+		obj8 = {
+			'decision' : row[6]
+		}
+		result8.append(obj8)
 	result.append(result1)
 	result.append(result2)
 	result.append(result3)
@@ -999,40 +1146,54 @@ def getStatsEachStudent():
 	result.append(result5)
 	result.append(result6)
 	result.append(result7)
-
+	result.append(result8)
 	response = jsonify(result)
 	response.status_code = 200
 	conn.commit()
 	cur.close()
 	return response
 
+@app.route("/getCollegeStatsEachMajor", methods=['GET'])
+def getCollegeStatsEachMajor():
+
+	collegename = request.headers.get('collegeName')
+
+	result = []
+	conn, cur = initDB()
+	cur.execute("SELECT major, AVG(act), AVG(sat), AVG(num_ap), AVG(gpa) FROM historicalapplication where college = %s GROUP BY major", (collegename,))
+	for row in cur:
+		obj = {
+			'major' : row[0],
+			'act' : float(row[1]),
+			'sat' : float(row[2]),
+			'num_ap' : float(row[3]),
+			'gpa' : float(row[4]),
+		}
+		result.append(obj)
+	conn.close()
+
+	return jsonify(result)
 
 
-def upload_file_to_s3(s3, S3_LOCATION, file, bucket_name, acl="public-read"):
+def upload_plain_object_to_s3(s3, S3_LOCATION, file, bucket_name, fname, acl="public-read"):
 	try:
-		s3.upload_fileobj(
-			file,
-			bucket_name,
-			file.filename, #KEY
-			ExtraArgs={
-				"ACL": acl,
-				"ContentType": file.content_type
-
-			}
+		
+		s3.put_object(
+			Body=file, 
+			Bucket=bucket_name, 
+			Key=fname, 
+			ContentType="image/png"
 		)
-
+		
 	except Exception as e:
-		# This is a catch all exception, edit this part to fit your needs.
 		print "Something Happened: ", e
 		return e
 
-	#return "{}{}".format(app.config[S3_LOCATION], file.filename)
-	return "{}{}".format(S3_LOCATION, file.filename)
-
-
+	return "{}{}".format(S3_LOCATION, fname)
 
 
 @app.route("/postImage", methods=['POST'])
+#@cross_origin(origin='http://localhost:4200',headers=['Content-Type','Authorization','Access-Control-Allow-Origin','Access-Control-Allow-Methods'])
 def postImage():
 	S3_BUCKET                 = os.environ.get("S3_BUCKET")
 	S3_KEY                    = os.environ.get("aws_access_key_id")
@@ -1042,62 +1203,66 @@ def postImage():
 	DEBUG                     = True
 	PORT                      = 5000
 
+	#Establish a connection to S3
 	s3 = boto3.client(
 		"s3",
 		aws_access_key_id=S3_KEY,
 		aws_secret_access_key=S3_SECRET,
 	)
 
-	if 'image' not in request.files:
-		return "No image key in request.files"
-	"""
-        file.filename               # The actual name of the file
-        file.content_type
-        file.content_length
-        file.mimetype
-    """
+	# Load Json Payload into dict
+	keyval = json.loads(request.data)
 
-	file  = request.files['image']
-	if file.filename == "":
-		return "Please select a file"
+	# Iterate over headers in request.data
+	# for key, value in keyval.iteritems():
+	# 	print key
 
-	#if file and allowed_file(file.filename):
-	if file:
-		file.filename = secure_filename(file.filename)
-		output = upload_file_to_s3(s3, S3_LOCATION, file, S3_BUCKET)
+	# Issue of FileReader.readAsDataURL() in angular sending a string that cannot be directly decoded as Base64
+	# To fix this issue we must remove "data:image/png;base64," from the start of the Blob
+	# more information here: https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
+	head, data = keyval['image'].split(',')
 
+	# decode the image
+	decoded = data.decode('base64','strict')
+	
+	# If image is not found in keyval then t
+	if 'image' not in keyval:
+		return "No image key found in the server side when /postImage was called. Set Header as 'image':'{data}'"
+	
+	if 'fname' not in keyval:
+		return "No object name found in the server"
+	fname = keyval['fname']
 
-		# print "S3_BUCKET is", S3_BUCKET
-		# print "TYPE OF S3_BUCKET is ", type(S3_BUCKET)
-		# print "TYPE OF STR S3_BUCKET is ", type(str(S3_BUCKET))
-		# print "FILE NAME IS ", file.filename
-		# print "S3 Location is ", S3_LOCATION
+	# Make the upload to S3 service
+	output = upload_plain_object_to_s3(s3, S3_LOCATION, decoded, S3_BUCKET, fname)
 
-		rekognition = boto3.client("rekognition", "us-east-2")
-
-		response = rekognition.detect_text(
-			Image={
-				'S3Object': {
-					'Bucket': S3_BUCKET,
-					'Name': file.filename,
-				}
+	# Connect to recognition service
+	rekognition = boto3.client("rekognition", "us-east-2")
+	
+	response = rekognition.detect_text(
+		Image={
+			'S3Object': {
+				'Bucket': S3_BUCKET,
+				'Name': fname,
 			}
-		)
+		}
+	)
 
-		map = {}
-		for label in response['TextDetections']:
-			map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
+	# Load the text from recognition into map
+	map = {}
+	for label in response['TextDetections']:
+		# Fix any anomalies in text detection
+		map[label['DetectedText'].lower().replace("-", "")] = label['DetectedText']
 
-		if "university" in map:
-			if "administrator" in map or "admin" in map:
+	# Check for valid keywords
+	if "university" in map or "college" in map:
+		for k, v in map.iteritems():
+			
+			if "admin" in k:
 				return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
+	
+	return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 
-		return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
-
-		#print "RESPONSE IS ", label['DetectedText']
-		#return output
-	else:
-		return redirect("/")
 
 
 if __name__ == '__main__':

@@ -18,8 +18,10 @@
 
 <div style="text-align: center;">
       <form class="form-inline center" style="width: 500px; margin: 0 auto;" >
+        <div>
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width: 415px;" id="typeahead-format" name ="collegeNameSearch" [(ngModel)]="collegeNameSearch" [ngbTypeahead]="search" [resultFormatter]="formatter" />
         <button class="btn btn-success" type="submit" (click)="searchMethod()">Search</button>
+        </div>
         <div *ngIf="collegeNotThere">
           <div class="alert alert-danger" role="alert" style="width: 415px;">
             College is not found!
@@ -35,7 +37,7 @@
 <label style="margin-left: 40px">Watch List</label>
 <ul class="list-group">
   <li class="list-group-item" *ngFor="let college of watchlist">
-    <button (click)="removeFromWatchList(college)" style="float:right; width:10px margin-right: 10px"class="btn btn-danger" type="button" name="button">X</button>
+    <button (click)="removeFromWatchList(college)" style="float:right;margin-right: 10px"class="btn btn-danger" type="button" name="button">X</button>
     <div (click)="openCollege(college)">
         {{college}}
     </div>
@@ -43,6 +45,17 @@
 </ul>
 </div>
 
+<div class="recommendedList">
+  <!-- <app-watch-list></app-watch-list> -->
+<label >Recommended List</label>
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let college of recommendedList">
+    <div (click)="openCollege(college.collegename)">
+        {{college.collegename}}
+    </div>
+  </li>
+</ul>
+</div>
 
 
 
@@ -55,30 +68,19 @@
             <li >
                 <!-- <img src={{hero.image_link}} style="width:240px;height:240px;">
                 <p><b>{{hero.collegeName}}</b></p> -->
-
+                  <p style="height: 40px;">{{hero.collegename}}</p> 
                 <ngb-carousel style="width:240px;height:240px;">
                   <ng-template ngbSlide>
-                    <img (click)="openCollege(hero.collegeName)" src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
-                    <div class="carousel-caption">
-                      <p>{{hero.collegeName}}</p>
-                    </div>
+                    <img (click)="openCollege(hero.collegename)" src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
+                    <!-- <div class="carousel-caption"> -->
+                      <!-- <p>{{hero.collegename}}</p> -->
+                    <!-- </div> -->
                     <div>
-                    <button (click)="addToWatchList(hero.collegeName)" style= "margin-left:50px; margin-bottom:10px; margin-top:3px"class="btn btn-primary" type="button" name="button">Add to watchlist</button>
+                    <button (click)="addToWatchList(hero.collegename)" style= "margin-left:50px; margin-bottom:10px; margin-top:3px"class="btn btn-primary" type="button" name="button">Add to watchlist</button>
                     </div>
 
                   </ng-template>
-                  <!-- <ng-template ngbSlide>
-                    <img src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
-                    <div class="carousel-caption">
-                      <p>{{hero.collegeName}} 2</p>
-                    </div>
-                  </ng-template>
-                  <ng-template ngbSlide>
-                    <img src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
-                    <div class="carousel-caption">
-                      <p>{{hero.collegeName}} 3</p>
-                    </div>
-                  </ng-template> -->
+
 
 
                 </ngb-carousel>

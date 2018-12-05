@@ -64,29 +64,63 @@
       <div class="form-group">
         <label>Major</label>
         <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]='major' [ngClass]="{'green' : toggleq0, 'red': !toggleq0}">
-          <option>Computer Science</option>
+          <option>Accounting</option>
+          <option>Actuarial Science</option>
+          <option>Agriculture</option>
+          <option>Animal Sciences</option>
+          <option>Anthropology</option>
+          <option>Applied Mathematics</option>
+          <option>Art History</option>
+          <option>Biochemistry</option>
           <option>Biology</option>
-          <option>Math</option>
-          <option>Engineering</option>
-          <option>Spanish</option>
+          <option>Chemical Engineering</option>
+          <option>Chemistry</option>
+          <option>Civil Engineering</option>
+          <option>Computer Engineering</option>
+          <option>Computer Science</option>
+          <option>Economics</option>
+          <option>Electrical Engineering</option>
+          <option>English</option>
+          <option>Environmental Sciences</option>
+          <option>Finance</option>
+          <option>Food Science</option>
+          <option>Geography</option>
+          <option>History</option>
+          <option>Hotel, Restaurant, and Institutional Management</option>
+          <option>Industrial Engineering</option>
+          <option>Marine Biology</option>
+          <option>Marketing</option>
+          <option>Mathematics</option>
+          <option>Mechanical Engineering</option>
+          <option>Media Studies</option>
+          <option>Media Studies</option>
+          <option>Mineral Economics</option>
+          <option>Nuclear Engineering</option>
+          <option>Nursing</option>
+          <option>Physics</option>
+          <option>Pre-medicine</option>
+          <option>Real Estate</option>
+          <option>Sociology</option>
+          <option>Statistics</option>
+          <option>Telecommunications</option>
+          <option>Theater</option>
         </select>
       </div>
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">{{collegeQuestions?.q1}}</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]='q1' [ngClass]="{'green' : toggleq1, 'red': !toggleq1}"></textarea>
+
+
+      <!-- working on riight now -->
+
+      <div *ngFor="let x of questions;let i = index;trackBy:customTrackBy">
+        <label for="exampleFormControlTextarea1">{{x}}</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]='answers[i]' [ngClass]="{'green' : toggleq1, 'red': !toggleq1}"></textarea>
+        <br>
       </div>
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">{{collegeQuestions?.q2}}</label>
-        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" [(ngModel)]='q2' [ngClass]="{'green' : toggleq2, 'red': !toggleq2}"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">{{collegeQuestions?.q3}}</label>
-        <textarea class="form-control" id="exampleFormControlTextarea3" rows="3" [(ngModel)]='q3' name="something" [ngClass]="{'green' : toggleq3, 'red': !toggleq3}"></textarea>
-      </div>
+
+      
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="saveAppl()">Save</button>
-    <button class="btn btn-primary" (click)="confirm(contenttemp)">Submit</button>
+    <button class="btn btn-primary" (click)="submitAppl()">Submit</button>
   </div>
 </ng-template>
 

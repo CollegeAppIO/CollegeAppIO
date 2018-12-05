@@ -9,7 +9,7 @@
    margin-bottom: 20px;
    padding:5px;
    width: 250px;
-   height:300px;
+   height:350px;
    float: left;
    border: 1px solid lightgray;
    list-style:none;
@@ -26,5 +26,16 @@
     margin-right: 5px;
     /* padding-top:5px; */
     float: right;
-    width: 190px;
+    width: 250px;
+    height: 1000px;
+  }
+  .recommendedList{
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-left: 5px;
+    /* padding-top:5px; */
+    float: left;
+    width: 250px;
+    height: 1000px;
+
   }

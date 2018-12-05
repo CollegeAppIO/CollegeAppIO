@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit,Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import * as firebase from 'firebase/app';
@@ -9,8 +9,10 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router'
 import { HttpClient } from '@angular/common/http';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
-
-
+import { HttpRequest } from "@angular/common/http";
+import { HttpEventType } from "@angular/common/http";
+import { HttpResponse } from "@angular/common/http";
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 @Component({
@@ -18,11 +20,15 @@ import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+@Injectable()
 export class LoginComponent implements OnInit {
 
+  public fileString
   user: string;
   loggedIn = false;
   userObj: any;
+
+  pDone: any;
 
   useremail: string;
   password: string;
@@ -32,10 +38,12 @@ export class LoginComponent implements OnInit {
 
   modalStatus: boolean;
   isAdmin: boolean;
+  isAdminProof: any;
   collegeName:string;
 
   //collegeList: JSON;
   colleges: any;
+  user_file: any;
 
   typeOfUser: string;
 
@@ -56,12 +64,85 @@ export class LoginComponent implements OnInit {
 
 
   constructor(public authServ: AuthService, private noteSvc: NotificationServicesService,private modalService: NgbModal, private router: Router, private httpClient: HttpClient) {
+    this.fileString
   }
 
   open(content) {
     this.modalReference = this.modalService.open(content);
     this.modalStatus = true;
   }
+
+  uploadProfilePic() {
+    
+    var f = (<HTMLInputElement>document.getElementById('ufile')).files[0];
+    console.log({f});
+    
+    var r = new FileReader();
+    var data;
+    r.onload = () => {
+      console.log(r.result)
+      data = r.result
+      this.uploadFileBlob(data,f.name)
+    }
+    
+    r.readAsDataURL(f);
+
+  }
+
+  // progbar is used as a listener for HTML progressbar to load
+  progbar() {
+    return this.pDone;
+  }
+  
+  uploadFileBlob(blob:any, filename:string) {
+      console.log({blob})
+      console.log({filename})
+
+      const req = new HttpRequest('POST', 'https://college-app-io.herokuapp.com/postImage', 
+      {'image':blob, 'fname':filename},
+      {reportProgress: true},
+      );
+      this.httpClient.request(req).subscribe(event => {
+        // Via this API, you get access to the raw event stream.
+        // Look for upload progress events.
+        if (event.type === HttpEventType.UploadProgress) {
+          // This is an upload progress event. Compute and show the % done:
+          const percentDone = Math.round(100 * event.loaded / event.total);
+          this.pDone = percentDone;
+
+          console.log(`File is ${percentDone}% uploaded.`);
+          this.progbar();
+          
+          console.log(event)
+        } else if (event instanceof HttpResponse) {
+          console.log('File is completely uploaded!');
+          console.log(event.body['ADMIN'])
+          this.isAdminProof = event.body['ADMIN'];
+          
+          
+        }
+      });
+      // return this.httpClient.post('https://college-app-io.herokuapp.com/postImage', {
+      //   image: blob,
+      //   fname: filename,
+      //   headers: {
+      //     reportProgress: true,
+      //     'Content-Type': 'image/png',
+      //     'Access-Control-Allow-Origin': '*',
+      //     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS,DELETE,PUT'
+      //   }
+      // })
+      // .subscribe(
+      //     event => {
+      //       console.log(event)
+      //     },
+      //     err => {
+      //       console.log(err);
+      //     }
+      //   )
+      //   ;
+
+    }
 
   uploadToUserTable(uid:string,isAdmin:boolean) {
       this.checkRegisterType = false;
@@ -125,7 +206,7 @@ export class LoginComponent implements OnInit {
 
   onSignUp() {
     firebase.auth().signOut();
-    if (this.useremail === undefined || this.password === undefined) {
+    if (this.useremail === undefined || this.password === undefined || this.isAdminProof === 'FALSE') {
         this.noteSvc.setNotification(
           'Missing Information',
           'User name and password are mandatory!'

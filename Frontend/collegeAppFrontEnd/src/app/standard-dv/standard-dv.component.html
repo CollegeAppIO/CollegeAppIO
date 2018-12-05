@@ -1,0 +1,78 @@
+
+<app-admin-nav-bar></app-admin-nav-bar>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    
+    .column {
+        float: left;
+        width: 50%;
+        padding: 5px;
+    }
+    
+    /* Clearfix (clear floats) */
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+    </style>
+<!-- <div *ngIf="chart" style="width: 40%">
+  <canvas id="canvas">{{chart}}</canvas>
+</div>
+<br>
+<div *ngIf="chart1" style="width: 40%">
+    <canvas id="canvas1">{{chart1}}</canvas>
+</div>
+<br>
+<div *ngIf="chart2" style="width: 40%">
+    <canvas id="canvas2">{{chart2}}</canvas>
+</div>
+<br>
+<div *ngIf="chart3" style="width: 40%">
+    <canvas id="canvas3">{{chart3}}</canvas>
+</div>
+<div *ngIf="chart4" style="width: 40%">
+    <canvas id="canvas4">{{chart4}}</canvas>
+</div>
+<div *ngIf="chart5" style="width: 40%">
+    <canvas id="canvas5">{{chart5}}</canvas>
+</div> -->
+
+
+<div class="row" style="margin: auto">
+    <div class="column">
+        <div *ngIf="chart" style="width: 100%">
+            <canvas id="canvas">{{chart}}</canvas>
+          </div>
+    </div>
+    <div class="column">
+        <div *ngIf="chart5" style="width: 100%">
+            <canvas id="canvas5">{{chart5}}</canvas>
+        </div>
+    </div>
+    <div class="column">
+        <div *ngIf="chart1" style="width: 100%">
+            <canvas id="canvas1">{{chart1}}</canvas>
+        </div>
+    </div>
+    <div class="column">
+        <div *ngIf="chart3" style="width: 100%">
+            <canvas id="canvas3">{{chart3}}</canvas>
+        </div>
+    </div>
+    <div class="column">
+        <div *ngIf="chart2" style="width: 100%">
+            <canvas id="canvas2">{{chart2}}</canvas>
+        </div>
+    </div>
+    <div class="column">
+        <div *ngIf="chart4" style="width: 100%">
+            <canvas id="canvas4">{{chart4}}</canvas>
+        </div>
+    </div>
+   
+    
+  </div>
+  
