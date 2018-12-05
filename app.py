@@ -527,24 +527,22 @@ def getData():
 		list_vars = variables.split("||")
 		list_quals = quals.split("||")
 		collegeN = (collegeName, )
-		query = "SELECT " + param1 + ", " + param2 + " FROM historicalapplication WHERE college = %s"
+		query = "SELECT " + param1 + ", " + param2 + ", decision FROM historicalapplication WHERE college = %s"
 		for i in range(0, len(list_quals)):
 			qual_var = list_quals[i]
 			if qual_var == "Male":
 				qual_var = 1
-				print "HERE"
 			elif qual_var == "Female":
 				qual_var = 0
 			query = query + " and " + list_vars[i] + " = %s"
 			collegeN = collegeN + (str(qual_var), )
-		print query
-		print "College:", collegeN
 		curs.execute(query, collegeN)
 		result = []
 		for row in curs:
 			obj = {
-				'param1': row[0],
+				'param1': float(row[0]),
 				'param2': float(row[1]),
+				'decision': row[2]
 			}
 			result.append(obj)
 		print(result)
