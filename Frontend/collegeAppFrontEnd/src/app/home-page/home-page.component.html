@@ -45,6 +45,17 @@
 </ul>
 </div>
 
+<div class="recommendedList">
+  <!-- <app-watch-list></app-watch-list> -->
+<label >Recommended List</label>
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let college of recommendedList">
+    <div (click)="openCollege(college.collegename)">
+        {{college.collegename}}
+    </div>
+  </li>
+</ul>
+</div>
 
 
 
