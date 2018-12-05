@@ -55,30 +55,19 @@
             <li >
                 <!-- <img src={{hero.image_link}} style="width:240px;height:240px;">
                 <p><b>{{hero.collegeName}}</b></p> -->
-
+                  <p style="height: 40px;">{{hero.collegename}}</p> 
                 <ngb-carousel style="width:240px;height:240px;">
                   <ng-template ngbSlide>
                     <img (click)="openCollege(hero.collegename)" src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
-                    <div class="carousel-caption">
-                      <p>{{hero.collegename}}</p>
-                    </div>
+                    <!-- <div class="carousel-caption"> -->
+                      <!-- <p>{{hero.collegename}}</p> -->
+                    <!-- </div> -->
                     <div>
                     <button (click)="addToWatchList(hero.collegename)" style= "margin-left:50px; margin-bottom:10px; margin-top:3px"class="btn btn-primary" type="button" name="button">Add to watchlist</button>
                     </div>
 
                   </ng-template>
-                  <!-- <ng-template ngbSlide>
-                    <img src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
-                    <div class="carousel-caption">
-                      <p>{{hero.collegeName}} 2</p>
-                    </div>
-                  </ng-template>
-                  <ng-template ngbSlide>
-                    <img src={{hero.image_link}} alt="Random first slide" style="width:240px;height:240px;">
-                    <div class="carousel-caption">
-                      <p>{{hero.collegeName}} 3</p>
-                    </div>
-                  </ng-template> -->
+
 
 
                 </ngb-carousel>
