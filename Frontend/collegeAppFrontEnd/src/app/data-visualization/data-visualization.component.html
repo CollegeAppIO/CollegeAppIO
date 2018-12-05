@@ -4,16 +4,76 @@
 <div >
 
   <select  style="width: 70%; max-width: 100px; float:left; " [(ngModel)]="category1" name="category1"id="category1" class="form-control">
-    <option *ngFor="let category of categories">{{category.categories}}</option>
+    <option *ngFor="let category of categories">{{category}}</option>
   </select>
 
   <select style="width: 70%; max-width: 100px;margin-left:10px; float:left; " [(ngModel)]="category2" name="category2"id="category2" class="form-control">
-    <option *ngFor="let category of categories">{{category.categories}}</option>
+    <option *ngFor="let category of categories">{{category}}</option>
   </select>
-
+  
   <button style="margin-left:10px; float:left;" (click)="onCategoryChange()" type="button" class="btn btn-primary">Apply Filter</button>
-</div>
 
-<div *ngIf="chart">
+  <select style="width: 70%; max-width: 100px;margin-left:10px; float:left; " [(ngModel)]="majorCategory" name="majorCategory"id="majorCategory" class="form-control">
+    <option>Accounting</option>
+          <option>Actuarial Science</option>
+          <option>Agriculture</option>
+          <option>Animal Sciences</option>
+          <option>Anthropology</option>
+          <option>Applied Mathematics</option>
+          <option>Art History</option>
+          <option>Biochemistry</option>
+          <option>Biology</option>
+          <option>Chemical Engineering</option>
+          <option>Chemistry</option>
+          <option>Civil Engineering</option>
+          <option>Computer Engineering</option>
+          <option>Computer Science</option>
+          <option>Economics</option>
+          <option>Electrical Engineering</option>
+          <option>English</option>
+          <option>Environmental Sciences</option>
+          <option>Finance</option>
+          <option>Food Science</option>
+          <option>Geography</option>
+          <option>History</option>
+          <option>Hotel, Restaurant, and Institutional Management</option>
+          <option>Industrial Engineering</option>
+          <option>Marine Biology</option>
+          <option>Marketing</option>
+          <option>Mathematics</option>
+          <option>Mechanical Engineering</option>
+          <option>Media Studies</option>
+          <option>Media Studies</option>
+          <option>Mineral Economics</option>
+          <option>Nuclear Engineering</option>
+          <option>Nursing</option>
+          <option>Physics</option>
+          <option>Pre-medicine</option>
+          <option>Real Estate</option>
+          <option>Sociology</option>
+          <option>Statistics</option>
+          <option>Telecommunications</option>
+          <option>Theater</option>
+    </select>
+
+    <select style="width: 70%; max-width: 100px;margin-left:10px; float:left; " [(ngModel)]="sexCategory" name="sexCategory"id="sexCategory" class="form-control">
+      <option>Male</option>
+      <option>Female</option>
+    </select>
+
+    <select style="width: 70%; max-width: 100px;margin-left:10px; float:left; " [(ngModel)]="raceCategory" name="raceCategory"id="raceCategory" class="form-control">
+      <option>Native American</option>
+      <option>African American</option>
+      <option>Asian</option>
+      <option>Caucasian</option>
+      <option>Hispanic</option>
+      <option>Other</option>
+    </select>
+  </div>
+
+  
+  
+
+<div *ngIf="chart" style="width: 80%">
   <canvas id="canvas">{{chart}}</canvas>
 </div>

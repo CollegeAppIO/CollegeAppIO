@@ -11,12 +11,16 @@ export class DataVisualizationComponent implements OnInit {
 
   dropDownOne: any;
   dropDownTwo: any;
-  categories : any;
+  categories = ['gpa','sat','act','num_ap'];
+
+  majorCategory: any;
+  sexCategory: any;
+
   category1: string;
   category2: string;
 
   collegeName: string;
-  chart = [];
+  chart: Chart = [];
   constructor(public httpClient: HttpClient, private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -29,29 +33,73 @@ export class DataVisualizationComponent implements OnInit {
     this.httpClient.get(temp).subscribe(data => {
           // this.userData = data[0] as JSON;
           console.log(data);
-          this.categories = data;
-          this.chart = new Chart('canvas',{
-              type:'line',
-              data:{
-                //labels: this.categories,
-                datasets:[
-                  {
-                    data: this.category1,
-                    borderColor: '#3cba9f',
-                    fill: false
-                  },
-                  {
-                    data: this.category2,
-                    borderColor: '#ffcc00',
-                    fill: false
-                  },
+          // this.categories = data;
+          
+          // this.chart = new Chart('canvas',{
+          //     type:'line',
+          //     data:{
+          //       //labels: this.categories,
+          //       datasets:[
+          //         {
+          //           data: this.category1,
+          //           borderColor: '#3cba9f',
+          //           fill: false
+          //         },
+          //         {
+          //           data: this.category2,
+          //           borderColor: '#ffcc00',
+          //           fill: false
+          //         },
 
-                ]
+          //       ]
 
-              }
-          })
+          //     }
+          // })
           //this.studentTable = data as JSON;
     })
+
+    var temp1 = 'http://college-app-io.herokuapp.com/getStatsEachStudent';
+    this.httpClient.get(temp1,{headers: {'collegeName': this.collegeName}}).subscribe(data1 => {
+      console.log(data1);
+           var actData = data1[0];
+           var satData = data1[1]
+           var numAPData = data1[2]
+           var gpaData = data1[3]
+           var raceData = data1[4]
+           var majorData = data1[5];
+           var sexData = data1[6];
+           var decisionData = data1[7];
+
+          var cat1 = gpaData.map(gpaData => gpaData.gpa);
+          var cat2 = satData.map(satData => satData.sat);
+          console.log(cat1);
+          console.log(cat2);
+          console.log(decisionData);
+          let coords = cat1.map( (v,i) => ({ x: v, y: cat2[i] }) )
+          console.log(coords);
+          var pointBackgroundColors = [];
+          // this.chart = new Chart('canvas',{
+          //     type:'scatter',
+          //     data: {
+          //     datasets: [{
+          //       label: 'GPA vs SAT',
+          //       data: coords,
+          //       pointBackgroundColor: pointBackgroundColors
+          //     }
+
+          //     ]
+          //   },
+          //     options: {
+          //       scales: {
+          //         xAxes: [{
+          //           type: 'linear',
+          //           position: 'bottom'
+          //         }]
+          //       }
+          //     }
+          // })
+        })
+
 
 
 
@@ -62,96 +110,57 @@ export class DataVisualizationComponent implements OnInit {
     //   console.log(data1);
     // })
     //var cat1 = this.category1;
-    var cat1: JSON;
-    var cat2: JSON;
-    var temp1 = 'http://college-app-io.herokuapp.com/getStatsEachStudent';
+    var param1Arr = [];
+    var c = []
+    var param2Arr = [];
+    var decisionArr = [];
+    var plotData: any= [];
+
+    var cat1: any;
+    var cat2: any;
+
+    var temp1 = 'http://college-app-io.herokuapp.com/getData';
     console.log(this.collegeName);
-    this.httpClient.get(temp1,{headers: {'collegeName': this.collegeName}}).subscribe(data1 => {
+    this.httpClient.get(temp1,{headers: {'collegeName': this.collegeName,'param1':"sat",'param2':"act",'vars':"sex||race||major",'qualitative':"Male||Asian||Computer Science"}}).subscribe(data1 => {
       console.log(data1);
-           var actData = data1[0];
-           //console.log(userData);
-           var satData = data1[1]
-           var numAPData = data1[2]
-           var gpaData = data1[3]
-           var raceData = data1[4]
-           var majorData = data1[5];
-           var sexData = data1[6];
-           //var sexes = data1[2] as JSON;
-          if(this.category1 == 'act'){
-            cat1 = actData.map(actData => actData.act);
-            console.log(cat1);
-          }else if(this.category1 == 'sat'){
-            cat1 = satData.map(satData => satData.sat);
-          }
-          else if(this.category1 == 'gpa'){
-            cat1 = gpaData.map(gpaData => gpaData.gpa);
-          }
-          else if(this.category1 == 'num_ap'){
-            cat1 = numAPData.map(numAPData => numAPData.num_ap);
-          }
-          else if(this.category1 == 'race'){
-            cat1 = raceData.map(raceData => raceData.race);
-          }
-          else if(this.category1 == 'major'){
-            cat1 = majorData.map(majorData => majorData.major);
-          }
-          else if(this.category1 == 'sex'){
-            cat1 = sexData.map(sexData => sexData.sex);
-          }
-          if(this.category2 == 'act'){
-            cat2 = actData.map(actData => actData.act);
-            console.log(cat1);
-          }else if(this.category2 == 'sat'){
-            cat2 = satData.map(satData => satData.sat);
-          }
-          else if(this.category2 == 'gpa'){
-            cat2 = gpaData.map(gpaData => gpaData.gpa);
-          }
-          else if(this.category2 == 'num_ap'){
-            cat2 = numAPData.map(numAPData => numAPData.num_ap);
-          }
-          else if(this.category2 == 'race'){
-            cat2 = raceData.map(raceData => raceData.race);
-          }
-          else if(this.category2 == 'major'){
-            cat2 = majorData.map(majorData => majorData.major);
-          }
-          else if(this.category2 == 'sex'){
-            cat2 = sexData.map(sexData => sexData.sex);
-          }
 
-          console.log('hi');
-          console.log(this.category1);
-          console.log(this.category2);
+           var param1 = data1[0];
+           var param2 = data1[1]
+           var decisionData = data1[2]
+          
+           console.log(param1)
+
+           cat1 = param1.map(param1 => param1.param1);
+           cat2 = param2.map(param2 => param2.param2);
           console.log(cat1);
-          //cat1 = [1500,2100,1800,1600,1750];
-          //cat2 = [27,29,34,30,32];
+          console.log(cat2);
+          console.log(decisionData);
+          let coords = cat1.map( (v,i) => ({ x: v, y: cat2[i] }) )
+          console.log(coords);
+          var pointBackgroundColors = [];
           this.chart = new Chart('canvas',{
-              type:'line',
-              data:{
-                labels: cat1,
-                datasets:[
-                  {
+              type:'scatter',
+              data: {
+              datasets: [{
+                label: 'GPA vs SAT',
+                data: coords,
+                pointBackgroundColor: pointBackgroundColors
+              }
 
-                    data: cat2,
-                    borderColor: '#4169e1',
-                    fill: false,
-                    borderWidth: 1,
-                  },
-
-                ]
-
-              },
+              ]
+            },
               options: {
-                  legend:{
-                    display: false
-                  },
-
-
+                scales: {
+                  xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                  }]
+                }
               }
           })
-          console.log('what up');
+
     })
+  
 
 
   }
