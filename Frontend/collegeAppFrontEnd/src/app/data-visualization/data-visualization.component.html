@@ -15,7 +15,7 @@
   <select style="width: 70%; max-width: 100px;margin-left:10px; float:left; " [(ngModel)]="category2" name="category2"id="category2" class="form-control">
     <option *ngFor="let category of categories">{{category}}</option>
   </select>
-  
+
   <!-- <button style="margin-left:10px; float:left;" (click)="onCategoryChange()" type="button" class="btn btn-primary">Apply Filter</button> -->
 
   <select style="width: 70%; max-width: 100px;margin-left:10px; float: right; " [(ngModel)]="majorCategory" name="majorCategory"id="majorCategory" class="form-control">
@@ -79,13 +79,12 @@
     </select>
   </div>
 
-  
-  
+  <br>
+  <br>
+  <div style="text-align: center;">
+  <button (click)="onCategoryChange()" type="button" class="btn btn-primary">Apply Filter</button>
+  </div>
 
 <div *ngIf="chart" style="width: 80%;margin: auto;">
   <canvas id="canvas">{{chart}}</canvas>
-</div>
-<br>
-<div style="text-align: center;">
-<button (click)="onCategoryChange()" type="button" class="btn btn-primary">Apply Filter</button>
 </div>
