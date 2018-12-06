@@ -44,7 +44,7 @@ export class StandardDVComponent implements OnInit {
     var cat2: any;
     var act: any;
     var aps: any;
-   
+
     var temp1 = 'http://college-app-io.herokuapp.com/getStatsEachStudent';
     this.httpClient.get(temp1,{headers: {'collegeName': this.collegeName}}).subscribe(data1 => {
       console.log(data1);
@@ -65,38 +65,26 @@ export class StandardDVComponent implements OnInit {
           console.log(decisionData);
           let coords = cat1.map( (v,i) => ({ x: v, y: cat2[i] }) )
           var pointBackgroundColors = [];
+          var gpaBackgroundColors = ['#1a1aff','#1a1aff','#1a1aff','#1a1aff']
           this.chart = new Chart('canvas',{
-              type:'scatter',
+              type:'line',
               data: {
               datasets: [{
                 label: 'GPA vs SAT',
                 data: coords,
-                pointBackgroundColor: pointBackgroundColors
-              }
+                pointBackgroundColor: pointBackgroundColors,
+                borderColor: "rgba(0,0,0,0)",
+                borderWidth: 0,
+                backgroundColor:"rgba(0,0,0,0)"
+              },
+              {
+                label: 'Line of Best fit',
+                data: [{x:0,y:0},{x:1,y:600},{x:2,y:1200},{x:3,y:1800}{x:4,y:2400}],
+                type:'line',
+                backgroundColor:"rgba(0,0,0,0)",
+                borderColor: "rgba(0,0,204)",
+                pointBackgroundColor: gpaBackgroundColors
 
-              ]
-            },
-              options: {
-                scales: {
-                  xAxes: [{
-                    type: 'linear',
-                    position: 'bottom'
-                  }]
-                }
-              }
-          })
-
-          
-          act = actData.map(actData => actData.act);
-          let coords1 = cat1.map( (v,i) => ({ x: v, y: act[i] }) )
-          console.log(coords1);
-          this.chart1 = new Chart('canvas1',{
-              type:'scatter',
-              data: {
-              datasets: [{
-                label: 'GPA vs ACT',
-                data: coords1,
-                pointBackgroundColor: pointBackgroundColors
               }
 
               ]
@@ -106,10 +94,72 @@ export class StandardDVComponent implements OnInit {
                   xAxes: [{
                     type: 'linear',
                     position: 'bottom',
-                    
+                    ticks: {
+                        min: 0,
+                        max: 4
+                    },
+                  }],
+                  yAxes:[{
+                    ticks: {
+                        min: 0,
+                        max: 2400,
+                        stepSize: 400,
+
+                    }
+                  }]
+
+                }
+              }
+          })
+
+
+          act = actData.map(actData => actData.act);
+          let coords1 = cat1.map( (v,i) => ({ x: v, y: act[i] }) )
+          console.log(coords1);
+          this.chart1 = new Chart('canvas1',{
+              type:'line',
+              data: {
+              datasets: [{
+                label: 'GPA vs ACT',
+                data: coords1,
+                pointBackgroundColor: pointBackgroundColors,
+                borderColor: "rgba(0,0,0,0)",
+                borderWidth: 0,
+                backgroundColor:"rgba(0,0,0,0)"
+              },
+              {
+                label: 'Line of Best fit',
+                data: [{x:0,y:7},{x:1,y:14},{x:2,y:21},{x:3,y:28}{x:4,y:36}],
+                type:'line',
+                backgroundColor:"rgba(0,0,0,0)",
+                borderColor: "rgba(0,0,204)",
+                pointBackgroundColor: gpaBackgroundColors
+
+              }
+
+              ]
+            },
+              options: {
+                scales: {
+                  xAxes: [{
+                    type: 'linear',
+                    position: 'bottom',
+                    ticks: {
+                        min: 0,
+                        max: 4
+                    }
+
+                  }],
+                  yAxes:[{
+                    ticks: {
+                        min: 0,
+                        max: 36,
+                        stepSize: 4,
+
+                    }
                   }]
                 },
-                showLine:'true'
+
               }
           })
 
@@ -117,12 +167,24 @@ export class StandardDVComponent implements OnInit {
           let coords2 = cat1.map( (v,i) => ({ x: v, y: numAPData[i].num_ap }) )
           console.log(coords2);
           this.chart2 = new Chart('canvas2',{
-              type:'scatter',
+              type:'line',
               data: {
               datasets: [{
                 label: 'GPA vs Number of APs',
                 data: coords2,
-                pointBackgroundColor: pointBackgroundColors
+                pointBackgroundColor: pointBackgroundColors ,
+                borderColor: "rgba(0,0,0,0)",
+                borderWidth: 0,
+                backgroundColor:"rgba(0,0,0,0)"
+              },
+              {
+                label: 'Line of Best fit',
+                data: [{x:0,y:2},{x:1,y:4},{x:2,y:6},{x:3,y:8},{x:4,y:10}],
+                type:'line',
+                backgroundColor:"rgba(0,0,0,0)",
+                borderColor: "rgba(0,0,204)",
+                pointBackgroundColor: gpaBackgroundColors
+
               }
 
               ]
@@ -132,10 +194,21 @@ export class StandardDVComponent implements OnInit {
                   xAxes: [{
                     type: 'linear',
                     position: 'bottom',
-                    
+                    ticks: {
+                        min: 0,
+                        max: 4
+                    }
+                  }],
+                  yAxes:[{
+                    ticks: {
+                        min: 0,
+                        max: 10,
+                        stepSize:1,
+
+                    }
                   }]
                 },
-                showLine:'true'
+                
               }
           })
 
@@ -145,7 +218,7 @@ export class StandardDVComponent implements OnInit {
           var url1 = 'http://college-app-io.herokuapp.com/getCollegeCountMajor';
           this.httpClient.get(url1,{headers: {'collegename': this.collegeName}}).subscribe(data1 => {
                 console.log(data1);
-              
+
                 for(var i = 0; i < Object.keys(data1).length; i++){
                   majorCounts.push(data1[i].Count);
                   majorLabels.push(data1[i].Major);
@@ -233,8 +306,8 @@ export class StandardDVComponent implements OnInit {
               });
 
           })
-      
-         
+
+
 
 
 
@@ -251,7 +324,7 @@ export class StandardDVComponent implements OnInit {
           this.chart.update();
           this.chart1.update();
           this.chart2.update();
-     
+
           console.log('what up');
     })
 

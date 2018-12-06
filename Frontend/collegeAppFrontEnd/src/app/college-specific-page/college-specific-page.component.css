@@ -12,3 +12,22 @@ textarea.ng-invalid.ng-touched {
 .red {
   border: 1px solid red;
 }
+.infoboxes{
+  width: 80%;
+  max-width: 800px;
+  margin: auto;
+  float:left
+}
+.graphs{
+  width: 50%;
+  max-width: 800px;
+  margin: auto;
+  float: right;
+}
+.buttons{
+  /* position:absolute;
+  margin-top:100%;
+  text-align:center; */
+  float: right;
+
+}

@@ -3,10 +3,17 @@
 <br>
 <div style="text-align: center">
   <h1>{{message}}</h1>
+  <div class="buttons">
+  <button class="btn btn-lg btn-primary" [disabled]="isDisabled" (click)="open(content)">Apply to College</button>
+  <button class="btn btn-lg btn-primary" (click)="addToWatchList()">Add to WatchList</button>
+  </div>
 </div>
 
+
+
 <br>
-<div style="width: 80%;max-width: 1000px;margin: auto; ">
+<div class="infoboxes">
+  <label for="">Information</label>
 <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
   <ngb-panel title="Background Information">
     <ng-template ngbPanelContent>
@@ -48,10 +55,46 @@
 </div>
 <br>
 
-<div style="text-align:center;">
-<button class="btn btn-lg btn-primary" [disabled]="isDisabled" (click)="open(content)">Apply to College</button>
-<button class="btn btn-lg btn-primary" [disabled]="isDisabled" (click)="addToWatchList()">Add to WatchList</button>
-</div>
+
+<div class="graphs">
+  <label for="">Data Visulizations</label>
+<div class="row" style="margin: auto">
+    <div class="column">
+        <div *ngIf="chart" style="width: 150%; height:10%">
+            <canvas id="canvas">{{chart}}</canvas>
+          </div>
+    </div>
+    <div class="column">
+        <div *ngIf="chart5" style="width: 150%">
+            <canvas id="canvas5">{{chart5}}</canvas>
+        </div>
+    </div>
+    <div class="column">
+        <div *ngIf="chart1" style="width: 150%">
+            <canvas id="canvas1">{{chart1}}</canvas>
+        </div>
+    </div>
+    <div class="column">
+        <div *ngIf="chart3" style="width: 150%">
+            <canvas id="canvas3">{{chart3}}</canvas>
+        </div>
+    </div>
+    <div class="column">
+        <div *ngIf="chart2" style="width: 150%">
+            <canvas id="canvas2">{{chart2}}</canvas>
+        </div>
+    </div>
+    <div class="column">
+        <div *ngIf="chart4" style="width: 150%">
+            <canvas id="canvas4">{{chart4}}</canvas>
+        </div>
+    </div>
+  </div>
+
+  </div>
+
+
+
 
 <ng-template #content let-modal>
   <div class="modal-header">
