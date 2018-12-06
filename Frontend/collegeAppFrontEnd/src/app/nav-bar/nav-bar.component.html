@@ -9,9 +9,9 @@
 
 <!-- <nav class="navbar navbar-dark bg-primary justify-content-between">
   <a class="navbar-brand" style="color: white;font-size: 24px;" (click)="home()">CollegeApp.IO</a>
-  
+
   <form class="form-inline">
-    
+
     <input (keyup.enter)="searchMethod()" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width: 415px;" id="typeahead-format" name ="collegeNameSearch" [(ngModel)]="collegeNameSearch" [ngbTypeahead]="search" [resultFormatter]="formatter" />
     <button  type="button" class="btn btn-success" (click)="toViewApplication()">View Application</button>
     <button  type="button" class="btn btn-success" (click)="toApplication()">Create Application</button>
@@ -31,7 +31,10 @@
         </li>
         <li class="nav-item active">
             <a class="nav-link" (click)="toApplication()" >Create Application</a>
-        </li>      
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" (click)="toDynamicDV()" >Dynamic Data Visualization</a>
+        </li>
       </ul>
       <input (keyup.enter)="searchMethod()" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width: 415px;" id="typeahead-format" name ="collegeNameSearch" [(ngModel)]="collegeNameSearch" [ngbTypeahead]="search" [resultFormatter]="formatter" />
       <button (click)="onSignOut()" type="button" class="btn btn-danger">Sign Out</button>

@@ -31,7 +31,7 @@ export class NavBarComponent implements OnInit {
 
   constructor(public authServ: AuthService,private router: Router,private httpClient: HttpClient,private data: DataService) { }
 
-  
+
 
   ngOnInit() {
     this.data.currentMessage.subscribe(message => this.message = message);
@@ -68,6 +68,9 @@ export class NavBarComponent implements OnInit {
   }
   toViewApplication(){
     this.router.navigateByUrl('/ViewApplication');
+  }
+  toDynamicDV(){
+    this.router.navigateByUrl('/StudentDynamicDV');
   }
 
   newMessage(collegeName:string) {
