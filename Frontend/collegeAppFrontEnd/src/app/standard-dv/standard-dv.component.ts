@@ -79,7 +79,7 @@ export class StandardDVComponent implements OnInit {
               },
               {
                 label: 'Line of Best fit',
-                data: [{x:0,y:0},{x:1,y:600},{x:2,y:1200},{x:3,y:1800}{x:4,y:2400}],
+                data: [{x:0,y:0},{x:1,y:600},{x:2,y:1200},{x:3,y:1800},{x:4,y:2400}],
                 type:'line',
                 backgroundColor:"rgba(0,0,0,0)",
                 borderColor: "rgba(0,0,204)",
@@ -129,7 +129,7 @@ export class StandardDVComponent implements OnInit {
               },
               {
                 label: 'Line of Best fit',
-                data: [{x:0,y:7},{x:1,y:14},{x:2,y:21},{x:3,y:28}{x:4,y:36}],
+                data: [{x:0,y:7},{x:1,y:14},{x:2,y:21},{x:3,y:28},{x:4,y:36}],
                 type:'line',
                 backgroundColor:"rgba(0,0,0,0)",
                 borderColor: "rgba(0,0,204)",
@@ -208,7 +208,7 @@ export class StandardDVComponent implements OnInit {
                     }
                   }]
                 },
-                
+
               }
           })
 
