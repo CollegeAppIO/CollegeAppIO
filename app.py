@@ -76,7 +76,7 @@ def postResponse():
 		con = psycopg2.connect(conn_string)
 		print ("Connecting to database\n ->%s" % (conn_string))
 		text = ast.literal_eval(json.dumps(request.get_json()))
-		print "text", text
+
 		studentid = text['studentid']
 		collegeName = text['collegeName']
 		questions = []
@@ -522,17 +522,44 @@ def getData():
 		collegeName = request.headers.get('collegeName')
 		param1 = request.headers.get('param1')
 		param2 = request.headers.get('param2')
+		variables = request.headers.get('vars')
+		quals = request.headers.get('qualitative')
+		list_quals = []
+		list_vars = []
+		if variables != "":
+			list_vars = variables.split("||")
+			list_quals = quals.split("||")
 		collegeN = (collegeName, )
-		query = "SELECT " + param1 + ", " + param2 + " FROM historicalapplication WHERE college = %s"
+		query = "SELECT " + param1 + ", " + param2 + ", decision FROM historicalapplication WHERE college = %s"
+		for i in range(0, len(list_quals)):
+			qual_var = list_quals[i]
+			if qual_var == "Male":
+				qual_var = 1
+			elif qual_var == "Female":
+				qual_var = 0
+			query = query + " and " + list_vars[i] + " = %s"
+			collegeN = collegeN + (str(qual_var), )
 		curs.execute(query, collegeN)
 		result = []
+		result1 = []
+		result2 = []
+		result3 = []
 		for row in curs:
 			obj = {
-				'param1': row[0],
-				'param2': float(row[1]),
+				'param1': float(row[0]),
 			}
-			result.append(obj)
-		print(result)
+			obj1 = {
+				'param2': float(row[1])
+			}
+			obj2 = {
+				'decision': row[2]
+			}
+			result1.append(obj)
+			result2.append(obj1)
+			result3.append(obj2)
+		result.append(result1)
+		result.append(result2)
+		result.append(result3)
 		response = jsonify(result)
 		response.status_code = 200
 		conn.commit()
@@ -1177,14 +1204,14 @@ def getCollegeStatsEachMajor():
 
 def upload_plain_object_to_s3(s3, S3_LOCATION, file, bucket_name, fname, acl="public-read"):
 	try:
-		
+
 		s3.put_object(
-			Body=file, 
-			Bucket=bucket_name, 
-			Key=fname, 
+			Body=file,
+			Bucket=bucket_name,
+			Key=fname,
 			ContentType="image/png"
 		)
-		
+
 	except Exception as e:
 		print "Something Happened: ", e
 		return e
@@ -1224,11 +1251,11 @@ def postImage():
 
 	# decode the image
 	decoded = data.decode('base64','strict')
-	
+
 	# If image is not found in keyval then t
 	if 'image' not in keyval:
 		return "No image key found in the server side when /postImage was called. Set Header as 'image':'{data}'"
-	
+
 	if 'fname' not in keyval:
 		return "No object name found in the server"
 	fname = keyval['fname']
@@ -1238,7 +1265,7 @@ def postImage():
 
 	# Connect to recognition service
 	rekognition = boto3.client("rekognition", "us-east-2")
-	
+
 	response = rekognition.detect_text(
 		Image={
 			'S3Object': {
@@ -1257,10 +1284,10 @@ def postImage():
 	# Check for valid keywords
 	if "university" in map or "college" in map:
 		for k, v in map.iteritems():
-			
+
 			if "admin" in k:
 				return jsonify({'ADMIN' : 'TRUE', 's3URL': output})
-	
+
 	return jsonify({'ADMIN' : 'FALSE', 's3URL': output})
 
 

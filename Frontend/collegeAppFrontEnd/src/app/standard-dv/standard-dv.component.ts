@@ -56,6 +56,7 @@ export class StandardDVComponent implements OnInit {
            var majorData = data1[5];
            var sexData = data1[6];
            var decisionData = data1[7];
+           console.log(gpaData)
 
           cat1 = gpaData.map(gpaData => gpaData.gpa);
           cat2 = satData.map(satData => satData.sat);

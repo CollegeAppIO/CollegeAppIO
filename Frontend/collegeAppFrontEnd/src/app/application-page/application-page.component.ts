@@ -166,13 +166,13 @@ genders = [
 ]
 
 races = [
-  {value: 'American Indian or Alaskan Native'},
+  {value: 'Native American'},
   {value: 'African American'},
   {value: 'Asian'},
-  {value: 'White'},
-  {value: 'Native Hawaiian Or Pacific Islander'},
-  {value: 'Two or more races'},
-  {value: 'Decline to Self Identify'},
+  {value: 'Caucasian'},
+  {value: 'Hispanic'},
+  {value: 'Other'},
+
 ]
 
 religions = [
