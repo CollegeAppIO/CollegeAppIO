@@ -12,7 +12,7 @@ import {HistoricalDataComponent}  from '../historical-data/historical-data.compo
 import {DataVisualizationComponent}  from '../data-visualization/data-visualization.component';
 import {AdminQuestionsComponent} from '../admin-questions/admin-questions.component';
 import {StandardDVComponent} from '../standard-dv/standard-dv.component';
-
+import {StudentDynamicComponent} from '../student-dynamic/student-dynamic.component';
 
 // @NgModule({
 //   imports: [
@@ -66,6 +66,10 @@ const routes: Routes = [
         },{
             path: 'StandardDV',
             component: StandardDVComponent,
+        },
+        {
+            path: 'StudentDynamicDV',
+            component: StudentDynamicComponent,
         },
 
     ];

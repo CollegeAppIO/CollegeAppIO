@@ -36,6 +36,7 @@ import { Chart }  from 'chart.js';
 import { WatchListComponent } from './watch-list/watch-list.component';
 import { AdminQuestionsComponent } from './admin-questions/admin-questions.component';
 import { StandardDVComponent } from './standard-dv/standard-dv.component';
+import { StudentDynamicComponent } from './student-dynamic/student-dynamic.component';
 
 
 
@@ -60,6 +61,7 @@ import { StandardDVComponent } from './standard-dv/standard-dv.component';
     WatchListComponent,
     AdminQuestionsComponent,
     StandardDVComponent,
+    StudentDynamicComponent,
 
   ],
   imports: [
