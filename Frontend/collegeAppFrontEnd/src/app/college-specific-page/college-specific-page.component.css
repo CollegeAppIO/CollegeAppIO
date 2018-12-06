@@ -13,7 +13,7 @@ textarea.ng-invalid.ng-touched {
   border: 1px solid red;
 }
 .infoboxes{
-  width: 80%;
+  width: 45%;
   max-width: 800px;
   margin: auto;
   float:left
