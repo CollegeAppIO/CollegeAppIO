@@ -396,9 +396,29 @@ export class CollegeSpecificPageComponent implements OnInit {
 
           console.log('what up');
     })
-
-
   }
+
+  change(){
+    console.log("hello")
+    this.ngOnInit();
+  }
+
+  onLoad() {
+    this.ngOnInit();
+  }
+  loadData(){
+    this.ngOnInit();
+    }
+    
+    //on change event
+    ngOnChanges(){
+      this.ngOnInit();
+    }
+    
+    //capture data on other event
+    otherEvent(){
+      this.ngOnInit();
+    }
 
   addToWatchList(){
     var url = 'http://college-app-io.herokuapp.com/addWatchList';

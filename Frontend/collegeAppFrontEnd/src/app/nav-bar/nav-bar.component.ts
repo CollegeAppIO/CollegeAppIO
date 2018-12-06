@@ -6,7 +6,7 @@ import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from "../data.service";
-
+import {CollegeSpecificPageComponent} from '../college-specific-page/college-specific-page.component';
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
@@ -88,6 +88,7 @@ export class NavBarComponent implements OnInit {
       console.log('there bitch');
       this.openCollege(this.collegeNameSearch);
       this.collegeNotThere = false;
+      // this.collegespecific.ngOnInit();
     }else{
       console.log('not there bitch');
       this.collegeNotThere = true;
