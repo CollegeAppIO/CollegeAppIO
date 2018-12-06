@@ -176,12 +176,10 @@ races = [
 ]
 
 religions = [
-  {value: 'Hindu'},
   {value: 'Christianity'},
   {value: 'Hinduism'},
   {value: 'Chinese traditional religion'},
   {value: 'Buddhism'},
-  {value: 'Christianity'},
   {value: 'Other'},
 ]
 
