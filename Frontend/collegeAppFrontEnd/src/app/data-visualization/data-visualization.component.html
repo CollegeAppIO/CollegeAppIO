@@ -1,8 +1,11 @@
 <app-admin-nav-bar></app-admin-nav-bar>
 <br>
-<label>Please choose the categories you want to compare with</label>
-<div >
 
+<div style="width:90%;margin:auto">
+<label>Please choose the categories you want to compare with</label>
+<label style="float:right">Please choose the filters you want to filter the data with</label>
+</div>
+<div style="width:90%;margin:auto">
   <select  style="width: 70%; max-width: 100px; float:left; " [(ngModel)]="category1" name="category1"id="category1" class="form-control">
     <option *ngFor="let category of categories">{{category}}</option>
   </select>
@@ -11,10 +14,11 @@
     <option *ngFor="let category of categories">{{category}}</option>
   </select>
   
-  <button style="margin-left:10px; float:left;" (click)="onCategoryChange()" type="button" class="btn btn-primary">Apply Filter</button>
+  <!-- <button style="margin-left:10px; float:left;" (click)="onCategoryChange()" type="button" class="btn btn-primary">Apply Filter</button> -->
 
-  <select style="width: 70%; max-width: 100px;margin-left:10px; float:left; " [(ngModel)]="majorCategory" name="majorCategory"id="majorCategory" class="form-control">
-    <option>Accounting</option>
+  <select style="width: 70%; max-width: 100px;margin-left:10px; float: right; " [(ngModel)]="majorCategory" name="majorCategory"id="majorCategory" class="form-control">
+          <option>All</option>
+          <option>Accounting</option>
           <option>Actuarial Science</option>
           <option>Agriculture</option>
           <option>Animal Sciences</option>
@@ -56,12 +60,14 @@
           <option>Theater</option>
     </select>
 
-    <select style="width: 70%; max-width: 100px;margin-left:10px; float:left; " [(ngModel)]="sexCategory" name="sexCategory"id="sexCategory" class="form-control">
+    <select style="width: 70%; max-width: 100px;margin-left:10px; float: right;" [(ngModel)]="sexCategory" name="sexCategory"id="sexCategory" class="form-control">
+      <option>All</option>
       <option>Male</option>
       <option>Female</option>
     </select>
 
-    <select style="width: 70%; max-width: 100px;margin-left:10px; float:left; " [(ngModel)]="raceCategory" name="raceCategory"id="raceCategory" class="form-control">
+    <select style="width: 70%; max-width: 100px;margin-left:10px; float: right;" [(ngModel)]="raceCategory" name="raceCategory"id="raceCategory" class="form-control">
+      <option>All</option>
       <option>Native American</option>
       <option>African American</option>
       <option>Asian</option>
@@ -74,6 +80,10 @@
   
   
 
-<div *ngIf="chart" style="width: 80%">
+<div *ngIf="chart" style="width: 80%;margin: auto;">
   <canvas id="canvas">{{chart}}</canvas>
+</div>
+<br>
+<div style="text-align: center;">
+<button (click)="onCategoryChange()" type="button" class="btn btn-primary">Apply Filter</button>
 </div>
