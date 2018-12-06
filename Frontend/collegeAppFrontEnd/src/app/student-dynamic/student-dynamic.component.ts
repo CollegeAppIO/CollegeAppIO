@@ -87,7 +87,7 @@ export class StudentDynamicComponent implements OnInit {
 
           for (var i = 0; i < decisionData.length; i++) {
             console.log(decisionData[i]);
-            if (decisionData[i].decision < 1) {
+            if (decisionData[i].decision === 1) {
               pointBackgroundColors.push("#00ff00");
 
             } else {
