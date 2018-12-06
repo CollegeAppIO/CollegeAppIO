@@ -351,13 +351,13 @@ export class CollegeSpecificPageComponent implements OnInit {
 
           })
           var sexCounts = [];
-          var sexLabels = [];
+          var sexLabels = ["Male","Female"];
           var url3 = 'http://college-app-io.herokuapp.com/getCollegeCountSex';
           this.httpClient.get(url3,{headers: {'collegename': this.message}}).subscribe(data2 => {
                 console.log(data2);
                 for(var i = 0; i < Object.keys(data2).length; i++){
                   sexCounts.push(data2[i].Count);
-                  sexLabels.push(data2[i].Sex);
+                  // sexLabels.push(data2[i].Sex);
                 }
                 console.log(sexCounts);
                 console.log(sexLabels);

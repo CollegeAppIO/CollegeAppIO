@@ -14,9 +14,11 @@
   </form>
 </nav> -->
 
+
+
 <br>
 
-<div style="text-align: center;">
+<!-- <div style="text-align: center;">
       <form class="form-inline center" style="width: 500px; margin: 0 auto;" >
         <div> 
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="width: 415px;" id="typeahead-format" name ="collegeNameSearch" [(ngModel)]="collegeNameSearch" [ngbTypeahead]="search" [resultFormatter]="formatter" />
@@ -30,7 +32,7 @@
         </div>
        
       </form>
-</div>
+</div> -->
 
 
 <div class="watchlist">
@@ -39,7 +41,7 @@
 <ul class="list-group">
   <li class="list-group-item" *ngFor="let college of watchlist">
     <button (click)="removeFromWatchList(college)" style="float:right;margin-right: 10px"class="btn btn-danger" type="button" name="button">X</button>
-    <div (click)="openCollege(college)">
+    <div (click)="openCollege(college)" style="font-family: cursive;">
         {{college}}
     </div>
   </li>
@@ -51,7 +53,7 @@
 <label style="font-weight: bold;font-size: x-large;" >Recommended List</label>
 <ul class="list-group">
   <li class="list-group-item" *ngFor="let college of recommendedList">
-    <div (click)="openCollege(college.collegename)">
+    <div (click)="openCollege(college.collegename)" style="font-family: cursive;">
         {{college.collegename}}
     </div>
   </li>

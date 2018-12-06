@@ -1,26 +1,36 @@
 <app-nav-bar></app-nav-bar>
 
 <br>
-<div style="text-align: center">
-  <h1>{{message}}</h1>
-  <div class="buttons">
-  <button class="btn btn-lg btn-primary" [disabled]="isDisabled" (click)="open(content)">Apply to College</button>
-  <button class="btn btn-lg btn-primary" (click)="addToWatchList()">Add to WatchList</button>
-  </div>
-</div>
-
-
-
+<!-- <div style="text-align: center"> -->
+  
+  <!-- <div>
+  <button  class="btn btn-lg btn-primary" style="float: left" [disabled]="isDisabled" (click)="open(content)">Apply to College</button>
+  <button style="float:right" class="btn btn-lg btn-primary" (click)="addToWatchList()">Add to WatchList</button>
+  </div> -->
+<!-- </div> -->
+<!-- <br>
+<br> -->
+<h1 style="    width: 100%;text-align: center;font-size: 65px;">{{message}}</h1>
 <br>
+<div style="width: 90%; margin: auto;">
+<div>
+    <button  class="btn btn-lg btn-primary" style="float: left" [disabled]="isDisabled" (click)="open(content)">Apply to College</button>
+    <button style="float:right" class="btn btn-lg btn-primary" (click)="addToWatchList()">Add to WatchList</button>
+</div>
+    <br>
+    <br>
+    <br>
+    <br>
+
 <div class="infoboxes">
-  <label for="">Information</label>
-<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
-  <ngb-panel title="Background Information">
+  <!-- <label for="">Information</label> -->
+<ngb-accordion #acc="ngbAccordion" activeIds="1,2,3">
+  <ngb-panel id="1" title="Background Information">
     <ng-template ngbPanelContent>
       {{collegeList?.information}}
     </ng-template>
   </ngb-panel>
-  <ngb-panel title="Academic Information">
+  <ngb-panel id="2" title="Academic Information">
     <ng-template ngbPanelContent>
       <label>Deadline: {{collegeList?.deadlines}}</label>
       <br>
@@ -35,7 +45,7 @@
       <label>Academic Calander Type: {{collegeList?.a_calender}}</label>
     </ng-template>
   </ngb-panel>
-  <ngb-panel title="General Information">
+  <ngb-panel title="General Information" id="3">
     <ng-template ngbPanelContent>
       <label>Year Founded: {{collegeList?.found_year}}</label>
       <br>
@@ -60,7 +70,7 @@
   <label for="">Data Visulizations</label>
 <div class="row" style="margin: auto">
     <div class="column">
-        <div *ngIf="chart" style="width: 150%; height:10%">
+        <div *ngIf="chart" style="width: 150%;">
             <canvas id="canvas">{{chart}}</canvas>
           </div>
     </div>
@@ -180,3 +190,4 @@
   </div>
 
 </ng-template>
+</div>
