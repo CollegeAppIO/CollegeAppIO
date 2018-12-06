@@ -524,8 +524,11 @@ def getData():
 		param2 = request.headers.get('param2')
 		variables = request.headers.get('vars')
 		quals = request.headers.get('qualitative')
-		list_vars = variables.split("||")
-		list_quals = quals.split("||")
+		list_quals = []
+		list_vars = []
+		if variables != "":
+			list_vars = variables.split("||")
+			list_quals = quals.split("||")
 		collegeN = (collegeName, )
 		query = "SELECT " + param1 + ", " + param2 + ", decision FROM historicalapplication WHERE college = %s"
 		for i in range(0, len(list_quals)):
