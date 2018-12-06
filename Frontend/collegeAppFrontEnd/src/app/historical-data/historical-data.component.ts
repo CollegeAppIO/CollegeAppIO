@@ -33,7 +33,7 @@ export class HistoricalDataComponent implements OnInit {
         console.log(this.studentTable[i]);
         if(this.studentTable[i].decision == '1'){
             this.studentTable[i].decision = 'Accepted';
-        }else if(this.studentTable[i].decision == '0'){
+        }else if(this.studentTable[i].decision == '2'){
             this.studentTable[i].decision = 'Rejected';
         }
       }
