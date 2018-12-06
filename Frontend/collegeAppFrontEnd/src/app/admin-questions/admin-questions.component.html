@@ -1,12 +1,14 @@
 <app-admin-nav-bar></app-admin-nav-bar>
-
+<br>
+<h1 style="    width: 100%;text-align: center;font-size: 65px;" ng-change="change()">Custom Questions</h1>
 
 <br>
 <br>
 <table align="center" >
-  <tr *ngFor="let x of questions;let i = index;trackBy:customTrackBy">
-    <input [(ngModel)]="questions[i]" style="width: 500px;margin: auto;">
-    <button (click)="deleteQuestion(x)">Delete</button>
+  <tr *ngFor="let x of questions;let i = index;trackBy:customTrackBy">  
+    <input type="email" class="form-control" [(ngModel)]="questions[i]" style="width: 500px;margin: auto; float: left;">
+    <button type="button" class="btn btn-danger" style="float:right" (click)="deleteQuestion(x)">Delete</button>
+    <br>
     <br>
   </tr>
 </table>
