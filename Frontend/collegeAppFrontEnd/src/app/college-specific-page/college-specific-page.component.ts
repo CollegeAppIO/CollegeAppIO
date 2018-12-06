@@ -168,7 +168,7 @@ export class CollegeSpecificPageComponent implements OnInit {
                     type: 'linear',
                     position: 'bottom',
                     ticks: {
-                        min: 0,
+                        min: 2,
                         max: 4
                     },
 
@@ -220,7 +220,7 @@ export class CollegeSpecificPageComponent implements OnInit {
                     type: 'linear',
                     position: 'bottom',
                     ticks: {
-                        min: 0,
+                        min: 2,
                         max: 4
                     }
 
@@ -270,7 +270,7 @@ export class CollegeSpecificPageComponent implements OnInit {
                     type: 'linear',
                     position: 'bottom',
                     ticks: {
-                        min: 0,
+                        min: 2,
                         max: 4
                     }
 
@@ -409,12 +409,12 @@ export class CollegeSpecificPageComponent implements OnInit {
   loadData(){
     this.ngOnInit();
     }
-    
+
     //on change event
     ngOnChanges(){
       this.ngOnInit();
     }
-    
+
     //capture data on other event
     otherEvent(){
       this.ngOnInit();
