@@ -151,15 +151,15 @@ export class CollegeSpecificPageComponent implements OnInit {
                 borderWidth: 0,
                 backgroundColor:"rgba(0,0,0,0)"
               },
-              {
-                label: 'Line of Best fit',
-                data: [{x:0,y:0},{x:1,y:600},{x:2,y:1200},{x:3,y:1800},{x:4,y:2400}],
-                type:'line',
-                backgroundColor:"rgba(0,0,0,0)",
-                borderColor: "rgba(0,0,204)",
-                pointBackgroundColor: gpaBackgroundColors
-
-              }
+              // {
+              //   label: 'Line of Best fit',
+              //   data: [{x:0,y:0},{x:1,y:600},{x:2,y:1200},{x:3,y:1800},{x:4,y:2400}],
+              //   type:'line',
+              //   backgroundColor:"rgba(0,0,0,0)",
+              //   borderColor: "rgba(0,0,204)",
+              //   pointBackgroundColor: gpaBackgroundColors
+              //
+              // }
               ]
             },
               options: {
@@ -201,15 +201,15 @@ export class CollegeSpecificPageComponent implements OnInit {
                 borderWidth: 0,
                 backgroundColor:"rgba(0,0,0,0)"
               },
-              {
-                label: 'Line of Best fit',
-                data: [{x:0,y:7},{x:1,y:14},{x:2,y:21},{x:3,y:28},{x:4,y:36}],
-                type:'line',
-                backgroundColor:"rgba(0,0,0,0)",
-                borderColor: "rgba(0,0,204)",
-                pointBackgroundColor: gpaBackgroundColors
-
-              }
+              // {
+              //   label: 'Line of Best fit',
+              //   data: [{x:0,y:7},{x:1,y:14},{x:2,y:21},{x:3,y:28},{x:4,y:36}],
+              //   type:'line',
+              //   backgroundColor:"rgba(0,0,0,0)",
+              //   borderColor: "rgba(0,0,204)",
+              //   pointBackgroundColor: gpaBackgroundColors
+              //
+              // }
 
 
               ]
@@ -252,15 +252,15 @@ export class CollegeSpecificPageComponent implements OnInit {
                 borderWidth: 0,
                 backgroundColor:"rgba(0,0,0,0)"
               },
-              {
-                label: 'Line of Best fit',
-                data: [{x:0,y:2},{x:1,y:4},{x:2,y:6},{x:3,y:8},{x:4,y:10}],
-                type:'line',
-                backgroundColor:"rgba(0,0,0,0)",
-                borderColor: "rgba(0,0,204)",
-                pointBackgroundColor: gpaBackgroundColors
-
-              }
+              // {
+              //   label: 'Line of Best fit',
+              //   data: [{x:0,y:2},{x:1,y:4},{x:2,y:6},{x:3,y:8},{x:4,y:10}],
+              //   type:'line',
+              //   backgroundColor:"rgba(0,0,0,0)",
+              //   borderColor: "rgba(0,0,204)",
+              //   pointBackgroundColor: gpaBackgroundColors
+              //
+              // }
 
               ]
             },
