@@ -95,7 +95,7 @@ export class StandardDVComponent implements OnInit {
                     type: 'linear',
                     position: 'bottom',
                     ticks: {
-                        min: 0,
+                        min: 2,
                         max: 4
                     },
                   }],
@@ -147,7 +147,7 @@ export class StandardDVComponent implements OnInit {
                     type: 'linear',
                     position: 'bottom',
                     ticks: {
-                        min: 0,
+                        min: 2,
                         max: 4
                     }
 
@@ -197,7 +197,7 @@ export class StandardDVComponent implements OnInit {
                     type: 'linear',
                     position: 'bottom',
                     ticks: {
-                        min: 0,
+                        min: 2,
                         max: 4
                     }
                   }],
