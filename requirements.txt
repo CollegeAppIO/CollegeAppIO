@@ -22,7 +22,7 @@ jmespath==0.9.3
 kiwisolver==1.0.1
 MarkupSafe==1.0
 matplotlib==2.2.3
-numpy==1.15.1
+numpy==1.22.0
 pandas==0.23.4
 psycopg2==2.7.5
 psycopg2-binary==2.7.5
